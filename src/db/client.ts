@@ -87,6 +87,36 @@ export function initializeTables(dbInstance?: ReturnType<typeof drizzle<typeof s
       started_at INTEGER NOT NULL,
       completed_at INTEGER
     );
+
+    CREATE TABLE IF NOT EXISTS game_sleeves (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      bgg_id INTEGER NOT NULL REFERENCES games(bgg_id) ON DELETE CASCADE,
+      card_set_name TEXT NOT NULL DEFAULT 'Baralho Principal',
+      format_name TEXT NOT NULL,
+      width_mm REAL NOT NULL,
+      height_mm REAL NOT NULL,
+      card_count INTEGER NOT NULL,
+      is_sleeved INTEGER NOT NULL DEFAULT 0,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_game_sleeves_bgg_id ON game_sleeves(bgg_id);
+    CREATE INDEX IF NOT EXISTS idx_game_sleeves_is_sleeved ON game_sleeves(is_sleeved);
+
+    CREATE TABLE IF NOT EXISTS sleeve_inventory (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      format_name TEXT NOT NULL,
+      width_mm REAL NOT NULL,
+      height_mm REAL NOT NULL,
+      brand TEXT NOT NULL,
+      pack_size INTEGER NOT NULL DEFAULT 100,
+      packs_owned INTEGER NOT NULL DEFAULT 0,
+      loose_sleeves INTEGER NOT NULL DEFAULT 0,
+      notes TEXT,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
   `);
 
   return dbInstance ?? getDatabase();

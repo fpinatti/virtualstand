@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { CollectionWithGame, collectionRepository } from '@/db/repositories/collection.repository';
 import { BoxDimensionEditor } from './box-dimension-editor';
+import { GameSleeveManagerModal } from './sleeves/game-sleeve-manager';
 
 interface GameDetailSheetProps {
   item: CollectionWithGame | null;
@@ -30,6 +31,7 @@ export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailS
   );
   const [saving, setSaving] = useState(false);
   const [showDimensionEditor, setShowDimensionEditor] = useState(false);
+  const [showSleeveModal, setShowSleeveModal] = useState(false);
 
   const handleAddTag = () => {
     const trimmed = tagInput.trim().toLowerCase();
@@ -135,6 +137,16 @@ export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailS
             </View>
 
             <View style={styles.section}>
+              <Text style={styles.sectionLabel}>Proteção de Cartas (Sleeves):</Text>
+              <TouchableOpacity
+                style={styles.dimBtn}
+                onPress={() => setShowSleeveModal(true)}
+              >
+                <Text style={styles.dimBtnText}>🃏 Gerenciar Sleeves e Quantidade de Cartas</Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.section}>
               <Text style={styles.sectionLabel}>Dimensões Físicas da Caixa (Estante 3D):</Text>
               <TouchableOpacity
                 style={styles.dimBtn}
@@ -156,6 +168,14 @@ export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailS
           visible={showDimensionEditor}
           onClose={() => setShowDimensionEditor(false)}
           onSaved={onSaved}
+        />
+
+        <GameSleeveManagerModal
+          bggId={game.bggId}
+          gameTitle={game.title}
+          visible={showSleeveModal}
+          onClose={() => setShowSleeveModal(false)}
+          onUpdated={onSaved}
         />
       </View>
     </Modal>

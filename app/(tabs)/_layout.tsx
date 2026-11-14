@@ -27,6 +27,13 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="sleeves"
+        options={{
+          title: 'Sleeves',
+          headerTitle: 'Central de Sleeves',
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           title: 'Configurações',

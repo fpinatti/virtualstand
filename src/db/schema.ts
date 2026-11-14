@@ -80,6 +80,44 @@ export const syncLogs = sqliteTable('sync_logs', {
   completedAt: integer('completed_at'),
 });
 
+/**
+ * Card sleeve specifications per game (supports multi-deck games)
+ */
+export const gameSleeves = sqliteTable('game_sleeves', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  bggId: integer('bgg_id')
+    .notNull()
+    .references(() => games.bggId, { onDelete: 'cascade' }),
+  cardSetName: text('card_set_name').notNull().default('Baralho Principal'),
+  formatName: text('format_name').notNull(),
+  widthMm: real('width_mm').notNull(),
+  heightMm: real('height_mm').notNull(),
+  cardCount: integer('card_count').notNull(),
+  isSleeved: integer('is_sleeved').notNull().default(0), // 0 = pending, 1 = sleeved
+  createdAt: integer('created_at').notNull(),
+  updatedAt: integer('updated_at').notNull(),
+}, (table) => ({
+  bggIdIdx: index('idx_game_sleeves_bgg_id').on(table.bggId),
+  isSleevedIdx: index('idx_game_sleeves_is_sleeved').on(table.isSleeved),
+}));
+
+/**
+ * User-owned spare card sleeve stock inventory
+ */
+export const sleeveInventory = sqliteTable('sleeve_inventory', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  formatName: text('format_name').notNull(),
+  widthMm: real('width_mm').notNull(),
+  heightMm: real('height_mm').notNull(),
+  brand: text('brand').notNull(),
+  packSize: integer('pack_size').notNull().default(100),
+  packsOwned: integer('packs_owned').notNull().default(0),
+  looseSleeves: integer('loose_sleeves').notNull().default(0),
+  notes: text('notes'),
+  createdAt: integer('created_at').notNull(),
+  updatedAt: integer('updated_at').notNull(),
+});
+
 // Relationships
 export const gamesRelations = relations(games, ({ one, many }) => ({
   dimensions: one(boxDimensions, {
@@ -87,6 +125,14 @@ export const gamesRelations = relations(games, ({ one, many }) => ({
     references: [boxDimensions.bggId],
   }),
   collectionEntries: many(collectionItems),
+  sleeves: many(gameSleeves),
+}));
+
+export const gameSleevesRelations = relations(gameSleeves, ({ one }) => ({
+  game: one(games, {
+    fields: [gameSleeves.bggId],
+    references: [games.bggId],
+  }),
 }));
 
 export const boxDimensionsRelations = relations(boxDimensions, ({ one }) => ({
@@ -115,4 +161,10 @@ export type InsertCollectionItem = typeof collectionItems.$inferInsert;
 
 export type SyncLog = typeof syncLogs.$inferSelect;
 export type InsertSyncLog = typeof syncLogs.$inferInsert;
+
+export type GameSleeve = typeof gameSleeves.$inferSelect;
+export type InsertGameSleeve = typeof gameSleeves.$inferInsert;
+
+export type SleeveInventory = typeof sleeveInventory.$inferSelect;
+export type InsertSleeveInventory = typeof sleeveInventory.$inferInsert;
 

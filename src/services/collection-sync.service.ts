@@ -10,6 +10,7 @@ import { gameRepository, GameRepository } from '@/db/repositories/game.repositor
 import { collectionRepository, CollectionRepository } from '@/db/repositories/collection.repository';
 import { imageCacheService, ImageCacheService } from './image-cache.service';
 import { dimensionCalculatorService, DimensionCalculatorService } from './dimension-calculator.service';
+import { sleeveManagerService, SleeveManagerService } from './sleeve-manager.service';
 import { getDatabase } from '@/db/client';
 import { syncLogs, InsertGame } from '@/db/schema';
 import { desc, eq } from 'drizzle-orm';
@@ -23,7 +24,8 @@ export class CollectionSyncService implements ICollectionSyncService {
     private readonly gameRepo: GameRepository = gameRepository,
     private readonly collectionRepo: CollectionRepository = collectionRepository,
     private readonly imageCache: ImageCacheService = imageCacheService,
-    private readonly dimensionCalculator: DimensionCalculatorService = dimensionCalculatorService
+    private readonly dimensionCalculator: DimensionCalculatorService = dimensionCalculatorService,
+    private readonly sleeveManager: SleeveManagerService = sleeveManagerService
   ) {}
 
   getCurrentStatus(): SyncStage {
@@ -117,7 +119,13 @@ export class CollectionSyncService implements ICollectionSyncService {
       // 2. Reconcile user collection items
       const { inserted, updated } = await this.collectionRepo.reconcileBggItems(rawItems);
 
-      // 3. Fetch physical box dimensions (US3)
+      // 3. Auto-populate community sleeve requirements (US3)
+      for (const item of rawItems) {
+        if (this.isCancelled) break;
+        await this.sleeveManager.seedGameSleevesFromCatalog(item.objectid);
+      }
+
+      // 4. Fetch physical box dimensions (US3)
       if (options.fetchDimensions !== false && rawItems.length > 0) {
         report('FETCHING_DIMENSIONS', 'Obtendo proporções físicas reais das caixas...', 0, totalItems);
         const bggIds = rawItems.map((r) => r.objectid);
