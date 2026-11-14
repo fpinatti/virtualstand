@@ -1,15 +1,15 @@
 import * as THREE from 'three';
 
 const PALETTE = [
-  '#1e3a8a', // Blue
-  '#065f46', // Emerald
-  '#701a75', // Purple
-  '#831843', // Rose
-  '#7c2d12', // Orange/Brown
-  '#134e4a', // Teal
-  '#312e81', // Indigo
-  '#1f2937', // Slate
-  '#713f12', // Amber
+  '#7C2D12', // Warm Terracotta
+  '#14532D', // Deep Felt Forest
+  '#78350F', // Aged Brass Amber
+  '#881337', // Burgundy Velvet
+  '#1E3A5F', // Deep Prussian Navy
+  '#134E4A', // Patina Teal
+  '#581C87', // Royal Plum
+  '#3F2E21', // Walnut Espresso
+  '#713F12', // Ochre Gold
 ];
 
 /**
@@ -75,7 +75,7 @@ export class SpineGeneratorService {
       ctx.fillRect(0, 0, width, height);
 
       // Draw spine borders
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.strokeStyle = 'rgba(245, 240, 232, 0.22)';
       ctx.lineWidth = 4;
       ctx.strokeRect(2, 2, width - 4, height - 4);
 
@@ -110,4 +110,3 @@ export class SpineGeneratorService {
 }
 
 export const spineGeneratorService = new SpineGeneratorService();
-

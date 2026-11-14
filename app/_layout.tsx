@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { initializeTables } from '@/db/client';
 import { rulebookService } from '@/services/rulebook.service';
+import { tokens } from '@/ui';
 
 export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);
@@ -34,7 +35,7 @@ export default function RootLayout() {
   if (!isReady) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#4f46e5" />
+        <ActivityIndicator size="large" color={tokens.colors.accent.primary} />
         <Text style={styles.loadingText}>Carregando VirtualStand...</Text>
       </View>
     );
@@ -45,10 +46,13 @@ export default function RootLayout() {
       <StatusBar style="light" />
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: '#0f172a' },
-          headerTintColor: '#ffffff',
-          headerTitleStyle: { fontWeight: 'bold' },
-          contentStyle: { backgroundColor: '#0f172a' },
+          headerStyle: { backgroundColor: tokens.colors.surface.canvas },
+          headerTintColor: tokens.colors.text.primary,
+          headerTitleStyle: {
+            fontWeight: tokens.typography.weights.bold,
+            fontSize: tokens.typography.scale.h2.fontSize,
+          },
+          contentStyle: { backgroundColor: tokens.colors.surface.canvas },
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -69,23 +73,23 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#0f172a',
-    padding: 20,
+    backgroundColor: tokens.colors.surface.canvas,
+    padding: tokens.spacing.lg,
   },
   loadingText: {
-    color: '#94a3b8',
-    marginTop: 12,
-    fontSize: 16,
+    color: tokens.colors.text.secondary,
+    marginTop: tokens.spacing.sm,
+    fontSize: tokens.typography.scale.body.fontSize,
   },
   errorTitle: {
-    color: '#ef4444',
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.h2.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    marginBottom: tokens.spacing.xs,
   },
   errorText: {
-    color: '#f87171',
+    color: tokens.colors.text.secondary,
     textAlign: 'center',
+    fontSize: tokens.typography.scale.bodySm.fontSize,
   },
 });
-

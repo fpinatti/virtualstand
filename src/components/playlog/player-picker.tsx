@@ -7,6 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Player, PlayerErrorCode, Result } from '@/services/playlog-types';
+import { Button, Card, tokens } from '@/ui';
 
 interface PlayerPickerProps {
   players: Player[];
@@ -88,7 +89,7 @@ export function PlayerPicker({
       </View>
 
       {managedPlayer ? (
-        <View style={styles.manageCard}>
+        <Card variant="sunken" padding="sm" style={styles.manageCard}>
           <Text style={styles.manageTitle}>Gerenciar "{managedPlayer.name}"</Text>
           <View style={styles.inlineRow}>
             <TextInput
@@ -97,8 +98,10 @@ export function PlayerPicker({
               onChangeText={setRenameText}
               maxLength={40}
             />
-            <TouchableOpacity
-              style={styles.smallBtn}
+            <Button
+              label="Renomear"
+              variant="primary"
+              size="sm"
               onPress={async () => {
                 const res = await onRenamePlayer(managedPlayer.id, renameText);
                 if (!res.ok) {
@@ -107,15 +110,13 @@ export function PlayerPicker({
                   setManagedPlayer(null);
                 }
               }}
-            >
-              <Text style={styles.smallBtnText}>Renomear</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.deleteBtn}
+            />
+            <Button
+              label="Excluir"
+              variant="danger"
+              size="sm"
               onPress={() => handleDeleteAttempt(managedPlayer)}
-            >
-              <Text style={styles.smallBtnText}>Excluir</Text>
-            </TouchableOpacity>
+            />
             <TouchableOpacity
               style={styles.closeBtn}
               onPress={() => setManagedPlayer(null)}
@@ -129,34 +130,32 @@ export function PlayerPicker({
               <Text style={styles.inUseText}>
                 Este jogador aparece em partidas passadas e não pode ser apagado. Deseja ocultá-lo da lista rápida?
               </Text>
-              <TouchableOpacity
-                style={styles.hideBtn}
+              <Button
+                label="Ocultar Jogador"
+                variant="secondary"
+                size="sm"
                 onPress={async () => {
                   await onHidePlayer(managedPlayer.id, true);
                   setManagedPlayer(null);
                   setInUseWarningId(null);
                 }}
-              >
-                <Text style={styles.smallBtnText}>Ocultar Jogador</Text>
-              </TouchableOpacity>
+              />
             </View>
           )}
-        </View>
+        </Card>
       ) : null}
 
       <View style={styles.inlineRow}>
         <TextInput
           style={styles.input}
           placeholder="Novo jogador (ex: Ana, Bruno)..."
-          placeholderTextColor="#64748b"
+          placeholderTextColor={tokens.colors.text.muted}
           value={newName}
           onChangeText={setNewName}
           maxLength={40}
           onSubmitEditing={handleAdd}
         />
-        <TouchableOpacity style={styles.addBtn} onPress={handleAdd}>
-          <Text style={styles.addBtnText}>+ Jogador</Text>
-        </TouchableOpacity>
+        <Button label="+ Jogador" variant="secondary" size="sm" onPress={handleAdd} />
       </View>
     </View>
   );
@@ -164,127 +163,90 @@ export function PlayerPicker({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 14,
+    marginBottom: tokens.spacing.md,
   },
   label: {
-    color: '#cbd5e1',
-    fontSize: 13,
-    fontWeight: '600',
-    marginBottom: 8,
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
+    marginBottom: tokens.spacing.xs,
   },
   errorText: {
-    color: '#fca5a5',
-    fontSize: 12,
-    marginBottom: 6,
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    marginBottom: tokens.spacing['2xs'],
   },
   chipsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 10,
+    gap: tokens.spacing.xs,
+    marginBottom: tokens.spacing.sm,
   },
   chip: {
-    backgroundColor: '#1e293b',
-    paddingHorizontal: 12,
+    backgroundColor: tokens.colors.surface.sunken,
+    paddingHorizontal: tokens.spacing.sm,
     paddingVertical: 7,
-    borderRadius: 16,
+    borderRadius: tokens.radius.pill,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: tokens.colors.border.subtle,
   },
   chipSelected: {
-    backgroundColor: '#4f46e5',
-    borderColor: '#6366f1',
+    backgroundColor: tokens.colors.accent.primary,
+    borderColor: tokens.colors.accent.primary,
   },
   chipText: {
-    color: '#94a3b8',
-    fontSize: 13,
-    fontWeight: '600',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   chipTextSelected: {
-    color: '#ffffff',
+    color: tokens.colors.text.inverse,
+    fontWeight: tokens.typography.weights.bold,
   },
   inlineRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: tokens.spacing.xs,
   },
   input: {
     flex: 1,
-    backgroundColor: '#1e293b',
+    backgroundColor: tokens.colors.surface.sunken,
     borderWidth: 1,
-    borderColor: '#334155',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    color: '#f8fafc',
-    fontSize: 13,
-  },
-  addBtn: {
-    backgroundColor: '#4338ca',
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-    borderRadius: 8,
-  },
-  addBtnText: {
-    color: '#ffffff',
-    fontSize: 13,
-    fontWeight: '600',
+    borderColor: tokens.colors.border.subtle,
+    borderRadius: tokens.radius.md,
+    paddingHorizontal: tokens.spacing.sm,
+    paddingVertical: tokens.spacing.xs,
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.caption.fontSize,
   },
   manageCard: {
-    backgroundColor: '#1e293b',
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#475569',
+    marginBottom: tokens.spacing.xs,
+    borderColor: tokens.colors.border.strong,
   },
   manageTitle: {
-    color: '#f8fafc',
-    fontSize: 12,
-    fontWeight: '700',
-    marginBottom: 6,
-  },
-  smallBtn: {
-    backgroundColor: '#4f46e5',
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-    borderRadius: 6,
-  },
-  deleteBtn: {
-    backgroundColor: '#ef4444',
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-    borderRadius: 6,
-  },
-  smallBtnText: {
-    color: '#ffffff',
-    fontSize: 12,
-    fontWeight: '600',
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    marginBottom: tokens.spacing['2xs'],
   },
   closeBtn: {
-    paddingHorizontal: 6,
+    paddingHorizontal: tokens.spacing['2xs'],
   },
   closeBtnText: {
-    color: '#94a3b8',
-    fontSize: 14,
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
   },
   inUseBox: {
-    marginTop: 8,
-    padding: 8,
-    borderRadius: 6,
-    backgroundColor: 'rgba(245,158,11,0.15)',
-    gap: 6,
+    marginTop: tokens.spacing.xs,
+    padding: tokens.spacing.xs,
+    borderRadius: tokens.radius.sm,
+    backgroundColor: tokens.colors.surface.elevated,
+    borderWidth: 1,
+    borderColor: tokens.colors.semantic.warning,
+    gap: tokens.spacing['2xs'],
   },
   inUseText: {
-    color: '#fde68a',
-    fontSize: 12,
-  },
-  hideBtn: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#d97706',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
+    color: tokens.colors.semantic.warning,
+    fontSize: tokens.typography.scale.caption.fontSize,
   },
 });
-

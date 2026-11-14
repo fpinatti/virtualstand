@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { SleeveShoppingItem } from '@/services/sleeve-types';
+import { Badge, Card, EmptyState, SectionHeader, tokens } from '@/ui';
 
 interface ShoppingListViewProps {
   items: SleeveShoppingItem[];
@@ -11,21 +12,19 @@ export function ShoppingListView({ items }: ShoppingListViewProps) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Lista de Compras de Sleeves</Text>
-      <Text style={styles.sectionSubtitle}>
-        Calculada automaticamente cruzando cartas não envelopadas com seu estoque atual.
-      </Text>
+      <SectionHeader
+        title="Lista de Compras de Sleeves"
+        subtitle="Calculada automaticamente cruzando cartas não envelopadas com seu estoque atual."
+      />
 
       {itemsNeedingPurchase.length === 0 ? (
-        <View style={styles.allCoveredCard}>
-          <Text style={styles.allCoveredTitle}>🎉 Tudo protegido!</Text>
-          <Text style={styles.allCoveredText}>
-            Todos os seus jogos estão com cartas envelopadas ou cobertos pelo seu estoque sobressalente.
-          </Text>
-        </View>
+        <EmptyState
+          title="Tudo protegido!"
+          description="Todos os seus jogos estão com cartas envelopadas ou cobertos pelo seu estoque sobressalente."
+        />
       ) : (
         itemsNeedingPurchase.map((item) => (
-          <View key={item.dimensionKey} style={styles.card}>
+          <Card key={item.dimensionKey} variant="elevated" padding="md" style={styles.card}>
             <View style={styles.mainRow}>
               <View style={styles.formatInfo}>
                 <Text style={styles.formatName}>{item.formatName}</Text>
@@ -34,11 +33,11 @@ export function ShoppingListView({ items }: ShoppingListViewProps) {
                 </Text>
               </View>
 
-              <View style={styles.buyBadge}>
-                <Text style={styles.buyBadgeText}>
-                  Comprar {item.packsToBuy} {item.packsToBuy === 1 ? 'pacote' : 'pacotes'}
-                </Text>
-              </View>
+              <Badge
+                tone="accent"
+                label={`Comprar ${item.packsToBuy} ${item.packsToBuy === 1 ? 'pacote' : 'pacotes'}`}
+                tabularNums
+              />
             </View>
 
             <View style={styles.statsRow}>
@@ -61,7 +60,7 @@ export function ShoppingListView({ items }: ShoppingListViewProps) {
                 </Text>
               </View>
             )}
-          </View>
+          </Card>
         ))
       )}
     </View>
@@ -70,116 +69,70 @@ export function ShoppingListView({ items }: ShoppingListViewProps) {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 32,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#f8fafc',
-    marginBottom: 4,
-  },
-  sectionSubtitle: {
-    fontSize: 13,
-    color: '#94a3b8',
-    marginBottom: 16,
-    lineHeight: 18,
-  },
-  allCoveredCard: {
-    backgroundColor: '#064e3b',
-    borderRadius: 12,
-    padding: 20,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#059669',
-  },
-  allCoveredTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#34d399',
-    marginBottom: 6,
-  },
-  allCoveredText: {
-    fontSize: 13,
-    color: '#a7f3d0',
-    textAlign: 'center',
-    lineHeight: 18,
+    marginBottom: tokens.spacing.xl,
   },
   card: {
-    backgroundColor: '#1e293b',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#334155',
+    marginBottom: tokens.spacing.sm,
   },
   mainRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: tokens.spacing.xs,
   },
   formatInfo: {
     flex: 1,
+    marginRight: tokens.spacing.xs,
   },
   formatName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#f8fafc',
-    marginBottom: 2,
+    fontSize: tokens.typography.scale.h3.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    color: tokens.colors.text.primary,
+    marginBottom: tokens.spacing['2xs'],
   },
   dimensions: {
-    fontSize: 13,
-    color: '#94a3b8',
-  },
-  buyBadge: {
-    backgroundColor: '#4f46e5',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-  },
-  buyBadgeText: {
-    color: '#ffffff',
-    fontSize: 13,
-    fontWeight: 'bold',
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    color: tokens.colors.text.secondary,
+    fontVariant: ['tabular-nums'],
   },
   statsRow: {
     flexDirection: 'row',
-    gap: 16,
-    paddingVertical: 8,
+    gap: tokens.spacing.md,
+    paddingVertical: tokens.spacing.xs,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: '#334155',
-    marginBottom: 8,
+    borderColor: tokens.colors.border.subtle,
+    marginBottom: tokens.spacing.xs,
   },
   statText: {
-    fontSize: 12,
-    color: '#94a3b8',
+    fontSize: tokens.typography.scale.caption.fontSize,
+    color: tokens.colors.text.secondary,
+    fontVariant: ['tabular-nums'],
   },
   statBold: {
-    fontWeight: 'bold',
-    color: '#f8fafc',
+    fontWeight: tokens.typography.weights.bold,
+    color: tokens.colors.text.primary,
   },
   statStock: {
-    fontWeight: 'bold',
-    color: '#34d399',
+    fontWeight: tokens.typography.weights.bold,
+    color: tokens.colors.semantic.success,
   },
   statDeficit: {
-    fontWeight: 'bold',
-    color: '#f87171',
+    fontWeight: tokens.typography.weights.bold,
+    color: tokens.colors.semantic.danger,
   },
   gamesRow: {
     flexDirection: 'row',
-    gap: 6,
+    gap: tokens.spacing['2xs'],
   },
   gamesLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#64748b',
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
+    color: tokens.colors.text.muted,
   },
   gamesList: {
     flex: 1,
-    fontSize: 12,
-    color: '#cbd5e1',
+    fontSize: tokens.typography.scale.caption.fontSize,
+    color: tokens.colors.text.secondary,
   },
 });
-

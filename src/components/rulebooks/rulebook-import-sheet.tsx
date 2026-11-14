@@ -3,7 +3,6 @@ import {
   Modal,
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
@@ -15,6 +14,7 @@ import {
   RulebookDocType,
   RulebookImportResult,
 } from '@/services/rulebook-types';
+import { Button, Card, Input, tokens } from '@/ui';
 
 const DOC_TYPES: { value: RulebookDocType; label: string }[] = [
   { value: 'BASE_RULES', label: 'Regras base' },
@@ -135,36 +135,34 @@ export function RulebookImportSheet({
           ) : null}
 
           {duplicatePending ? (
-            <View style={styles.dupBox}>
+            <Card variant="sunken" padding="sm" style={styles.dupBox}>
               <Text style={styles.dupTitle}>Arquivo Duplicado</Text>
               <Text style={styles.dupText}>{duplicatePending.message}</Text>
               <View style={styles.dupActions}>
-                <TouchableOpacity
-                  style={styles.skipBtn}
+                <Button
+                  label="Pular"
+                  variant="secondary"
+                  size="sm"
                   onPress={() => setDuplicatePending(null)}
-                >
-                  <Text style={styles.skipBtnText}>Pular</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.forceBtn}
+                />
+                <Button
+                  label="Importar mesmo assim"
+                  variant="primary"
+                  size="sm"
                   onPress={() =>
                     duplicatePending.mode === 'device'
                       ? runDeviceImport(true)
                       : runUrlImport(true)
                   }
-                >
-                  <Text style={styles.forceBtnText}>Importar mesmo assim</Text>
-                </TouchableOpacity>
+                />
               </View>
-            </View>
+            </Card>
           ) : null}
 
           <View style={styles.body}>
-            <Text style={styles.label}>Nome do Documento (opcional):</Text>
-            <TextInput
-              style={styles.input}
+            <Input
+              label="Nome do Documento (opcional)"
               placeholder="Ex: Regras Base (Português)"
-              placeholderTextColor="#64748b"
               value={label}
               onChangeText={setLabel}
               maxLength={120}
@@ -190,21 +188,18 @@ export function RulebookImportSheet({
               ))}
             </View>
 
-            <TouchableOpacity
-              style={styles.deviceBtn}
+            <Button
+              label="📁 Adicionar do aparelho"
+              variant="primary"
               disabled={isDownloading}
               onPress={() => runDeviceImport(false)}
-            >
-              <Text style={styles.deviceBtnText}>📁 Adicionar do aparelho</Text>
-            </TouchableOpacity>
+            />
 
             <View style={styles.divider} />
 
-            <Text style={styles.label}>Ou adicionar por link HTTPS:</Text>
-            <TextInput
-              style={styles.input}
+            <Input
+              label="Ou adicionar por link HTTPS"
               placeholder="https://exemplo.com/manual.pdf"
-              placeholderTextColor="#64748b"
               autoCapitalize="none"
               keyboardType="url"
               value={url}
@@ -212,9 +207,9 @@ export function RulebookImportSheet({
             />
 
             {isDownloading ? (
-              <View style={styles.progressBox}>
+              <Card variant="sunken" padding="sm" style={styles.progressBox}>
                 <View style={styles.progressRow}>
-                  <ActivityIndicator size="small" color="#6366f1" />
+                  <ActivityIndicator size="small" color={tokens.colors.accent.primary} />
                   <Text style={styles.progressText}>
                     Baixando PDF...{' '}
                     {percent !== null
@@ -224,17 +219,19 @@ export function RulebookImportSheet({
                       : ''}
                   </Text>
                 </View>
-                <TouchableOpacity style={styles.cancelBtn} onPress={onCancelDownload}>
-                  <Text style={styles.cancelBtnText}>Cancelar Download</Text>
-                </TouchableOpacity>
-              </View>
+                <Button
+                  label="Cancelar Download"
+                  variant="danger"
+                  size="sm"
+                  onPress={onCancelDownload}
+                />
+              </Card>
             ) : (
-              <TouchableOpacity
-                style={styles.urlBtn}
+              <Button
+                label="🌐 Baixar e salvar offline"
+                variant="secondary"
                 onPress={() => runUrlImport(false)}
-              >
-                <Text style={styles.urlBtnText}>🌐 Baixar e salvar offline</Text>
-              </TouchableOpacity>
+              />
             )}
           </View>
         </View>
@@ -246,193 +243,121 @@ export function RulebookImportSheet({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.75)',
+    backgroundColor: tokens.colors.surface.overlay,
     justifyContent: 'flex-end',
   },
   sheet: {
-    backgroundColor: '#0f172a',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    backgroundColor: tokens.colors.surface.elevated,
+    borderTopLeftRadius: tokens.radius.xl,
+    borderTopRightRadius: tokens.radius.xl,
     borderTopWidth: 1,
-    borderColor: '#1e293b',
-    paddingBottom: 28,
+    borderColor: tokens.colors.border.subtle,
+    paddingBottom: tokens.spacing.xl,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
+    padding: tokens.spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: '#1e293b',
+    borderBottomColor: tokens.colors.border.subtle,
   },
   title: {
-    color: '#f8fafc',
-    fontSize: 16,
-    fontWeight: '700',
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.h3.fontSize,
+    fontWeight: tokens.typography.weights.bold,
   },
   closeText: {
-    color: '#94a3b8',
-    fontSize: 14,
-    fontWeight: '600',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   errorBox: {
-    marginHorizontal: 16,
-    marginTop: 12,
-    padding: 10,
-    borderRadius: 8,
-    backgroundColor: 'rgba(239,68,68,0.15)',
+    marginHorizontal: tokens.spacing.md,
+    marginTop: tokens.spacing.sm,
+    padding: tokens.spacing.sm,
+    borderRadius: tokens.radius.md,
+    backgroundColor: tokens.colors.surface.sunken,
     borderWidth: 1,
-    borderColor: '#ef4444',
+    borderColor: tokens.colors.semantic.danger,
   },
   errorText: {
-    color: '#fca5a5',
-    fontSize: 13,
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.caption.fontSize,
   },
   dupBox: {
-    marginHorizontal: 16,
-    marginTop: 12,
-    padding: 12,
-    borderRadius: 10,
-    backgroundColor: 'rgba(245,158,11,0.15)',
-    borderWidth: 1,
-    borderColor: '#f59e0b',
+    marginHorizontal: tokens.spacing.md,
+    marginTop: tokens.spacing.sm,
+    borderColor: tokens.colors.semantic.warning,
   },
   dupTitle: {
-    color: '#fcd34d',
-    fontWeight: '700',
-    fontSize: 14,
-    marginBottom: 4,
+    color: tokens.colors.semantic.warning,
+    fontWeight: tokens.typography.weights.bold,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    marginBottom: tokens.spacing['2xs'],
   },
   dupText: {
-    color: '#fde68a',
-    fontSize: 13,
-    marginBottom: 10,
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    marginBottom: tokens.spacing.xs,
   },
   dupActions: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    gap: 8,
-  },
-  skipBtn: {
-    backgroundColor: '#334155',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  skipBtnText: {
-    color: '#e2e8f0',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  forceBtn: {
-    backgroundColor: '#d97706',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  forceBtnText: {
-    color: '#ffffff',
-    fontSize: 12,
-    fontWeight: '700',
+    gap: tokens.spacing.xs,
   },
   body: {
-    padding: 16,
+    padding: tokens.spacing.md,
   },
   label: {
-    color: '#cbd5e1',
-    fontSize: 13,
-    fontWeight: '600',
-    marginBottom: 6,
-  },
-  input: {
-    backgroundColor: '#1e293b',
-    borderWidth: 1,
-    borderColor: '#334155',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-    color: '#f8fafc',
-    fontSize: 14,
-    marginBottom: 12,
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
+    marginBottom: tokens.spacing['2xs'],
   },
   typeChips: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
-    marginBottom: 14,
+    gap: tokens.spacing['2xs'],
+    marginBottom: tokens.spacing.md,
   },
   typeChip: {
-    backgroundColor: '#1e293b',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 14,
+    backgroundColor: tokens.colors.surface.sunken,
+    paddingHorizontal: tokens.spacing.sm,
+    paddingVertical: tokens.spacing['2xs'],
+    borderRadius: tokens.radius.pill,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: tokens.colors.border.subtle,
   },
   typeChipActive: {
-    backgroundColor: '#4f46e5',
-    borderColor: '#6366f1',
+    backgroundColor: tokens.colors.accent.primary,
+    borderColor: tokens.colors.accent.primary,
   },
   typeChipText: {
-    color: '#94a3b8',
-    fontSize: 12,
-    fontWeight: '600',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   typeChipTextActive: {
-    color: '#ffffff',
-  },
-  deviceBtn: {
-    backgroundColor: '#6366f1',
-    paddingVertical: 12,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  deviceBtnText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '700',
+    color: tokens.colors.text.inverse,
+    fontWeight: tokens.typography.weights.bold,
   },
   divider: {
     height: 1,
-    backgroundColor: '#1e293b',
-    marginVertical: 14,
-  },
-  urlBtn: {
-    backgroundColor: '#0284c7',
-    paddingVertical: 11,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  urlBtnText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: '700',
+    backgroundColor: tokens.colors.border.subtle,
+    marginVertical: tokens.spacing.md,
   },
   progressBox: {
-    backgroundColor: '#1e293b',
-    borderRadius: 10,
-    padding: 12,
-    gap: 10,
+    gap: tokens.spacing.xs,
   },
   progressRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: tokens.spacing.xs,
   },
   progressText: {
-    color: '#e2e8f0',
-    fontSize: 13,
-  },
-  cancelBtn: {
-    backgroundColor: '#ef4444',
-    paddingVertical: 8,
-    borderRadius: 6,
-    alignItems: 'center',
-  },
-  cancelBtnText: {
-    color: '#ffffff',
-    fontSize: 12,
-    fontWeight: '700',
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontVariant: ['tabular-nums'],
   },
 });
-

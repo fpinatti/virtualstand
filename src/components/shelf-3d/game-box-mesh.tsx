@@ -1,8 +1,9 @@
-import React, { useRef, useMemo, useState } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { useFrame, ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 import { Box3DProps } from './types';
 import { spineGeneratorService, getDeterministicColorFromTitle } from '@/services/spine-generator.service';
+import { tokens } from '@/ui';
 
 export function GameBoxMesh({ box, isSelected, onSelect, onOpenDetails }: Box3DProps) {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -15,7 +16,7 @@ export function GameBoxMesh({ box, isSelected, onSelect, onOpenDetails }: Box3DP
   // Box materials
   const materials = useMemo(() => {
     const sideMaterial = new THREE.MeshStandardMaterial({
-      color: '#cbd5e1',
+      color: tokens.colors.text.primary,
       roughness: 0.7,
       metalness: 0.05,
     });

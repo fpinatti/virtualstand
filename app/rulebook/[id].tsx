@@ -3,7 +3,6 @@ import {
   View,
   Text,
   ActivityIndicator,
-  TouchableOpacity,
   Platform,
   StyleSheet,
 } from 'react-native';
@@ -12,6 +11,7 @@ import { Rulebook } from '@/services/rulebook-types';
 import { rulebookRepository } from '@/db/repositories/rulebook.repository';
 import { rulebookFileService } from '@/services/rulebook-file.service';
 import { PdfReader } from '@/components/rulebooks/pdf-reader';
+import { Button, ScreenContainer, tokens } from '@/ui';
 
 export default function RulebookReaderScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -62,7 +62,7 @@ export default function RulebookReaderScreen() {
   }, [id]);
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer padded={false}>
       <Stack.Screen
         options={{
           title: rulebook?.label ?? 'Manual de Regras',
@@ -78,15 +78,13 @@ export default function RulebookReaderScreen() {
         </View>
       ) : loading ? (
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#6366f1" />
+          <ActivityIndicator size="large" color={tokens.colors.accent.primary} />
           <Text style={styles.loadingText}>Abrindo manual...</Text>
         </View>
       ) : errorMsg || !rulebook ? (
         <View style={styles.center}>
           <Text style={styles.errorText}>{errorMsg ?? 'Manual indisponível.'}</Text>
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-            <Text style={styles.backBtnText}>Voltar</Text>
-          </TouchableOpacity>
+          <Button label="Voltar" variant="secondary" onPress={() => router.back()} />
         </View>
       ) : (
         <PdfReader
@@ -101,46 +99,31 @@ export default function RulebookReaderScreen() {
           }}
         />
       )}
-    </View>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0f172a',
-  },
   center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
+    padding: tokens.spacing.lg,
   },
   loadingText: {
-    color: '#94a3b8',
-    marginTop: 12,
-    fontSize: 14,
+    color: tokens.colors.text.secondary,
+    marginTop: tokens.spacing.sm,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
   },
   webNotice: {
-    color: '#cbd5e1',
-    fontSize: 15,
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.body.fontSize,
     textAlign: 'center',
   },
   errorText: {
-    color: '#f87171',
-    fontSize: 15,
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.body.fontSize,
     textAlign: 'center',
-    marginBottom: 16,
-  },
-  backBtn: {
-    backgroundColor: '#334155',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 8,
-  },
-  backBtnText: {
-    color: '#f8fafc',
-    fontWeight: '600',
+    marginBottom: tokens.spacing.md,
   },
 });
-

@@ -2,20 +2,18 @@ import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
   StyleSheet,
-  Alert,
-  ScrollView,
 } from 'react-native';
 import { useSync } from '@/hooks/use-sync';
 import { collectionSyncService } from '@/services/collection-sync.service';
 import { SyncProgressModal } from '@/components/sync-progress-modal';
+import { Button, Card, Input, ScreenContainer, SectionHeader, tokens } from '@/ui';
 
 export default function SettingsScreen() {
   const [username, setUsername] = useState('');
   const [lastSync, setLastSync] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const { isSyncing, progress, startSync, cancelSync } = useSync();
 
   useEffect(() => {
@@ -30,10 +28,11 @@ export default function SettingsScreen() {
 
   const handleStartSync = async () => {
     if (!username.trim()) {
-      Alert.alert('Atenção', 'Por favor, informe seu nome de usuário do BoardGameGeek.');
+      setValidationError('Por favor, informe seu nome de usuário do BoardGameGeek.');
       return;
     }
 
+    setValidationError(null);
     setModalVisible(true);
     const result = await startSync(username.trim());
     if (result.success) {
@@ -42,40 +41,41 @@ export default function SettingsScreen() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-      <Text style={styles.sectionTitle}>Integração BoardGameGeek</Text>
-      <Text style={styles.sectionSubtitle}>
-        Conecte sua conta do BGG para importar sua coleção de jogos de tabuleiro e sincronizar avaliações.
-      </Text>
+    <ScreenContainer scrollable>
+      <SectionHeader
+        title="Integração BoardGameGeek"
+        subtitle="Conecte sua conta do BGG para importar sua coleção de jogos de tabuleiro e sincronizar avaliações."
+      />
 
-      <View style={styles.formGroup}>
-        <Text style={styles.label}>Nome de Usuário no BGG</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="ex: rodneysmith"
-          placeholderTextColor="#64748b"
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={username}
-          onChangeText={setUsername}
-        />
-      </View>
+      <Input
+        label="Nome de Usuário no BGG"
+        placeholder="ex: rodneysmith"
+        autoCapitalize="none"
+        autoCorrect={false}
+        value={username}
+        onChangeText={(txt) => {
+          setUsername(txt);
+          if (validationError) setValidationError(null);
+        }}
+        errorText={validationError}
+      />
 
       {lastSync ? (
         <Text style={styles.lastSyncText}>Última sincronização com sucesso: {lastSync}</Text>
       ) : null}
 
-      <TouchableOpacity
-        style={[styles.syncButton, !username.trim() && styles.syncButtonDisabled]}
-        onPress={handleStartSync}
-        disabled={!username.trim() || isSyncing}
-      >
-        <Text style={styles.syncButtonText}>
-          {isSyncing ? 'Sincronizando...' : 'Sincronizar Coleção Agora'}
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.buttonWrap}>
+        <Button
+          label={isSyncing ? 'Sincronizando...' : 'Sincronizar Coleção Agora'}
+          variant="primary"
+          size="lg"
+          onPress={handleStartSync}
+          disabled={!username.trim() || isSyncing}
+          loading={isSyncing}
+        />
+      </View>
 
-      <View style={styles.infoBox}>
+      <Card variant="elevated" padding="md">
         <Text style={styles.infoTitle}>Como funciona o processo?</Text>
         <Text style={styles.infoItem}>
           • <Text style={styles.bold}>Fila do BGG (HTTP 202)</Text>: O BGG processa coleções em segundo plano. O app aguarda automaticamente com tentativas progressivas.
@@ -86,7 +86,7 @@ export default function SettingsScreen() {
         <Text style={styles.infoItem}>
           • <Text style={styles.bold}>Proteção de Dados Locais</Text>: Sincronizações nunca apagam suas anotações ou tags personalizadas.
         </Text>
-      </View>
+      </Card>
 
       <SyncProgressModal
         visible={modalVisible}
@@ -96,92 +96,34 @@ export default function SettingsScreen() {
           setModalVisible(false);
         }}
       />
-    </ScrollView>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0f172a',
-  },
-  content: {
-    padding: 20,
-  },
-  sectionTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#f8fafc',
-    marginBottom: 6,
-  },
-  sectionSubtitle: {
-    fontSize: 14,
-    color: '#94a3b8',
-    marginBottom: 24,
-    lineHeight: 20,
-  },
-  formGroup: {
-    marginBottom: 16,
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#cbd5e1',
-    marginBottom: 8,
-  },
-  input: {
-    backgroundColor: '#1e293b',
-    borderRadius: 8,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    color: '#f8fafc',
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#334155',
-  },
   lastSyncText: {
-    fontSize: 13,
-    color: '#10b981',
-    marginBottom: 16,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    color: tokens.colors.semantic.success,
+    marginBottom: tokens.spacing.md,
+    fontVariant: ['tabular-nums'],
   },
-  syncButton: {
-    backgroundColor: '#6366f1',
-    borderRadius: 8,
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginBottom: 32,
-  },
-  syncButtonDisabled: {
-    backgroundColor: '#334155',
-    opacity: 0.6,
-  },
-  syncButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  infoBox: {
-    backgroundColor: '#1e293b',
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#334155',
+  buttonWrap: {
+    marginBottom: tokens.spacing.xl,
   },
   infoTitle: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#f8fafc',
-    marginBottom: 12,
+    fontSize: tokens.typography.scale.h3.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    color: tokens.colors.text.primary,
+    marginBottom: tokens.spacing.sm,
   },
   infoItem: {
-    fontSize: 13,
-    color: '#94a3b8',
-    marginBottom: 8,
-    lineHeight: 18,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    color: tokens.colors.text.secondary,
+    marginBottom: tokens.spacing.xs,
+    lineHeight: tokens.typography.scale.bodySm.lineHeight,
   },
   bold: {
-    fontWeight: 'bold',
-    color: '#cbd5e1',
+    fontWeight: tokens.typography.weights.bold,
+    color: tokens.colors.text.primary,
   },
 });
-

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { PlayStats } from '@/services/playlog-types';
+import { Badge, Card, tokens } from '@/ui';
 
 interface PlayStatsCardProps {
   stats: PlayStats;
@@ -15,7 +16,7 @@ function formatIsoToPtBr(iso: string | null): string {
 
 export function PlayStatsCard({ stats }: PlayStatsCardProps) {
   return (
-    <View style={styles.card}>
+    <Card variant="sunken" padding="sm" style={styles.card}>
       <View style={styles.metricsRow}>
         <View style={styles.metricItem}>
           <Text style={styles.metricValue}>
@@ -48,27 +49,23 @@ export function PlayStatsCard({ stats }: PlayStatsCardProps) {
           <Text style={styles.winsTitle}>Vitórias por Jogador:</Text>
           <View style={styles.winsList}>
             {stats.winsByPlayer.map((w) => (
-              <View key={w.playerId} style={styles.winBadge}>
-                <Text style={styles.winBadgeText}>
-                  🏆 {w.playerName}: {w.wins} ({w.plays}j)
-                </Text>
-              </View>
+              <Badge
+                key={w.playerId}
+                tone="accent"
+                label={`🏆 ${w.playerName}: ${w.wins} (${w.plays}j)`}
+                tabularNums
+              />
             ))}
           </View>
         </View>
       )}
-    </View>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#0f172a',
-    borderRadius: 10,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#334155',
-    marginBottom: 10,
+    marginBottom: tokens.spacing.xs,
   },
   metricsRow: {
     flexDirection: 'row',
@@ -79,49 +76,39 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   metricValue: {
-    color: '#f8fafc',
-    fontSize: 14,
-    fontWeight: '700',
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    fontVariant: ['tabular-nums'],
   },
   metricLabel: {
-    color: '#64748b',
-    fontSize: 11,
+    color: tokens.colors.text.muted,
+    fontSize: tokens.typography.scale.caption.fontSize,
     marginTop: 2,
   },
   coopText: {
-    color: '#38bdf8',
-    fontSize: 12,
-    fontWeight: '600',
-    marginTop: 8,
+    color: tokens.colors.semantic.info,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
+    marginTop: tokens.spacing.xs,
     textAlign: 'center',
+    fontVariant: ['tabular-nums'],
   },
   winsBox: {
-    marginTop: 10,
+    marginTop: tokens.spacing.xs,
     borderTopWidth: 1,
-    borderTopColor: '#1e293b',
-    paddingTop: 8,
+    borderTopColor: tokens.colors.border.subtle,
+    paddingTop: tokens.spacing.xs,
   },
   winsTitle: {
-    color: '#94a3b8',
-    fontSize: 12,
-    fontWeight: '600',
-    marginBottom: 6,
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
+    marginBottom: tokens.spacing['2xs'],
   },
   winsList: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
-  },
-  winBadge: {
-    backgroundColor: '#1e293b',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  winBadgeText: {
-    color: '#fbbf24',
-    fontSize: 12,
-    fontWeight: '600',
+    gap: tokens.spacing['2xs'],
   },
 });
-

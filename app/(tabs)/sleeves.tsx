@@ -11,6 +11,7 @@ import {
 import { useSleeves } from '@/hooks/use-sleeves';
 import { ShoppingListView } from '@/components/sleeves/shopping-list-view';
 import { InventoryListView } from '@/components/sleeves/inventory-list';
+import { ScreenContainer, tokens } from '@/ui';
 
 type TabSection = 'shopping' | 'inventory';
 
@@ -23,7 +24,7 @@ export default function SleevesScreen() {
     .reduce((sum, item) => sum + item.packsToBuy, 0);
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer padded={false}>
       {/* Top Segmented Control */}
       <View style={styles.tabBar}>
         <TouchableOpacity
@@ -52,7 +53,7 @@ export default function SleevesScreen() {
       {/* Main Content Area */}
       {loading && inventory.length === 0 && shoppingList.length === 0 ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#6366f1" />
+          <ActivityIndicator size="large" color={tokens.colors.accent.primary} />
           <Text style={styles.loadingText}>Carregando dados de sleeves...</Text>
         </View>
       ) : (
@@ -60,7 +61,11 @@ export default function SleevesScreen() {
           style={styles.scrollContainer}
           contentContainerStyle={styles.scrollContent}
           refreshControl={
-            <RefreshControl refreshing={loading} onRefresh={refresh} tintColor="#6366f1" />
+            <RefreshControl
+              refreshing={loading}
+              onRefresh={refresh}
+              tintColor={tokens.colors.accent.primary}
+            />
           }
         >
           {activeTab === 'shopping' ? (
@@ -70,57 +75,58 @@ export default function SleevesScreen() {
           )}
         </ScrollView>
       )}
-    </View>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0f172a',
-  },
   tabBar: {
     flexDirection: 'row',
-    backgroundColor: '#1e293b',
-    padding: 6,
-    marginHorizontal: 16,
-    marginTop: 12,
-    marginBottom: 8,
-    borderRadius: 12,
+    backgroundColor: tokens.colors.surface.elevated,
+    padding: tokens.spacing['2xs'],
+    marginHorizontal: tokens.spacing.md,
+    marginTop: tokens.spacing.sm,
+    marginBottom: tokens.spacing.xs,
+    borderRadius: tokens.radius.lg,
+    borderWidth: 1,
+    borderColor: tokens.colors.border.subtle,
   },
   tabButton: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: tokens.spacing.sm,
     alignItems: 'center',
-    borderRadius: 8,
+    borderRadius: tokens.radius.md,
   },
   activeTabButton: {
-    backgroundColor: '#6366f1',
+    backgroundColor: tokens.colors.accent.primary,
   },
   tabButtonText: {
-    color: '#94a3b8',
-    fontSize: 14,
-    fontWeight: '600',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
+    fontVariant: ['tabular-nums'],
   },
   activeTabButtonText: {
-    color: '#ffffff',
+    color: tokens.colors.text.inverse,
+    fontWeight: tokens.typography.weights.bold,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 32,
+    padding: tokens.spacing.xl,
   },
   loadingText: {
-    color: '#94a3b8',
-    marginTop: 12,
-    fontSize: 14,
+    color: tokens.colors.text.secondary,
+    marginTop: tokens.spacing.sm,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
   },
   scrollContainer: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 32,
+    paddingHorizontal: tokens.spacing.md,
+    paddingTop: tokens.spacing.xs,
+    paddingBottom: tokens.spacing.xl,
   },
 });
-

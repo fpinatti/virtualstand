@@ -1,6 +1,7 @@
 import React from 'react';
-import { Modal, View, Text, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
+import { Modal, View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { SyncProgressUpdate } from '@/api/contracts';
+import { Button, Card, tokens } from '@/ui';
 
 interface SyncProgressModalProps {
   visible: boolean;
@@ -17,11 +18,15 @@ export function SyncProgressModal({ visible, progress, onCancel }: SyncProgressM
   return (
     <Modal visible={visible} transparent animationType="fade">
       <View style={styles.overlay}>
-        <View style={styles.card}>
+        <Card variant="elevated" padding="lg" style={styles.card}>
           <Text style={styles.title}>Sincronização BGG</Text>
 
           {!isCompleted && !isFailed && (
-            <ActivityIndicator size="large" color="#6366f1" style={styles.spinner} />
+            <ActivityIndicator
+              size="large"
+              color={tokens.colors.accent.primary}
+              style={styles.spinner}
+            />
           )}
 
           <Text style={styles.message}>{progress.message}</Text>
@@ -31,7 +36,12 @@ export function SyncProgressModal({ visible, progress, onCancel }: SyncProgressM
               <View
                 style={[
                   styles.progressBarFill,
-                  { width: `${Math.min(100, (progress.itemsProcessed / progress.totalItems) * 100)}%` },
+                  {
+                    width: `${Math.min(
+                      100,
+                      (progress.itemsProcessed / progress.totalItems) * 100
+                    )}%`,
+                  },
                 ]}
               />
             </View>
@@ -43,13 +53,14 @@ export function SyncProgressModal({ visible, progress, onCancel }: SyncProgressM
             </Text>
           )}
 
-          <TouchableOpacity
-            style={[styles.button, isCompleted ? styles.buttonSuccess : styles.buttonCancel]}
-            onPress={onCancel}
-          >
-            <Text style={styles.buttonText}>{isCompleted ? 'Concluir' : isFailed ? 'Fechar' : 'Cancelar'}</Text>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.buttonWrap}>
+            <Button
+              label={isCompleted ? 'Concluir' : isFailed ? 'Fechar' : 'Cancelar'}
+              variant={isCompleted ? 'primary' : 'secondary'}
+              onPress={onCancel}
+            />
+          </View>
+        </Card>
       </View>
     </Modal>
   );
@@ -58,70 +69,52 @@ export function SyncProgressModal({ visible, progress, onCancel }: SyncProgressM
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    backgroundColor: tokens.colors.surface.overlay,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
+    padding: tokens.spacing.lg,
   },
   card: {
-    backgroundColor: '#1e293b',
-    borderRadius: 16,
-    padding: 24,
     width: '100%',
     maxWidth: 400,
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#334155',
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#f8fafc',
-    marginBottom: 16,
+    fontSize: tokens.typography.scale.h1.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    color: tokens.colors.text.primary,
+    marginBottom: tokens.spacing.md,
   },
   spinner: {
-    marginVertical: 12,
+    marginVertical: tokens.spacing.sm,
   },
   message: {
-    fontSize: 14,
-    color: '#cbd5e1',
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    color: tokens.colors.text.secondary,
     textAlign: 'center',
-    marginVertical: 8,
-    lineHeight: 20,
+    marginVertical: tokens.spacing.xs,
+    lineHeight: tokens.typography.scale.bodySm.lineHeight,
   },
   progressBarContainer: {
     width: '100%',
     height: 8,
-    backgroundColor: '#334155',
-    borderRadius: 4,
+    backgroundColor: tokens.colors.surface.sunken,
+    borderRadius: tokens.radius.sm,
     overflow: 'hidden',
-    marginTop: 16,
+    marginTop: tokens.spacing.md,
   },
   progressBarFill: {
     height: '100%',
-    backgroundColor: '#6366f1',
+    backgroundColor: tokens.colors.accent.primary,
   },
   counter: {
-    fontSize: 12,
-    color: '#94a3b8',
-    marginTop: 6,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    color: tokens.colors.text.secondary,
+    marginTop: tokens.spacing.xs,
+    fontVariant: ['tabular-nums'],
   },
-  button: {
-    marginTop: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-  },
-  buttonCancel: {
-    backgroundColor: '#475569',
-  },
-  buttonSuccess: {
-    backgroundColor: '#10b981',
-  },
-  buttonText: {
-    color: '#ffffff',
-    fontWeight: '600',
-    fontSize: 14,
+  buttonWrap: {
+    marginTop: tokens.spacing.lg,
+    width: '100%',
   },
 });
-

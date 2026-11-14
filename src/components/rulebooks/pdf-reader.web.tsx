@@ -3,13 +3,13 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
 } from 'react-native';
 import { Rulebook } from '@/services/rulebook-types';
 import { rulebookService } from '@/services/rulebook.service';
 import { useAnnotations } from '@/hooks/use-annotations';
 import { AnnotationsPanel } from './annotations-panel';
+import { Badge, Button, tokens } from '@/ui';
 
 interface PdfReaderProps {
   rulebook: Rulebook;
@@ -89,16 +89,8 @@ export function PdfReader({ rulebook, onVerified }: PdfReaderProps) {
           <Text style={styles.pageCounter}>
             Pág. {currentPage} {totalPages > 0 ? `/ ${totalPages}` : ''}
           </Text>
-          {hasBookmarkOnPage && (
-            <View style={styles.bookmarkIndicator}>
-              <Text style={styles.indicatorText}>🔖 Marcada</Text>
-            </View>
-          )}
-          {hasNoteOnPage && (
-            <View style={styles.noteIndicator}>
-              <Text style={styles.indicatorText}>📝 Com nota</Text>
-            </View>
-          )}
+          {hasBookmarkOnPage && <Badge tone="accent" label="🔖 Marcada" />}
+          {hasNoteOnPage && <Badge tone="info" label="📝 Com nota" />}
         </View>
 
         <View style={styles.controlsRow}>
@@ -106,25 +98,21 @@ export function PdfReader({ rulebook, onVerified }: PdfReaderProps) {
             <TextInput
               style={styles.jumpInput}
               placeholder="Ir p/ pág."
-              placeholderTextColor="#64748b"
+              placeholderTextColor={tokens.colors.text.muted}
               keyboardType="number-pad"
               value={jumpInput}
               onChangeText={setJumpInput}
               onSubmitEditing={handleJumpSubmit}
             />
-            <TouchableOpacity style={styles.jumpBtn} onPress={handleJumpSubmit}>
-              <Text style={styles.jumpBtnText}>Ir</Text>
-            </TouchableOpacity>
+            <Button label="Ir" variant="secondary" size="sm" onPress={handleJumpSubmit} />
           </View>
 
-          <TouchableOpacity
-            style={styles.annotationsBtn}
+          <Button
+            label={`🔖 Anotações (${bookmarks.length + notes.length})`}
+            variant="primary"
+            size="sm"
             onPress={() => setShowAnnotations(true)}
-          >
-            <Text style={styles.annotationsBtnText}>
-              🔖 Anotações ({bookmarks.length + notes.length})
-            </Text>
-          </TouchableOpacity>
+          />
         </View>
       </View>
 
@@ -156,106 +144,68 @@ export function PdfReader({ rulebook, onVerified }: PdfReaderProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0f172a',
+    backgroundColor: tokens.colors.surface.canvas,
   },
   toolbar: {
-    backgroundColor: '#1e293b',
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    backgroundColor: tokens.colors.surface.elevated,
+    paddingHorizontal: tokens.spacing.sm,
+    paddingVertical: tokens.spacing.xs,
     borderBottomWidth: 1,
-    borderBottomColor: '#334155',
-    gap: 8,
+    borderBottomColor: tokens.colors.border.subtle,
+    gap: tokens.spacing.xs,
   },
   pageStatusRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: tokens.spacing.xs,
   },
   pageCounter: {
-    color: '#f8fafc',
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  bookmarkIndicator: {
-    backgroundColor: '#4f46e5',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 6,
-  },
-  noteIndicator: {
-    backgroundColor: '#0284c7',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 6,
-  },
-  indicatorText: {
-    color: '#ffffff',
-    fontSize: 11,
-    fontWeight: '600',
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    fontVariant: ['tabular-nums'],
   },
   controlsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8,
+    gap: tokens.spacing.xs,
   },
   jumpGroup: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: tokens.spacing['2xs'],
   },
   jumpInput: {
-    backgroundColor: '#0f172a',
+    backgroundColor: tokens.colors.surface.sunken,
     borderWidth: 1,
-    borderColor: '#334155',
-    borderRadius: 6,
-    paddingHorizontal: 10,
+    borderColor: tokens.colors.border.subtle,
+    borderRadius: tokens.radius.sm,
+    paddingHorizontal: tokens.spacing.xs,
     paddingVertical: 5,
-    color: '#f8fafc',
-    fontSize: 13,
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.caption.fontSize,
     minWidth: 90,
-  },
-  jumpBtn: {
-    backgroundColor: '#334155',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  jumpBtnText: {
-    color: '#e2e8f0',
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  annotationsBtn: {
-    backgroundColor: '#6366f1',
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderRadius: 8,
-  },
-  annotationsBtnText: {
-    color: '#ffffff',
-    fontSize: 13,
-    fontWeight: '600',
+    fontVariant: ['tabular-nums'],
   },
   webPreviewContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 32,
+    padding: tokens.spacing.xl,
   },
   webPreviewTitle: {
-    color: '#f8fafc',
-    fontSize: 18,
-    fontWeight: '700',
-    marginBottom: 8,
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.h2.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    marginBottom: tokens.spacing.xs,
     textAlign: 'center',
   },
   webPreviewSubtitle: {
-    color: '#94a3b8',
-    fontSize: 14,
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
     textAlign: 'center',
     maxWidth: 420,
-    lineHeight: 20,
+    lineHeight: tokens.typography.scale.bodySm.lineHeight,
   },
 });
-

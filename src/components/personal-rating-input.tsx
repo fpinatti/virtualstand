@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Card, tokens } from '@/ui';
 
 interface PersonalRatingInputProps {
   rating: number | null;
@@ -10,7 +11,7 @@ const SCORES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 export function PersonalRatingInput({ rating, onChange }: PersonalRatingInputProps) {
   return (
-    <View style={styles.container}>
+    <Card variant="sunken" padding="sm" style={styles.container}>
       <View style={styles.headerRow}>
         <Text style={styles.label}>
           Sua Nota Pessoal (App):{' '}
@@ -39,64 +40,60 @@ export function PersonalRatingInput({ rating, onChange }: PersonalRatingInputPro
           );
         })}
       </View>
-    </View>
+    </Card>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 16,
-    backgroundColor: '#0f172a',
-    padding: 10,
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: '#334155',
+    marginBottom: tokens.spacing.md,
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: tokens.spacing.xs,
   },
   label: {
-    color: '#cbd5e1',
-    fontSize: 13,
-    fontWeight: '600',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   currentVal: {
-    color: '#34d399',
-    fontWeight: '700',
+    color: tokens.colors.accent.primary,
+    fontWeight: tokens.typography.weights.bold,
+    fontVariant: ['tabular-nums'],
   },
   clearLink: {
-    color: '#f87171',
-    fontSize: 12,
-    fontWeight: '600',
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   buttonsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 4,
+    gap: tokens.spacing['2xs'],
   },
   scoreBtn: {
     flex: 1,
-    backgroundColor: '#1e293b',
+    backgroundColor: tokens.colors.surface.elevated,
     paddingVertical: 7,
-    borderRadius: 6,
+    borderRadius: tokens.radius.sm,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: tokens.colors.border.subtle,
   },
   scoreBtnActive: {
-    backgroundColor: '#059669',
-    borderColor: '#10b981',
+    backgroundColor: tokens.colors.accent.primary,
+    borderColor: tokens.colors.accent.primary,
   },
   scoreText: {
-    color: '#94a3b8',
-    fontSize: 12,
-    fontWeight: '700',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    fontVariant: ['tabular-nums'],
   },
   scoreTextActive: {
-    color: '#ffffff',
+    color: tokens.colors.text.inverse,
   },
 });
-

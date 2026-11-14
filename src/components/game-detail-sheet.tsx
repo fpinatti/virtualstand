@@ -3,7 +3,6 @@ import {
   Modal,
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
@@ -19,6 +18,7 @@ import { PlaySessionForm } from './playlog/play-session-form';
 import { useRulebooks } from '@/hooks/use-rulebooks';
 import { usePlayLog } from '@/hooks/use-play-log';
 import { PlaySession, PlaySessionInput } from '@/services/playlog-types';
+import { Badge, Button, Card, Input, SectionHeader, tokens } from '@/ui';
 
 interface GameDetailSheetProps {
   item: CollectionWithGame | null;
@@ -125,48 +125,46 @@ export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailS
                 {game.minPlaytime ? `${game.minPlaytime} min` : ''}
               </Text>
               {hasReadyRulebook && (
-                <View style={styles.offlineManualBadge}>
-                  <Text style={styles.offlineManualBadgeText}>📖 Manual offline</Text>
-                </View>
+                <Badge tone="success" label="📖 Manual offline" />
               )}
             </View>
 
             {collection.bggRating ? (
               <View style={styles.ratingRow}>
                 <Text style={styles.ratingLabel}>Avaliação no BGG:</Text>
-                <Text style={styles.ratingValue}>★ {collection.bggRating.toFixed(1)} / 10</Text>
+                <Badge
+                  tone="accent"
+                  label={`★ ${collection.bggRating.toFixed(1)} / 10`}
+                  tabularNums
+                />
               </View>
             ) : null}
 
             <PersonalRatingInput rating={personalRating} onChange={setRating} />
 
             {collection.bggComment ? (
-              <View style={styles.bggCommentBox}>
+              <Card variant="sunken" padding="sm" style={styles.bggCommentBox}>
                 <Text style={styles.bggCommentTitle}>Comentário importado do BGG:</Text>
                 <Text style={styles.bggCommentText}>{collection.bggComment}</Text>
-              </View>
+              </Card>
             ) : null}
 
             {/* Offline PDF Rulebooks Section (US1) */}
             <View style={styles.section}>
-              <Text style={styles.sectionLabel}>Manuais de Regras (PDF Offline):</Text>
+              <SectionHeader title="Manuais de Regras (PDF Offline)" />
               <RulebookList bggId={game.bggId} onBeforeOpenReader={onClose} />
             </View>
 
             {/* Play Sessions & Statistics Section (US3) */}
             <View style={styles.section}>
-              <View style={styles.playHeaderRow}>
-                <Text style={styles.sectionLabel}>Partidas e Estatísticas:</Text>
-                <TouchableOpacity
-                  style={styles.logPlayBtn}
-                  onPress={() => {
-                    setEditingSession(null);
-                    setShowPlayForm(true);
-                  }}
-                >
-                  <Text style={styles.logPlayBtnText}>🎲 Registrar partida</Text>
-                </TouchableOpacity>
-              </View>
+              <SectionHeader
+                title="Partidas e Estatísticas"
+                actionLabel="🎲 Registrar partida"
+                onAction={() => {
+                  setEditingSession(null);
+                  setShowPlayForm(true);
+                }}
+              />
               <PlayStatsCard stats={stats} />
               <PlayHistory
                 sessions={sessions}
@@ -179,72 +177,70 @@ export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailS
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionLabel}>Anotações Pessoais (Salvas apenas no app):</Text>
-              <TextInput
-                style={styles.textArea}
+              <Input
+                label="Anotações Pessoais (Salvas apenas no app)"
                 multiline
                 numberOfLines={4}
                 placeholder="ex: Componentes guardados em ziplocks; jogado na ludoteca dia 10..."
-                placeholderTextColor="#64748b"
                 value={notes}
                 onChangeText={setNotes}
+                style={styles.textArea}
               />
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionLabel}>Tags Personalizadas:</Text>
+              <SectionHeader title="Tags Personalizadas" />
               <View style={styles.tagInputRow}>
-                <TextInput
-                  style={styles.tagInput}
-                  placeholder="Nova tag (ex: favoritos, cooperativo)..."
-                  placeholderTextColor="#64748b"
-                  value={tagInput}
-                  onChangeText={setTagInput}
-                  onSubmitEditing={handleAddTag}
-                />
-                <TouchableOpacity style={styles.addTagBtn} onPress={handleAddTag}>
-                  <Text style={styles.addTagBtnText}>Adicionar</Text>
-                </TouchableOpacity>
+                <View style={styles.tagInputFlex}>
+                  <Input
+                    placeholder="Nova tag (ex: favoritos, cooperativo)..."
+                    value={tagInput}
+                    onChangeText={setTagInput}
+                    onSubmitEditing={handleAddTag}
+                  />
+                </View>
+                <Button label="Adicionar" variant="secondary" size="sm" onPress={handleAddTag} />
               </View>
 
               <View style={styles.tagsContainer}>
                 {tags.map((tag) => (
-                  <TouchableOpacity
-                    key={tag}
-                    style={styles.tagBadge}
-                    onPress={() => handleRemoveTag(tag)}
-                  >
-                    <Text style={styles.tagBadgeText}>#{tag} ✕</Text>
+                  <TouchableOpacity key={tag} onPress={() => handleRemoveTag(tag)}>
+                    <Badge tone="neutral" label={`#${tag} ✕`} />
                   </TouchableOpacity>
                 ))}
               </View>
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionLabel}>Proteção de Cartas (Sleeves):</Text>
-              <TouchableOpacity
-                style={styles.dimBtn}
+              <SectionHeader title="Proteção de Cartas (Sleeves)" />
+              <Button
+                label="🃏 Gerenciar Sleeves e Quantidade de Cartas"
+                variant="secondary"
                 onPress={() => setShowSleeveModal(true)}
-              >
-                <Text style={styles.dimBtnText}>🃏 Gerenciar Sleeves e Quantidade de Cartas</Text>
-              </TouchableOpacity>
+              />
             </View>
 
             <View style={styles.section}>
-              <Text style={styles.sectionLabel}>Dimensões Físicas da Caixa (Estante 3D):</Text>
-              <TouchableOpacity
-                style={styles.dimBtn}
+              <SectionHeader title="Dimensões Físicas da Caixa (Estante 3D)" />
+              <Button
+                label="📐 Visualizar / Calibrar Medidas da Caixa"
+                variant="secondary"
                 onPress={() => setShowDimensionEditor(true)}
-              >
-                <Text style={styles.dimBtnText}>📐 Visualizar / Calibrar Medidas da Caixa</Text>
-              </TouchableOpacity>
+              />
             </View>
 
             {saveError ? <Text style={styles.errorText}>{saveError}</Text> : null}
 
-            <TouchableOpacity style={styles.saveBtn} onPress={handleSave} disabled={saving}>
-              <Text style={styles.saveBtnText}>{saving ? 'Salvando...' : 'Salvar Anotações'}</Text>
-            </TouchableOpacity>
+            <View style={styles.saveBtnWrap}>
+              <Button
+                label={saving ? 'Salvando...' : 'Salvar Anotações'}
+                variant="primary"
+                size="lg"
+                onPress={handleSave}
+                disabled={saving}
+                loading={saving}
+              />
+            </View>
           </ScrollView>
         </View>
 
@@ -287,208 +283,104 @@ export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailS
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    backgroundColor: tokens.colors.surface.overlay,
     justifyContent: 'flex-end',
   },
   sheet: {
-    backgroundColor: '#1e293b',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    backgroundColor: tokens.colors.surface.elevated,
+    borderTopLeftRadius: tokens.radius.xl,
+    borderTopRightRadius: tokens.radius.xl,
     maxHeight: '88%',
-    borderWidth: 1,
-    borderColor: '#334155',
+    borderTopWidth: 1,
+    borderColor: tokens.colors.border.subtle,
   },
   content: {
-    padding: 24,
+    padding: tokens.spacing.lg,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 4,
+    marginBottom: tokens.spacing['2xs'],
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#f8fafc',
+    fontSize: tokens.typography.scale.h1.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    color: tokens.colors.text.primary,
     flex: 1,
-    marginRight: 12,
+    marginRight: tokens.spacing.sm,
   },
   closeBtn: {
-    padding: 4,
+    padding: tokens.spacing['2xs'],
   },
   closeBtnText: {
-    color: '#94a3b8',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.h2.fontSize,
+    fontWeight: tokens.typography.weights.bold,
   },
   metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 14,
+    gap: tokens.spacing.xs,
+    marginBottom: tokens.spacing.md,
   },
   meta: {
-    fontSize: 14,
-    color: '#94a3b8',
-  },
-  offlineManualBadge: {
-    backgroundColor: '#065f46',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-    borderColor: '#10b981',
-  },
-  offlineManualBadgeText: {
-    color: '#a7f3d0',
-    fontSize: 11,
-    fontWeight: '700',
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    color: tokens.colors.text.secondary,
+    fontVariant: ['tabular-nums'],
   },
   ratingRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 10,
+    gap: tokens.spacing.xs,
+    marginBottom: tokens.spacing.sm,
   },
   ratingLabel: {
-    fontSize: 14,
-    color: '#cbd5e1',
-  },
-  ratingValue: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#fbbf24',
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    color: tokens.colors.text.secondary,
   },
   bggCommentBox: {
-    backgroundColor: '#0f172a',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#334155',
+    marginBottom: tokens.spacing.md,
   },
   bggCommentTitle: {
-    fontSize: 12,
-    color: '#64748b',
-    fontWeight: '600',
-    marginBottom: 4,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    color: tokens.colors.text.muted,
+    fontWeight: tokens.typography.weights.semibold,
+    marginBottom: tokens.spacing['2xs'],
   },
   bggCommentText: {
-    fontSize: 13,
-    color: '#cbd5e1',
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    color: tokens.colors.text.secondary,
     fontStyle: 'italic',
   },
   section: {
-    marginBottom: 16,
-  },
-  sectionLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#f1f5f9',
-    marginBottom: 8,
-  },
-  playHeaderRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  logPlayBtn: {
-    backgroundColor: '#4f46e5',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  logPlayBtnText: {
-    color: '#ffffff',
-    fontSize: 12,
-    fontWeight: '700',
+    marginBottom: tokens.spacing.md,
   },
   textArea: {
-    backgroundColor: '#0f172a',
-    borderRadius: 8,
-    padding: 12,
-    color: '#f8fafc',
-    fontSize: 14,
     minHeight: 80,
     textAlignVertical: 'top',
-    borderWidth: 1,
-    borderColor: '#334155',
   },
   tagInputRow: {
     flexDirection: 'row',
-    gap: 8,
-    marginBottom: 10,
+    alignItems: 'flex-start',
+    gap: tokens.spacing.xs,
   },
-  tagInput: {
+  tagInputFlex: {
     flex: 1,
-    backgroundColor: '#0f172a',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    color: '#f8fafc',
-    fontSize: 14,
-    borderWidth: 1,
-    borderColor: '#334155',
-  },
-  addTagBtn: {
-    backgroundColor: '#4338ca',
-    paddingHorizontal: 16,
-    justifyContent: 'center',
-    borderRadius: 8,
-  },
-  addTagBtnText: {
-    color: '#ffffff',
-    fontSize: 13,
-    fontWeight: '600',
   },
   tagsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
-  },
-  tagBadge: {
-    backgroundColor: '#334155',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 12,
-  },
-  tagBadgeText: {
-    color: '#93c5fd',
-    fontSize: 12,
-  },
-  dimBtn: {
-    backgroundColor: '#0f172a',
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: '#4338ca',
-    alignItems: 'center',
-  },
-  dimBtnText: {
-    color: '#a5b4fc',
-    fontSize: 14,
-    fontWeight: '600',
+    gap: tokens.spacing.xs,
   },
   errorText: {
-    color: '#f87171',
-    fontSize: 13,
-    marginBottom: 8,
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    marginBottom: tokens.spacing.xs,
   },
-  saveBtn: {
-    backgroundColor: '#6366f1',
-    borderRadius: 8,
-    paddingVertical: 12,
-    alignItems: 'center',
-    marginTop: 12,
-    marginBottom: 24,
-  },
-  saveBtnText: {
-    color: '#ffffff',
-    fontSize: 15,
-    fontWeight: 'bold',
+  saveBtnWrap: {
+    marginTop: tokens.spacing.sm,
+    marginBottom: tokens.spacing.lg,
   },
 });

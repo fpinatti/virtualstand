@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
-  Alert,
 } from 'react-native';
 import { SleeveInventoryItem } from '@/services/sleeve-types';
 import { sleeveManagerService } from '@/services/sleeve-manager.service';
+import { Button, Card, EmptyState, Input, SectionHeader, tokens } from '@/ui';
 
 interface InventoryListViewProps {
   inventory: SleeveInventoryItem[];
@@ -23,9 +22,11 @@ export function InventoryListView({ inventory, onRefresh }: InventoryListViewPro
   const [height, setHeight] = useState('88');
   const [packsOwned, setPacksOwned] = useState('1');
   const [packSize, setPackSize] = useState('100');
-  const [looseSleeves, setLooseSleeves] = useState('0');
+  const [looseSleeves] = useState('0');
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleAddItem = async () => {
+    setErrorMsg(null);
     const w = parseFloat(width);
     const h = parseFloat(height);
     const packs = parseInt(packsOwned, 10);
@@ -33,7 +34,7 @@ export function InventoryListView({ inventory, onRefresh }: InventoryListViewPro
     const loose = parseInt(looseSleeves, 10) || 0;
 
     if (isNaN(w) || isNaN(h) || isNaN(packs) || isNaN(size)) {
-      Alert.alert('Erro', 'Por favor, informe números válidos para medidas e quantidades.');
+      setErrorMsg('Por favor, informe números válidos para medidas e quantidades.');
       return;
     }
 
@@ -50,8 +51,8 @@ export function InventoryListView({ inventory, onRefresh }: InventoryListViewPro
 
       setShowAdd(false);
       onRefresh();
-    } catch (err) {
-      Alert.alert('Erro', 'Não foi possível cadastrar o item no estoque.');
+    } catch {
+      setErrorMsg('Não foi possível cadastrar o item no estoque.');
     }
   };
 
@@ -60,97 +61,100 @@ export function InventoryListView({ inventory, onRefresh }: InventoryListViewPro
     try {
       await sleeveManagerService.deleteInventoryItem(id);
       onRefresh();
-    } catch (err) {
-      Alert.alert('Erro', 'Não foi possível remover o item do estoque.');
+    } catch {
+      setErrorMsg('Não foi possível remover o item do estoque.');
     }
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerRow}>
-        <Text style={styles.sectionTitle}>Meu Estoque de Sleeves</Text>
-        <TouchableOpacity
-          style={styles.addBtn}
-          onPress={() => setShowAdd(!showAdd)}
-        >
-          <Text style={styles.addBtnText}>{showAdd ? 'Fechar' : '+ Novo Pacote'}</Text>
-        </TouchableOpacity>
-      </View>
+      <SectionHeader
+        title="Meu Estoque de Sleeves"
+        actionLabel={showAdd ? 'Fechar' : '+ Novo Pacote'}
+        onAction={() => {
+          setErrorMsg(null);
+          setShowAdd(!showAdd);
+        }}
+      />
+
+      {errorMsg ? <Text style={styles.errorText}>{errorMsg}</Text> : null}
 
       {showAdd && (
-        <View style={styles.formCard}>
+        <Card variant="elevated" padding="md" style={styles.formCard}>
           <Text style={styles.formTitle}>Registrar Pacote Sobressalente</Text>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Marca (ex: Mayday, Dragon Shield, Gamegenic)"
-            placeholderTextColor="#64748b"
+          <Input
+            label="Marca"
+            placeholder="Ex: Mayday, Dragon Shield, Gamegenic"
             value={brand}
             onChangeText={setBrand}
           />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Nome do Formato (ex: Standard Card Game)"
-            placeholderTextColor="#64748b"
+          <Input
+            label="Nome do Formato"
+            placeholder="Ex: Standard Card Game"
             value={formatName}
             onChangeText={setFormatName}
           />
 
           <View style={styles.row}>
-            <TextInput
-              style={[styles.input, styles.halfInput]}
-              placeholder="Largura mm (63.5)"
-              placeholderTextColor="#64748b"
-              keyboardType="numeric"
-              value={width}
-              onChangeText={setWidth}
-            />
-            <TextInput
-              style={[styles.input, styles.halfInput]}
-              placeholder="Altura mm (88)"
-              placeholderTextColor="#64748b"
-              keyboardType="numeric"
-              value={height}
-              onChangeText={setHeight}
-            />
+            <View style={styles.halfInput}>
+              <Input
+                label="Largura (mm)"
+                placeholder="63.5"
+                keyboardType="numeric"
+                value={width}
+                onChangeText={setWidth}
+                tabularNums
+              />
+            </View>
+            <View style={styles.halfInput}>
+              <Input
+                label="Altura (mm)"
+                placeholder="88"
+                keyboardType="numeric"
+                value={height}
+                onChangeText={setHeight}
+                tabularNums
+              />
+            </View>
           </View>
 
           <View style={styles.row}>
-            <TextInput
-              style={[styles.input, styles.halfInput]}
-              placeholder="Pacotes Fechados (ex: 2)"
-              placeholderTextColor="#64748b"
-              keyboardType="numeric"
-              value={packsOwned}
-              onChangeText={setPacksOwned}
-            />
-            <TextInput
-              style={[styles.input, styles.halfInput]}
-              placeholder="Sleeves por Pacote (ex: 100)"
-              placeholderTextColor="#64748b"
-              keyboardType="numeric"
-              value={packSize}
-              onChangeText={setPackSize}
-            />
+            <View style={styles.halfInput}>
+              <Input
+                label="Pacotes Fechados"
+                placeholder="Ex: 2"
+                keyboardType="numeric"
+                value={packsOwned}
+                onChangeText={setPacksOwned}
+                tabularNums
+              />
+            </View>
+            <View style={styles.halfInput}>
+              <Input
+                label="Sleeves por Pacote"
+                placeholder="Ex: 100"
+                keyboardType="numeric"
+                value={packSize}
+                onChangeText={setPackSize}
+                tabularNums
+              />
+            </View>
           </View>
 
-          <TouchableOpacity style={styles.submitBtn} onPress={handleAddItem}>
-            <Text style={styles.submitBtnText}>Salvar no Estoque</Text>
-          </TouchableOpacity>
-        </View>
+          <Button label="Salvar no Estoque" variant="primary" onPress={handleAddItem} />
+        </Card>
       )}
 
       {inventory.length === 0 ? (
-        <View style={styles.emptyCard}>
-          <Text style={styles.emptyText}>Você ainda não cadastrou pacotes sobressalentes.</Text>
-          <Text style={styles.emptySubtext}>
-            Cadastre os sleeves que você tem sobrando em casa para abater da lista de compras.
-          </Text>
-        </View>
+        <EmptyState
+          title="Nenhum pacote sobressalente"
+          description="Cadastre os sleeves que você tem sobrando em casa para abater da lista de compras."
+        />
       ) : (
         inventory.map((item) => (
-          <View key={item.id} style={styles.itemCard}>
+          <Card key={item.id} variant="elevated" padding="md" style={styles.itemCard}>
             <View style={styles.itemInfo}>
               <Text style={styles.itemBrand}>{item.brand}</Text>
               <Text style={styles.itemFormat}>
@@ -158,14 +162,15 @@ export function InventoryListView({ inventory, onRefresh }: InventoryListViewPro
               </Text>
               <Text style={styles.itemStock}>
                 {item.packsOwned} {item.packsOwned === 1 ? 'pacote' : 'pacotes'} de {item.packSize}
-                {item.looseSleeves > 0 ? ` + ${item.looseSleeves} avulsos` : ''} ({item.packsOwned * item.packSize + item.looseSleeves} total)
+                {item.looseSleeves > 0 ? ` + ${item.looseSleeves} avulsos` : ''} (
+                {item.packsOwned * item.packSize + item.looseSleeves} total)
               </Text>
             </View>
 
             <TouchableOpacity style={styles.deleteBtn} onPress={() => handleDelete(item.id)}>
               <Text style={styles.deleteBtnText}>✕</Text>
             </TouchableOpacity>
-          </View>
+          </Card>
         ))
       )}
     </View>
@@ -174,127 +179,61 @@ export function InventoryListView({ inventory, onRefresh }: InventoryListViewPro
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 24,
+    marginBottom: tokens.spacing.xl,
   },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#f8fafc',
-  },
-  addBtn: {
-    backgroundColor: '#334155',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  addBtnText: {
-    color: '#a5b4fc',
-    fontSize: 13,
-    fontWeight: '600',
+  errorText: {
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    marginBottom: tokens.spacing.xs,
   },
   formCard: {
-    backgroundColor: '#1e293b',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#4338ca',
+    marginBottom: tokens.spacing.md,
+    borderColor: tokens.colors.border.strong,
   },
   formTitle: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#f8fafc',
-    marginBottom: 12,
-  },
-  input: {
-    backgroundColor: '#0f172a',
-    borderRadius: 8,
-    padding: 10,
-    color: '#f8fafc',
-    fontSize: 14,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: '#334155',
+    fontSize: tokens.typography.scale.h3.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    color: tokens.colors.text.primary,
+    marginBottom: tokens.spacing.sm,
   },
   row: {
     flexDirection: 'row',
-    gap: 8,
+    gap: tokens.spacing.xs,
   },
   halfInput: {
     flex: 1,
   },
-  submitBtn: {
-    backgroundColor: '#6366f1',
-    borderRadius: 8,
-    paddingVertical: 10,
-    alignItems: 'center',
-    marginTop: 6,
-  },
-  submitBtnText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  emptyCard: {
-    backgroundColor: '#1e293b',
-    borderRadius: 12,
-    padding: 20,
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#334155',
-  },
-  emptyText: {
-    color: '#cbd5e1',
-    fontSize: 14,
-    marginBottom: 4,
-    textAlign: 'center',
-  },
-  emptySubtext: {
-    color: '#64748b',
-    fontSize: 12,
-    textAlign: 'center',
-  },
   itemCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1e293b',
-    borderRadius: 10,
-    padding: 14,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: '#334155',
+    marginBottom: tokens.spacing.xs,
   },
   itemInfo: {
     flex: 1,
   },
   itemBrand: {
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#f8fafc',
-    marginBottom: 2,
+    fontSize: tokens.typography.scale.h3.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    color: tokens.colors.text.primary,
+    marginBottom: tokens.spacing['2xs'],
   },
   itemFormat: {
-    fontSize: 13,
-    color: '#94a3b8',
-    marginBottom: 4,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    color: tokens.colors.text.secondary,
+    marginBottom: tokens.spacing['2xs'],
+    fontVariant: ['tabular-nums'],
   },
   itemStock: {
-    fontSize: 12,
-    color: '#34d399',
-    fontWeight: '600',
+    fontSize: tokens.typography.scale.caption.fontSize,
+    color: tokens.colors.semantic.success,
+    fontWeight: tokens.typography.weights.semibold,
+    fontVariant: ['tabular-nums'],
   },
   deleteBtn: {
-    padding: 8,
+    padding: tokens.spacing.xs,
   },
   deleteBtnText: {
-    color: '#64748b',
-    fontSize: 16,
+    color: tokens.colors.text.muted,
+    fontSize: tokens.typography.scale.h3.fontSize,
   },
 });
-

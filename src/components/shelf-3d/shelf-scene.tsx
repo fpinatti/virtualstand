@@ -5,6 +5,7 @@ import { BookcaseMesh } from './bookcase-mesh';
 import { GameBoxMesh } from './game-box-mesh';
 import { PlacedBoxCoords, ShelfDimensions } from './types';
 import { spineGeneratorService } from '@/services/spine-generator.service';
+import { tokens } from '@/ui';
 
 interface ShelfSceneProps {
   shelf: ShelfDimensions;
@@ -37,9 +38,9 @@ export function ShelfScene({ shelf, boxes, onOpenGameDetails }: ShelfSceneProps)
         style={styles.canvas}
         onPointerMissed={handleDeselect}
       >
-        <ambientLight intensity={0.8} />
-        <directionalLight position={[5, 10, 7]} intensity={1.2} castShadow />
-        <directionalLight position={[-5, 5, 5]} intensity={0.5} />
+        <ambientLight intensity={0.85} />
+        <directionalLight position={[5, 10, 7]} intensity={1.25} castShadow />
+        <directionalLight position={[-5, 5, 5]} intensity={0.55} />
 
         <BookcaseMesh shelf={shelf} />
 
@@ -60,7 +61,7 @@ export function ShelfScene({ shelf, boxes, onOpenGameDetails }: ShelfSceneProps)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0b1120',
+    backgroundColor: tokens.colors.surface.sunken,
   },
   canvas: {
     flex: 1,

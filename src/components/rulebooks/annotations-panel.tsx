@@ -9,6 +9,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { Bookmark, PageNote } from '@/services/rulebook-types';
+import { Badge, Button, Card, tokens } from '@/ui';
 
 interface AnnotationsPanelProps {
   visible: boolean;
@@ -97,9 +98,7 @@ export function AnnotationsPanel({
         <View style={styles.sheet}>
           <View style={styles.header}>
             <Text style={styles.title}>Marcadores e Notas (Pág. {currentPage})</Text>
-            <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-              <Text style={styles.closeText}>Fechar</Text>
-            </TouchableOpacity>
+            <Button label="Fechar" variant="secondary" size="sm" onPress={onClose} />
           </View>
 
           {errorMsg ? (
@@ -110,35 +109,41 @@ export function AnnotationsPanel({
 
           <ScrollView contentContainerStyle={styles.content}>
             {/* Quick Add on Current Page */}
-            <View style={styles.addCard}>
+            <Card variant="sunken" padding="sm" style={styles.addCard}>
               <Text style={styles.sectionTitle}>Adicionar na Página {currentPage}</Text>
               <View style={styles.inlineRow}>
                 <TextInput
                   style={[styles.input, styles.flexInput]}
                   placeholder="Título do marcador (ex: Pontuação final)"
-                  placeholderTextColor="#64748b"
+                  placeholderTextColor={tokens.colors.text.muted}
                   value={newBookmarkTitle}
                   onChangeText={setNewBookmarkTitle}
                   maxLength={80}
                 />
-                <TouchableOpacity style={styles.primaryBtn} onPress={handleCreateBookmark}>
-                  <Text style={styles.primaryBtnText}>+ Marcador</Text>
-                </TouchableOpacity>
+                <Button
+                  label="+ Marcador"
+                  variant="primary"
+                  size="sm"
+                  onPress={handleCreateBookmark}
+                />
               </View>
 
               <TextInput
                 style={[styles.input, styles.textArea]}
                 placeholder="Nova nota de regra ou esclarecimento..."
-                placeholderTextColor="#64748b"
+                placeholderTextColor={tokens.colors.text.muted}
                 value={newNoteBody}
                 onChangeText={setNewNoteBody}
                 multiline
                 maxLength={2000}
               />
-              <TouchableOpacity style={styles.secondaryBtn} onPress={handleCreateNote}>
-                <Text style={styles.secondaryBtnText}>+ Adicionar Nota na Pág. {currentPage}</Text>
-              </TouchableOpacity>
-            </View>
+              <Button
+                label={`+ Adicionar Nota na Pág. ${currentPage}`}
+                variant="secondary"
+                size="sm"
+                onPress={handleCreateNote}
+              />
+            </Card>
 
             {/* Bookmarks List */}
             <Text style={styles.sectionTitle}>Marcadores ({bookmarks.length})</Text>
@@ -146,7 +151,7 @@ export function AnnotationsPanel({
               <Text style={styles.emptyText}>Nenhum marcador registrado neste manual.</Text>
             ) : (
               bookmarks.map((bm) => (
-                <View key={bm.id} style={styles.itemCard}>
+                <Card key={bm.id} variant="sunken" padding="sm" style={styles.itemCard}>
                   {editingBookmarkId === bm.id ? (
                     <View style={styles.inlineRow}>
                       <TextInput
@@ -155,18 +160,18 @@ export function AnnotationsPanel({
                         onChangeText={setEditingBookmarkText}
                         maxLength={80}
                       />
-                      <TouchableOpacity
-                        style={styles.smallPrimaryBtn}
+                      <Button
+                        label="Salvar"
+                        variant="primary"
+                        size="sm"
                         onPress={() => handleSaveBookmarkEdit(bm.id)}
-                      >
-                        <Text style={styles.primaryBtnText}>Salvar</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.smallGhostBtn}
+                      />
+                      <Button
+                        label="Cancelar"
+                        variant="secondary"
+                        size="sm"
                         onPress={() => setEditingBookmarkId(null)}
-                      >
-                        <Text style={styles.ghostBtnText}>Cancelar</Text>
-                      </TouchableOpacity>
+                      />
                     </View>
                   ) : (
                     <View style={styles.itemHeader}>
@@ -178,9 +183,7 @@ export function AnnotationsPanel({
                           onClose();
                         }}
                       >
-                        <View style={styles.pageBadge}>
-                          <Text style={styles.pageBadgeText}>Pág. {bm.page}</Text>
-                        </View>
+                        <Badge tone="accent" label={`Pág. ${bm.page}`} tabularNums />
                         <View style={styles.itemTextWrap}>
                           <Text style={styles.itemTitle}>{bm.title}</Text>
                           {!bm.isPageAvailable && (
@@ -215,19 +218,19 @@ export function AnnotationsPanel({
                       </View>
                     </View>
                   )}
-                </View>
+                </Card>
               ))
             )}
 
             {/* Notes List */}
-            <Text style={[styles.sectionTitle, { marginTop: 16 }]}>
+            <Text style={[styles.sectionTitle, { marginTop: tokens.spacing.md }]}>
               Notas por Página ({notes.length})
             </Text>
             {notes.length === 0 ? (
               <Text style={styles.emptyText}>Nenhuma nota adicionada neste manual.</Text>
             ) : (
               notes.map((note) => (
-                <View key={note.id} style={styles.itemCard}>
+                <Card key={note.id} variant="sunken" padding="sm" style={styles.itemCard}>
                   <View style={styles.itemHeader}>
                     <TouchableOpacity
                       style={styles.itemMain}
@@ -237,9 +240,7 @@ export function AnnotationsPanel({
                         onClose();
                       }}
                     >
-                      <View style={styles.notePageBadge}>
-                        <Text style={styles.pageBadgeText}>Pág. {note.page}</Text>
-                      </View>
+                      <Badge tone="info" label={`Pág. ${note.page}`} tabularNums />
                       {!note.isPageAvailable && (
                         <Text style={styles.unavailableBadge}>página indisponível</Text>
                       )}
@@ -272,7 +273,7 @@ export function AnnotationsPanel({
                   </View>
 
                   {editingNoteId === note.id ? (
-                    <View style={{ marginTop: 8 }}>
+                    <View style={{ marginTop: tokens.spacing.xs }}>
                       <TextInput
                         style={[styles.input, styles.textArea]}
                         value={editingNoteText}
@@ -281,18 +282,18 @@ export function AnnotationsPanel({
                         maxLength={2000}
                       />
                       <View style={styles.inlineRow}>
-                        <TouchableOpacity
-                          style={styles.smallPrimaryBtn}
+                        <Button
+                          label="Salvar"
+                          variant="primary"
+                          size="sm"
                           onPress={() => handleSaveNoteEdit(note.id)}
-                        >
-                          <Text style={styles.primaryBtnText}>Salvar</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={styles.smallGhostBtn}
+                        />
+                        <Button
+                          label="Cancelar"
+                          variant="secondary"
+                          size="sm"
                           onPress={() => setEditingNoteId(null)}
-                        >
-                          <Text style={styles.ghostBtnText}>Cancelar</Text>
-                        </TouchableOpacity>
+                        />
                       </View>
                     </View>
                   ) : (
@@ -306,7 +307,7 @@ export function AnnotationsPanel({
                       <Text style={styles.noteBodyText}>{note.body}</Text>
                     </TouchableOpacity>
                   )}
-                </View>
+                </Card>
               ))
             )}
           </ScrollView>
@@ -319,143 +320,90 @@ export function AnnotationsPanel({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.75)',
+    backgroundColor: tokens.colors.surface.overlay,
     justifyContent: 'flex-end',
   },
   sheet: {
-    backgroundColor: '#0f172a',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    backgroundColor: tokens.colors.surface.elevated,
+    borderTopLeftRadius: tokens.radius.xl,
+    borderTopRightRadius: tokens.radius.xl,
     maxHeight: '88%',
     borderTopWidth: 1,
-    borderColor: '#1e293b',
+    borderColor: tokens.colors.border.subtle,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
+    padding: tokens.spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: '#1e293b',
+    borderBottomColor: tokens.colors.border.subtle,
   },
   title: {
-    color: '#f8fafc',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  closeBtn: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    backgroundColor: '#1e293b',
-    borderRadius: 8,
-  },
-  closeText: {
-    color: '#cbd5e1',
-    fontSize: 13,
-    fontWeight: '600',
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.h3.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    fontVariant: ['tabular-nums'],
   },
   errorBox: {
-    marginHorizontal: 16,
-    marginTop: 10,
-    padding: 10,
-    borderRadius: 8,
-    backgroundColor: 'rgba(239,68,68,0.15)',
+    marginHorizontal: tokens.spacing.md,
+    marginTop: tokens.spacing.xs,
+    padding: tokens.spacing.sm,
+    borderRadius: tokens.radius.md,
+    backgroundColor: tokens.colors.surface.sunken,
     borderWidth: 1,
-    borderColor: '#ef4444',
+    borderColor: tokens.colors.semantic.danger,
   },
   errorText: {
-    color: '#fca5a5',
-    fontSize: 13,
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.caption.fontSize,
   },
   content: {
-    padding: 16,
-    paddingBottom: 36,
+    padding: tokens.spacing.md,
+    paddingBottom: tokens.spacing.xl,
   },
   addCard: {
-    backgroundColor: '#1e293b',
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 18,
+    marginBottom: tokens.spacing.md,
   },
   sectionTitle: {
-    color: '#e2e8f0',
-    fontSize: 14,
-    fontWeight: '700',
-    marginBottom: 8,
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    marginBottom: tokens.spacing.xs,
+    fontVariant: ['tabular-nums'],
   },
   inlineRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 8,
+    gap: tokens.spacing.xs,
+    marginBottom: tokens.spacing.xs,
   },
   flexInput: {
     flex: 1,
   },
   input: {
-    backgroundColor: '#0f172a',
+    backgroundColor: tokens.colors.surface.elevated,
     borderWidth: 1,
-    borderColor: '#334155',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    color: '#f8fafc',
-    fontSize: 13,
+    borderColor: tokens.colors.border.subtle,
+    borderRadius: tokens.radius.sm,
+    paddingHorizontal: tokens.spacing.sm,
+    paddingVertical: tokens.spacing.xs,
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.caption.fontSize,
   },
   textArea: {
     minHeight: 60,
     textAlignVertical: 'top',
-    marginBottom: 8,
-  },
-  primaryBtn: {
-    backgroundColor: '#6366f1',
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-    borderRadius: 8,
-  },
-  primaryBtnText: {
-    color: '#ffffff',
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  secondaryBtn: {
-    backgroundColor: '#334155',
-    paddingVertical: 9,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  secondaryBtnText: {
-    color: '#e2e8f0',
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  smallPrimaryBtn: {
-    backgroundColor: '#6366f1',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  smallGhostBtn: {
-    backgroundColor: '#334155',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  ghostBtnText: {
-    color: '#cbd5e1',
-    fontSize: 12,
+    marginBottom: tokens.spacing.xs,
   },
   emptyText: {
-    color: '#64748b',
-    fontSize: 13,
+    color: tokens.colors.text.muted,
+    fontSize: tokens.typography.scale.caption.fontSize,
     fontStyle: 'italic',
-    marginBottom: 8,
+    marginBottom: tokens.spacing.xs,
   },
   itemCard: {
-    backgroundColor: '#1e293b',
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 8,
+    marginBottom: tokens.spacing.xs,
   },
   itemHeader: {
     flexDirection: 'row',
@@ -466,63 +414,45 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    gap: 8,
-  },
-  pageBadge: {
-    backgroundColor: '#4f46e5',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  notePageBadge: {
-    backgroundColor: '#0284c7',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-  },
-  pageBadgeText: {
-    color: '#ffffff',
-    fontSize: 12,
-    fontWeight: '700',
+    gap: tokens.spacing.xs,
   },
   itemTextWrap: {
     flex: 1,
   },
   itemTitle: {
-    color: '#f8fafc',
-    fontSize: 14,
-    fontWeight: '600',
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   unavailableBadge: {
-    color: '#f59e0b',
-    fontSize: 11,
-    fontWeight: '600',
+    color: tokens.colors.semantic.warning,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   actionsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: tokens.spacing.sm,
   },
   actionLink: {
-    color: '#93c5fd',
-    fontSize: 12,
-    fontWeight: '600',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   deleteLink: {
-    color: '#f87171',
-    fontSize: 12,
-    fontWeight: '600',
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   deleteConfirmLink: {
-    color: '#ef4444',
-    fontSize: 12,
-    fontWeight: '700',
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.bold,
   },
   noteBodyText: {
-    color: '#cbd5e1',
-    fontSize: 13,
-    marginTop: 8,
-    lineHeight: 19,
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    marginTop: tokens.spacing.xs,
+    lineHeight: tokens.typography.scale.bodySm.lineHeight,
   },
 });
-

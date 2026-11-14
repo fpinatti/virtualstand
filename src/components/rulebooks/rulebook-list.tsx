@@ -11,6 +11,7 @@ import { useRouter } from 'expo-router';
 import { Rulebook, RulebookDocType } from '@/services/rulebook-types';
 import { useRulebooks } from '@/hooks/use-rulebooks';
 import { RulebookImportSheet } from './rulebook-import-sheet';
+import { Button, Card, tokens } from '@/ui';
 
 const DOC_TYPE_LABELS: Record<RulebookDocType, string> = {
   BASE_RULES: 'Regras base',
@@ -49,11 +50,11 @@ export function RulebookList({ bggId, onBeforeOpenReader }: RulebookListProps) {
 
   if (Platform.OS === 'web') {
     return (
-      <View style={styles.webFallback}>
+      <Card variant="sunken" padding="sm">
         <Text style={styles.webFallbackText}>
           📖 Leitura de manuais disponível no app iOS/Android
         </Text>
-      </View>
+      </Card>
     );
   }
 
@@ -78,9 +79,12 @@ export function RulebookList({ bggId, onBeforeOpenReader }: RulebookListProps) {
     <View style={styles.container}>
       <View style={styles.headerRow}>
         <Text style={styles.headerTitle}>Manuais ({rulebooks.length})</Text>
-        <TouchableOpacity style={styles.addBtn} onPress={() => setShowImport(true)}>
-          <Text style={styles.addBtnText}>+ Anexar PDF</Text>
-        </TouchableOpacity>
+        <Button
+          label="+ Anexar PDF"
+          variant="primary"
+          size="sm"
+          onPress={() => setShowImport(true)}
+        />
       </View>
 
       {rulebooks.length === 0 ? (
@@ -89,7 +93,7 @@ export function RulebookList({ bggId, onBeforeOpenReader }: RulebookListProps) {
         </Text>
       ) : (
         rulebooks.map((rb) => (
-          <View key={rb.id} style={styles.card}>
+          <Card key={rb.id} variant="sunken" padding="sm" style={styles.card}>
             {editingId === rb.id ? (
               <View style={styles.editRow}>
                 <TextInput
@@ -98,21 +102,21 @@ export function RulebookList({ bggId, onBeforeOpenReader }: RulebookListProps) {
                   onChangeText={setEditingLabel}
                   maxLength={120}
                 />
-                <TouchableOpacity
-                  style={styles.saveEditBtn}
+                <Button
+                  label="Salvar"
+                  variant="primary"
+                  size="sm"
                   onPress={async () => {
                     await renameRulebook(rb.id, editingLabel);
                     setEditingId(null);
                   }}
-                >
-                  <Text style={styles.saveEditText}>Salvar</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.cancelEditBtn}
+                />
+                <Button
+                  label="Cancelar"
+                  variant="secondary"
+                  size="sm"
                   onPress={() => setEditingId(null)}
-                >
-                  <Text style={styles.cancelEditText}>Cancelar</Text>
-                </TouchableOpacity>
+                />
               </View>
             ) : (
               <>
@@ -159,27 +163,27 @@ export function RulebookList({ bggId, onBeforeOpenReader }: RulebookListProps) {
                         : 'O arquivo local será apagado.'}
                     </Text>
                     <View style={styles.confirmButtons}>
-                      <TouchableOpacity
-                        style={styles.cancelEditBtn}
+                      <Button
+                        label="Cancelar"
+                        variant="secondary"
+                        size="sm"
                         onPress={() => setConfirmDelete(null)}
-                      >
-                        <Text style={styles.cancelEditText}>Cancelar</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.confirmDelBtn}
+                      />
+                      <Button
+                        label="Apagar Manual"
+                        variant="danger"
+                        size="sm"
                         onPress={async () => {
                           await deleteRulebook(rb.id);
                           setConfirmDelete(null);
                         }}
-                      >
-                        <Text style={styles.saveEditText}>Apagar Manual</Text>
-                      </TouchableOpacity>
+                      />
                     </View>
                   </View>
                 )}
               </>
             )}
-          </View>
+          </Card>
         ))
       )}
 
@@ -202,148 +206,101 @@ export function RulebookList({ bggId, onBeforeOpenReader }: RulebookListProps) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 4,
+    marginTop: tokens.spacing['2xs'],
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: tokens.spacing.xs,
   },
   headerTitle: {
-    color: '#cbd5e1',
-    fontSize: 13,
-    fontWeight: '600',
-  },
-  addBtn: {
-    backgroundColor: '#4f46e5',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  addBtnText: {
-    color: '#ffffff',
-    fontSize: 12,
-    fontWeight: '700',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
+    fontVariant: ['tabular-nums'],
   },
   emptyText: {
-    color: '#64748b',
-    fontSize: 13,
+    color: tokens.colors.text.muted,
+    fontSize: tokens.typography.scale.caption.fontSize,
     fontStyle: 'italic',
   },
   card: {
-    backgroundColor: '#0f172a',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: '#334155',
+    marginBottom: tokens.spacing.xs,
   },
   mainInfo: {
-    marginBottom: 6,
+    marginBottom: tokens.spacing['2xs'],
   },
   docLabel: {
-    color: '#f8fafc',
-    fontSize: 14,
-    fontWeight: '600',
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   docMeta: {
-    color: '#94a3b8',
-    fontSize: 12,
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
     marginTop: 2,
+    fontVariant: ['tabular-nums'],
   },
   actionsRow: {
     flexDirection: 'row',
-    gap: 14,
+    gap: tokens.spacing.md,
     borderTopWidth: 1,
-    borderTopColor: '#1e293b',
-    paddingTop: 6,
+    borderTopColor: tokens.colors.border.subtle,
+    paddingTop: tokens.spacing['2xs'],
   },
   readLink: {
-    color: '#818cf8',
-    fontSize: 12,
-    fontWeight: '700',
+    color: tokens.colors.accent.primary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.bold,
   },
   actionLink: {
-    color: '#93c5fd',
-    fontSize: 12,
-    fontWeight: '600',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   deleteLink: {
-    color: '#f87171',
-    fontSize: 12,
-    fontWeight: '600',
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   editRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: tokens.spacing['2xs'],
   },
   editInput: {
     flex: 1,
-    backgroundColor: '#1e293b',
-    borderRadius: 6,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    color: '#f8fafc',
-    fontSize: 13,
-  },
-  saveEditBtn: {
-    backgroundColor: '#6366f1',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  saveEditText: {
-    color: '#ffffff',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  cancelEditBtn: {
-    backgroundColor: '#334155',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  cancelEditText: {
-    color: '#cbd5e1',
-    fontSize: 12,
+    backgroundColor: tokens.colors.surface.elevated,
+    borderRadius: tokens.radius.sm,
+    paddingHorizontal: tokens.spacing.xs,
+    paddingVertical: tokens.spacing['2xs'],
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    borderWidth: 1,
+    borderColor: tokens.colors.border.subtle,
   },
   confirmBox: {
-    marginTop: 8,
-    padding: 10,
-    borderRadius: 8,
-    backgroundColor: 'rgba(239,68,68,0.12)',
+    marginTop: tokens.spacing.xs,
+    padding: tokens.spacing.sm,
+    borderRadius: tokens.radius.md,
+    backgroundColor: tokens.colors.surface.elevated,
     borderWidth: 1,
-    borderColor: '#ef4444',
+    borderColor: tokens.colors.semantic.danger,
   },
   confirmText: {
-    color: '#fca5a5',
-    fontSize: 12,
-    marginBottom: 8,
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    marginBottom: tokens.spacing.xs,
   },
   confirmButtons: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    gap: 8,
-  },
-  confirmDelBtn: {
-    backgroundColor: '#ef4444',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-  webFallback: {
-    backgroundColor: '#0f172a',
-    padding: 10,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#334155',
+    gap: tokens.spacing.xs,
   },
   webFallbackText: {
-    color: '#94a3b8',
-    fontSize: 13,
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
     textAlign: 'center',
   },
 });
-

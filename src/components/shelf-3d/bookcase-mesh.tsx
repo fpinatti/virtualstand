@@ -1,6 +1,7 @@
 import React from 'react';
 import * as THREE from 'three';
 import { ShelfDimensions } from './types';
+import { tokens } from '@/ui';
 
 interface BookcaseMeshProps {
   shelf: ShelfDimensions;
@@ -12,13 +13,13 @@ export function BookcaseMesh({ shelf }: BookcaseMeshProps) {
   const totalWidth = cols * cubbyWidth + (cols + 1) * thickness;
   const totalHeight = rows * cubbyHeight + (rows + 1) * thickness;
   const shelfMaterial = new THREE.MeshStandardMaterial({
-    color: '#1e293b',
-    roughness: 0.8,
-    metalness: 0.1,
+    color: tokens.colors.shelf3d.frameWood,
+    roughness: 0.78,
+    metalness: 0.08,
   });
 
   const backboardMaterial = new THREE.MeshStandardMaterial({
-    color: '#0f172a',
+    color: tokens.colors.shelf3d.backingBoard,
     roughness: 0.9,
     metalness: 0.05,
   });
@@ -85,4 +86,3 @@ export function BookcaseMesh({ shelf }: BookcaseMeshProps) {
     </group>
   );
 }
-

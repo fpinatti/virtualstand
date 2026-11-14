@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { PlaySession } from '@/services/playlog-types';
+import { Badge, Card, tokens } from '@/ui';
 
 interface PlayHistoryProps {
   sessions: PlaySession[];
@@ -20,19 +21,28 @@ export function PlayHistory({ sessions, onEdit, onDelete }: PlayHistoryProps) {
   return (
     <View style={styles.list}>
       {sessions.map((s) => (
-        <View key={s.id} style={styles.sessionCard}>
+        <Card key={s.id} variant="sunken" padding="sm" style={styles.sessionCard}>
           <View style={styles.topRow}>
             <Text style={styles.dateText}>
               📅 {s.playedOn}
               {s.durationMinutes ? ` • ${s.durationMinutes} min` : ''}
             </Text>
-            <Text style={styles.outcomeBadge}>
-              {s.outcome === 'COOP_WIN'
-                ? 'Vitória do grupo'
-                : s.outcome === 'COOP_LOSS'
-                ? 'Derrota do grupo'
-                : 'Competitivo'}
-            </Text>
+            <Badge
+              tone={
+                s.outcome === 'COOP_WIN'
+                  ? 'success'
+                  : s.outcome === 'COOP_LOSS'
+                  ? 'danger'
+                  : 'info'
+              }
+              label={
+                s.outcome === 'COOP_WIN'
+                  ? 'Vitória do grupo'
+                  : s.outcome === 'COOP_LOSS'
+                  ? 'Derrota do grupo'
+                  : 'Competitivo'
+              }
+            />
           </View>
 
           <View style={styles.participantsWrap}>
@@ -69,7 +79,7 @@ export function PlayHistory({ sessions, onEdit, onDelete }: PlayHistoryProps) {
               </TouchableOpacity>
             )}
           </View>
-        </View>
+        </Card>
       ))}
     </View>
   );
@@ -77,78 +87,70 @@ export function PlayHistory({ sessions, onEdit, onDelete }: PlayHistoryProps) {
 
 const styles = StyleSheet.create({
   emptyText: {
-    color: '#64748b',
-    fontSize: 13,
+    color: tokens.colors.text.muted,
+    fontSize: tokens.typography.scale.caption.fontSize,
     fontStyle: 'italic',
   },
   list: {
-    gap: 8,
+    gap: tokens.spacing.xs,
   },
   sessionCard: {
-    backgroundColor: '#0f172a',
-    borderRadius: 8,
-    padding: 10,
-    borderWidth: 1,
-    borderColor: '#334155',
+    marginBottom: tokens.spacing['2xs'],
   },
   topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: tokens.spacing['2xs'],
   },
   dateText: {
-    color: '#f8fafc',
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  outcomeBadge: {
-    color: '#93c5fd',
-    fontSize: 11,
-    fontWeight: '600',
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    fontVariant: ['tabular-nums'],
   },
   participantsWrap: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 4,
+    gap: tokens.spacing.xs,
+    marginBottom: tokens.spacing['2xs'],
   },
   partText: {
-    color: '#cbd5e1',
-    fontSize: 12,
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontVariant: ['tabular-nums'],
   },
   winnerPartText: {
-    color: '#fbbf24',
-    fontWeight: '700',
+    color: tokens.colors.accent.primary,
+    fontWeight: tokens.typography.weights.bold,
   },
   commentText: {
-    color: '#94a3b8',
-    fontSize: 12,
+    color: tokens.colors.text.muted,
+    fontSize: tokens.typography.scale.caption.fontSize,
     fontStyle: 'italic',
-    marginTop: 4,
+    marginTop: tokens.spacing['2xs'],
   },
   actionsRow: {
     flexDirection: 'row',
-    gap: 14,
-    marginTop: 6,
-    paddingTop: 6,
+    gap: tokens.spacing.md,
+    marginTop: tokens.spacing.xs,
+    paddingTop: tokens.spacing['2xs'],
     borderTopWidth: 1,
-    borderTopColor: '#1e293b',
+    borderTopColor: tokens.colors.border.subtle,
   },
   editLink: {
-    color: '#93c5fd',
-    fontSize: 12,
-    fontWeight: '600',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   delLink: {
-    color: '#f87171',
-    fontSize: 12,
-    fontWeight: '600',
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   confirmDelLink: {
-    color: '#ef4444',
-    fontSize: 12,
-    fontWeight: '700',
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.bold,
   },
 });
-

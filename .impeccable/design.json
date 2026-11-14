@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-14T18:22:00.000Z",
+  "title": "Design System: VirtualStand",
+  "extensions": {
+    "colorMeta": {
+      "amber-brass": {
+        "role": "primary",
+        "displayName": "Amber Brass",
+        "canonical": "#E5A93C",
+        "tonalRamp": ["#2A1D06", "#4B340B", "#6E4D11", "#966A19", "#C88D24", "#E5A93C", "#F0C571", "#F9E5BA"]
+      },
+      "meeple-teal": {
+        "role": "secondary",
+        "displayName": "Meeple Teal",
+        "canonical": "#4DB6AC",
+        "tonalRamp": ["#0D2624", "#17423E", "#23635D", "#318880", "#4DB6AC", "#76C8C0", "#A3DCD6", "#D4F0ED"]
+      },
+      "obsidian-canvas": {
+        "role": "neutral",
+        "displayName": "Obsidian Canvas",
+        "canonical": "#121316",
+        "tonalRamp": ["#121316", "#1B1D22", "#24272E", "#2E323B", "#454A57", "#8A857A", "#B5B0A4", "#F5F2EB"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero counters and primary modal headers." },
+      "headline": { "displayName": "Headline", "purpose": "Screen titles and empty-state headlines." },
+      "title": { "displayName": "Title", "purpose": "Section headers and card titles." },
+      "body": { "displayName": "Body", "purpose": "Primary descriptions, user notes, and form input values." },
+      "label": { "displayName": "Label", "purpose": "Button labels, field labels, and metadata badges." }
+    },
+    "shadows": [
+      {
+        "name": "sheet-elevation",
+        "value": "0 8px 24px rgba(0, 0, 0, 0.45)",
+        "purpose": "Floating modals and bottom sheets."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out-quart",
+        "value": "cubic-bezier(0.25, 1, 0.5, 1)",
+        "purpose": "Smooth box extraction and sheet transitions."
+      }
+    ],
+    "breakpoints": [
+      { "name": "tablet", "value": "768px" },
+      { "name": "desktop", "value": "920px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Primary Amber Brass action button with high-contrast dark ink label.",
+      "html": "<button class=\"ds-btn-primary\">Sincronizar Agora</button>",
+      "css": ".ds-btn-primary { background: #E5A93C; color: #121316; padding: 12px 20px; min-height: 44px; border-radius: 10px; font-size: 14px; font-weight: 700; border: none; cursor: pointer; transition: background 0.15s ease; } .ds-btn-primary:hover { background: #C88D24; } .ds-btn-primary:focus-visible { outline: 2px solid #F5F2EB; outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Tactile secondary control for supporting actions.",
+      "html": "<button class=\"ds-btn-secondary\">Importar Manual</button>",
+      "css": ".ds-btn-secondary { background: #2E323B; color: #F5F2EB; padding: 12px 20px; min-height: 44px; border-radius: 10px; font-size: 14px; font-weight: 600; border: 1px solid #323640; cursor: pointer; transition: background 0.15s ease; } .ds-btn-secondary:hover { background: #3A3F4B; }"
+    },
+    {
+      "name": "Default Card",
+      "kind": "card",
+      "refersTo": "card-default",
+      "description": "Walnut-toned surface container with subtle 1px structural border.",
+      "html": "<div class=\"ds-card\"><h3>Catan (1995)</h3><p>3–4 jogadores • 60–120 min</p></div>",
+      "css": ".ds-card { background: #1B1D22; color: #F5F2EB; border: 1px solid #262930; border-radius: 14px; padding: 16px; } .ds-card h3 { margin: 0 0 6px 0; font-size: 18px; font-weight: 700; } .ds-card p { margin: 0; color: #B5B0A4; font-size: 14px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-default",
+      "description": "Obsidian input well with Amber Brass focus ring.",
+      "html": "<input class=\"ds-input\" placeholder=\"Buscar jogo na coleção...\" />",
+      "css": ".ds-input { background: #121316; color: #F5F2EB; border: 1px solid #323640; border-radius: 10px; padding: 10px 14px; min-height: 44px; font-size: 15px; } .ds-input:focus { outline: none; border-color: #E5A93C; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Tactile Tabletop Lounge",
+    "overview": "VirtualStand's visual identity is crafted for the warm, focused atmosphere of an evening board game session. Instead of cold, blue-tinted SaaS dashboards or generic indigo gradients, the interface draws from the physical materials of modern tabletop gaming: deep obsidian felt, dark walnut shelving, warm linen rulebook pages, and stamped amber-brass tokens.",
+    "keyCharacteristics": [
+      "Warm-neutral dark surfaces (#121316 to #2E323B) that eliminate cold blue glare in low-light rooms.",
+      "High-contrast editorial ivory typography (#F5F2EB) paired with warm stone secondary copy (#B5B0A4).",
+      "Confident Amber Brass (#E5A93C) primary actions with dark ink labels (#121316) for unmistakable hierarchy.",
+      "Strict 4pt spatial rhythm and 44pt minimum touch targets across iOS, Android, and Web Localhost."
+    ],
+    "rules": [
+      {
+        "name": "The One Brass Token Rule",
+        "body": "amber-brass (#E5A93C) may appear as a solid fill on at most one primary button per active screen or modal section. All sibling actions must step down to ash-interactive or ghost treatments.",
+        "section": "colors"
+      },
+      {
+        "name": "The No Cold Indigo Rule",
+        "body": "Legacy AI-default colors (#0f172a, #1e293b, #6366f1, #4f46e5) are strictly banned across all screens and components.",
+        "section": "colors"
+      },
+      {
+        "name": "The Self-Sufficient Heading Rule",
+        "body": "Section headings stand on their own weight and spacing; never stack uppercase eyebrow kickers above a heading.",
+        "section": "typography"
+      },
+      {
+        "name": "The Single Boundary Rule",
+        "body": "Declare card boundaries once via tonal contrast and a 1px subtle border (#262930)—never combine thick borders with wide outer glows.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do import all colors, spacing, typography, and radii from @/ui/tokens and compose screens with @/ui primitives.",
+      "Do wrap scrollable tab screens in ScreenContainer so Web Localhost views stay centered at 920px max width.",
+      "Do maintain at least 4.5:1 contrast for all body/metadata text and 44x44pt touch targets on every pressable element."
+    ],
+    "donts": [
+      "Don't hardcode legacy Tailwind slate/indigo hex values (#0f172a, #1e293b, #334155, #6366f1, #4f46e5) in any screen or component.",
+      "Don't place two primary (amber-brass) buttons side by side in the same card, toolbar, or modal footer.",
+      "Don't use thick colored left borders (borderLeftWidth > 1) or zero-offset neon glow shadows on cards."
+    ]
+  }
+}

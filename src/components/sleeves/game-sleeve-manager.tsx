@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Modal,
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
-  Alert,
 } from 'react-native';
 import { GameSleeveItem } from '@/services/sleeve-types';
 import { sleeveManagerService } from '@/services/sleeve-manager.service';
+import { Button, Card, EmptyState, Input, tokens } from '@/ui';
 
 interface GameSleeveManagerModalProps {
   bggId: number;
@@ -28,8 +27,8 @@ export function GameSleeveManagerModal({
   onUpdated,
 }: GameSleeveManagerModalProps) {
   const [sleeves, setSleeves] = useState<GameSleeveItem[]>([]);
-  const [loading, setLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // New sleeve form fields
   const [newSetName, setNewSetName] = useState('');
@@ -38,42 +37,42 @@ export function GameSleeveManagerModal({
   const [newHeight, setNewHeight] = useState('88');
   const [newCount, setNewCount] = useState('50');
 
-  const loadSleeves = async () => {
-    setLoading(true);
+  const loadSleeves = useCallback(async () => {
     try {
       const data = await sleeveManagerService.getGameSleeves(bggId);
       setSleeves(data);
     } catch (err) {
       console.error('Failed to load sleeves:', err);
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [bggId]);
 
   useEffect(() => {
     if (visible && bggId) {
+      setErrorMsg(null);
       loadSleeves();
     }
-  }, [visible, bggId]);
+  }, [visible, bggId, loadSleeves]);
 
   const handleToggle = async (sleeve: GameSleeveItem) => {
     if (!sleeve.id) return;
+    setErrorMsg(null);
     try {
       await sleeveManagerService.toggleSleeveStatus(sleeve.id, !sleeve.isSleeved);
       await loadSleeves();
       onUpdated?.();
-    } catch (err) {
-      Alert.alert('Erro', 'Não foi possível atualizar o status de envelopamento.');
+    } catch {
+      setErrorMsg('Não foi possível atualizar o status de envelopamento.');
     }
   };
 
   const handleAddSleeve = async () => {
+    setErrorMsg(null);
     const w = parseFloat(newWidth);
     const h = parseFloat(newHeight);
     const count = parseInt(newCount, 10);
 
     if (isNaN(w) || isNaN(h) || isNaN(count) || count <= 0) {
-      Alert.alert('Erro', 'Por favor, informe medidas e quantidade de cartas válidas.');
+      setErrorMsg('Por favor, informe medidas e quantidade de cartas válidas.');
       return;
     }
 
@@ -92,19 +91,20 @@ export function GameSleeveManagerModal({
       setNewSetName('');
       await loadSleeves();
       onUpdated?.();
-    } catch (err) {
-      Alert.alert('Erro', 'Não foi possível cadastrar o formato de sleeve.');
+    } catch {
+      setErrorMsg('Não foi possível cadastrar o formato de sleeve.');
     }
   };
 
   const handleDeleteSleeve = async (id?: number) => {
     if (!id) return;
+    setErrorMsg(null);
     try {
       await sleeveManagerService.deleteGameSleeve(id);
       await loadSleeves();
       onUpdated?.();
-    } catch (err) {
-      Alert.alert('Erro', 'Não foi possível excluir o formato de sleeve.');
+    } catch {
+      setErrorMsg('Não foi possível excluir o formato de sleeve.');
     }
   };
 
@@ -115,24 +115,28 @@ export function GameSleeveManagerModal({
       <View style={styles.overlay}>
         <View style={styles.sheet}>
           <View style={styles.header}>
-            <View>
+            <View style={styles.headerTextWrap}>
               <Text style={styles.title}>Sleeves do Jogo</Text>
-              <Text style={styles.subtitle} numberOfLines={1}>{gameTitle}</Text>
+              <Text style={styles.subtitle} numberOfLines={1}>
+                {gameTitle}
+              </Text>
             </View>
             <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
               <Text style={styles.closeBtnText}>✕</Text>
             </TouchableOpacity>
           </View>
 
+          {errorMsg ? <Text style={styles.errorText}>{errorMsg}</Text> : null}
+
           <ScrollView style={styles.list}>
             {sleeves.length === 0 ? (
-              <View style={styles.emptyContainer}>
-                <Text style={styles.emptyText}>Nenhum formato de sleeve cadastrado para este jogo.</Text>
-                <Text style={styles.emptySubtext}>Adicione manualmente caso este jogo use cartas.</Text>
-              </View>
+              <EmptyState
+                title="Nenhum formato de sleeve cadastrado"
+                description="Adicione manualmente caso este jogo utilize cartas."
+              />
             ) : (
               sleeves.map((s) => (
-                <View key={s.id || s.cardSetName} style={styles.sleeveCard}>
+                <Card key={s.id || s.cardSetName} variant="sunken" padding="sm" style={styles.sleeveCard}>
                   <TouchableOpacity
                     style={[styles.checkbox, s.isSleeved && styles.checkboxActive]}
                     onPress={() => handleToggle(s)}
@@ -156,77 +160,83 @@ export function GameSleeveManagerModal({
                   >
                     <Text style={styles.deleteBtnText}>✕</Text>
                   </TouchableOpacity>
-                </View>
+                </Card>
               ))
             )}
 
             {showAddForm ? (
-              <View style={styles.formCard}>
+              <Card variant="sunken" padding="md" style={styles.formCard}>
                 <Text style={styles.formTitle}>Novo Formato de Carta</Text>
 
-                <TextInput
-                  style={styles.input}
-                  placeholder="Nome do baralho (ex: Cartas de Ação)"
-                  placeholderTextColor="#64748b"
+                <Input
+                  label="Nome do baralho"
+                  placeholder="Ex: Cartas de Ação"
                   value={newSetName}
                   onChangeText={setNewSetName}
                 />
 
-                <TextInput
-                  style={styles.input}
-                  placeholder="Nome do Formato (ex: Standard American)"
-                  placeholderTextColor="#64748b"
+                <Input
+                  label="Nome do formato"
+                  placeholder="Ex: Standard American"
                   value={newFormatName}
                   onChangeText={setNewFormatName}
                 />
 
                 <View style={styles.row}>
-                  <TextInput
-                    style={[styles.input, styles.halfInput]}
-                    placeholder="Largura mm (ex: 63.5)"
-                    placeholderTextColor="#64748b"
-                    keyboardType="numeric"
-                    value={newWidth}
-                    onChangeText={setNewWidth}
-                  />
-                  <TextInput
-                    style={[styles.input, styles.halfInput]}
-                    placeholder="Altura mm (ex: 88)"
-                    placeholderTextColor="#64748b"
-                    keyboardType="numeric"
-                    value={newHeight}
-                    onChangeText={setNewHeight}
-                  />
+                  <View style={styles.halfInput}>
+                    <Input
+                      label="Largura (mm)"
+                      placeholder="63.5"
+                      keyboardType="numeric"
+                      value={newWidth}
+                      onChangeText={setNewWidth}
+                      tabularNums
+                    />
+                  </View>
+                  <View style={styles.halfInput}>
+                    <Input
+                      label="Altura (mm)"
+                      placeholder="88"
+                      keyboardType="numeric"
+                      value={newHeight}
+                      onChangeText={setNewHeight}
+                      tabularNums
+                    />
+                  </View>
                 </View>
 
-                <TextInput
-                  style={styles.input}
-                  placeholder="Quantidade de cartas (ex: 54)"
-                  placeholderTextColor="#64748b"
+                <Input
+                  label="Quantidade de cartas"
+                  placeholder="Ex: 54"
                   keyboardType="numeric"
                   value={newCount}
                   onChangeText={setNewCount}
+                  tabularNums
                 />
 
                 <View style={styles.formButtonsRow}>
-                  <TouchableOpacity
-                    style={styles.cancelBtn}
+                  <Button
+                    label="Cancelar"
+                    variant="secondary"
+                    size="sm"
                     onPress={() => setShowAddForm(false)}
-                  >
-                    <Text style={styles.cancelBtnText}>Cancelar</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.saveBtn} onPress={handleAddSleeve}>
-                    <Text style={styles.saveBtnText}>Adicionar</Text>
-                  </TouchableOpacity>
+                  />
+                  <Button
+                    label="Adicionar"
+                    variant="primary"
+                    size="sm"
+                    onPress={handleAddSleeve}
+                  />
                 </View>
-              </View>
+              </Card>
             ) : (
-              <TouchableOpacity
-                style={styles.addTriggerBtn}
-                onPress={() => setShowAddForm(true)}
-              >
-                <Text style={styles.addTriggerText}>+ Adicionar Outro Tamanho de Carta</Text>
-              </TouchableOpacity>
+              <View style={styles.addTriggerWrap}>
+                <Button
+                  label="+ Adicionar Outro Tamanho de Carta"
+                  variant="secondary"
+                  onPress={() => setShowAddForm(true)}
+                />
+              </View>
             )}
           </ScrollView>
         </View>
@@ -238,156 +248,122 @@ export function GameSleeveManagerModal({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.7)',
+    backgroundColor: tokens.colors.surface.overlay,
     justifyContent: 'flex-end',
   },
   sheet: {
-    backgroundColor: '#1e293b',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    maxHeight: '80%',
-    padding: 20,
-    borderWidth: 1,
-    borderColor: '#334155',
+    backgroundColor: tokens.colors.surface.elevated,
+    borderTopLeftRadius: tokens.radius.xl,
+    borderTopRightRadius: tokens.radius.xl,
+    maxHeight: '82%',
+    padding: tokens.spacing.lg,
+    borderTopWidth: 1,
+    borderColor: tokens.colors.border.subtle,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 16,
+    marginBottom: tokens.spacing.md,
+  },
+  headerTextWrap: {
+    flex: 1,
+    marginRight: tokens.spacing.sm,
   },
   title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#f8fafc',
+    fontSize: tokens.typography.scale.h2.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    color: tokens.colors.text.primary,
   },
   subtitle: {
-    fontSize: 13,
-    color: '#94a3b8',
-    marginTop: 2,
-    maxWidth: 280,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    color: tokens.colors.text.secondary,
+    marginTop: tokens.spacing['2xs'],
   },
   closeBtn: {
-    padding: 4,
+    padding: tokens.spacing['2xs'],
   },
   closeBtnText: {
-    color: '#94a3b8',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.h2.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+  },
+  errorText: {
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    marginBottom: tokens.spacing.xs,
   },
   list: {
-    marginBottom: 20,
+    marginBottom: tokens.spacing.md,
   },
   sleeveCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#0f172a',
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#334155',
+    marginBottom: tokens.spacing.xs,
   },
   checkbox: {
     width: 24,
     height: 24,
-    borderRadius: 6,
+    borderRadius: tokens.radius.sm,
     borderWidth: 2,
-    borderColor: '#6366f1',
+    borderColor: tokens.colors.accent.primary,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: tokens.spacing.sm,
   },
   checkboxActive: {
-    backgroundColor: '#10b981',
-    borderColor: '#10b981',
+    backgroundColor: tokens.colors.semantic.success,
+    borderColor: tokens.colors.semantic.success,
   },
   checkboxCheck: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: 'bold',
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    fontWeight: tokens.typography.weights.bold,
   },
   sleeveInfo: {
     flex: 1,
   },
   setName: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#f8fafc',
-    marginBottom: 2,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
+    color: tokens.colors.text.primary,
+    marginBottom: tokens.spacing['2xs'],
   },
   formatText: {
-    fontSize: 12,
-    color: '#94a3b8',
-    marginBottom: 2,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    color: tokens.colors.text.secondary,
+    marginBottom: tokens.spacing['2xs'],
+    fontVariant: ['tabular-nums'],
   },
   countText: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#a5b4fc',
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.medium,
+    color: tokens.colors.accent.primary,
+    fontVariant: ['tabular-nums'],
   },
   deleteBtn: {
-    padding: 8,
+    padding: tokens.spacing.xs,
   },
   deleteBtnText: {
-    color: '#64748b',
-    fontSize: 14,
+    color: tokens.colors.text.muted,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
   },
-  emptyContainer: {
-    padding: 24,
-    alignItems: 'center',
-  },
-  emptyText: {
-    color: '#cbd5e1',
-    fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 4,
-  },
-  emptySubtext: {
-    color: '#64748b',
-    fontSize: 12,
-    textAlign: 'center',
-  },
-  addTriggerBtn: {
-    paddingVertical: 12,
-    alignItems: 'center',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#4338ca',
-    marginTop: 8,
-  },
-  addTriggerText: {
-    color: '#a5b4fc',
-    fontSize: 13,
-    fontWeight: '600',
+  addTriggerWrap: {
+    marginTop: tokens.spacing.xs,
   },
   formCard: {
-    backgroundColor: '#0f172a',
-    borderRadius: 12,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#4338ca',
-    marginTop: 8,
+    marginTop: tokens.spacing.xs,
+    borderColor: tokens.colors.border.strong,
   },
   formTitle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#f8fafc',
-    marginBottom: 12,
-  },
-  input: {
-    backgroundColor: '#1e293b',
-    borderRadius: 8,
-    padding: 10,
-    color: '#f8fafc',
-    fontSize: 13,
-    marginBottom: 8,
-    borderWidth: 1,
-    borderColor: '#334155',
+    fontSize: tokens.typography.scale.body.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    color: tokens.colors.text.primary,
+    marginBottom: tokens.spacing.sm,
   },
   row: {
     flexDirection: 'row',
-    gap: 8,
+    gap: tokens.spacing.xs,
   },
   halfInput: {
     flex: 1,
@@ -395,29 +371,7 @@ const styles = StyleSheet.create({
   formButtonsRow: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    gap: 8,
-    marginTop: 4,
-  },
-  cancelBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 6,
-    backgroundColor: '#334155',
-  },
-  cancelBtnText: {
-    color: '#94a3b8',
-    fontSize: 13,
-  },
-  saveBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 6,
-    backgroundColor: '#6366f1',
-  },
-  saveBtnText: {
-    color: '#ffffff',
-    fontSize: 13,
-    fontWeight: 'bold',
+    gap: tokens.spacing.xs,
+    marginTop: tokens.spacing['2xs'],
   },
 });
-

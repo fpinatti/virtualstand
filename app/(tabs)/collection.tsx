@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   FlatList,
   Image,
   TouchableOpacity,
@@ -16,11 +15,12 @@ import { useSync } from '@/hooks/use-sync';
 import { SyncProgressModal } from '@/components/sync-progress-modal';
 import { GameDetailSheet } from '@/components/game-detail-sheet';
 import { CollectionWithGame } from '@/db/repositories/collection.repository';
+import { Badge, Card, EmptyState, Input, ScreenContainer, tokens } from '@/ui';
 
 export default function CollectionScreen() {
   const router = useRouter();
-  const { items, allItemsCount, loading, error, searchQuery, setSearchQuery, refresh } = useCollection();
-  const { isSyncing, progress, startSync, cancelSync } = useSync();
+  const { items, allItemsCount, loading, searchQuery, setSearchQuery, refresh } = useCollection();
+  const { isSyncing, progress, cancelSync } = useSync();
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState<CollectionWithGame | null>(null);
 
@@ -30,60 +30,62 @@ export default function CollectionScreen() {
 
     return (
       <TouchableOpacity
-        style={styles.card}
-        activeOpacity={0.7}
+        activeOpacity={0.8}
         onPress={() => setSelectedItem(item)}
+        style={styles.cardTouch}
       >
-        {imageUri ? (
-          <Image source={{ uri: imageUri }} style={styles.thumbnail} resizeMode="cover" />
-        ) : (
-          <View style={[styles.thumbnail, styles.noImage]}>
-            <Text style={styles.noImageText}>Sem Capa</Text>
+        <Card variant="elevated" padding="none" style={styles.card}>
+          {imageUri ? (
+            <Image source={{ uri: imageUri }} style={styles.thumbnail} resizeMode="cover" />
+          ) : (
+            <View style={[styles.thumbnail, styles.noImage]}>
+              <Text style={styles.noImageText}>Sem Capa</Text>
+            </View>
+          )}
+
+          <View style={styles.info}>
+            <Text style={styles.title} numberOfLines={2}>
+              {game.title}
+            </Text>
+            <Text style={styles.subtitle}>
+              {game.yearPublished ? `${game.yearPublished} • ` : ''}
+              {game.minPlayers && game.maxPlayers
+                ? `${game.minPlayers}-${game.maxPlayers} jogadores`
+                : ''}
+            </Text>
+
+            <View style={styles.tagsRow}>
+              {collection.bggRating ? (
+                <Badge
+                  tone="accent"
+                  label={`★ ${collection.bggRating.toFixed(1)}`}
+                  tabularNums
+                />
+              ) : null}
+
+              {collection.localNotes ? (
+                <Badge tone="success" label="Nota pessoal" />
+              ) : null}
+
+              {collection.customTags ? (
+                <Badge
+                  tone="neutral"
+                  label={`${JSON.parse(collection.customTags).length} tags`}
+                  tabularNums
+                />
+              ) : null}
+            </View>
           </View>
-        )}
-
-        <View style={styles.info}>
-          <Text style={styles.title} numberOfLines={2}>
-            {game.title}
-          </Text>
-          <Text style={styles.subtitle}>
-            {game.yearPublished ? `${game.yearPublished} • ` : ''}
-            {game.minPlayers && game.maxPlayers ? `${game.minPlayers}-${game.maxPlayers} jogadores` : ''}
-          </Text>
-
-          <View style={styles.tagsRow}>
-            {collection.bggRating ? (
-              <View style={styles.ratingBadge}>
-                <Text style={styles.ratingText}>★ {collection.bggRating.toFixed(1)}</Text>
-              </View>
-            ) : null}
-
-            {collection.localNotes ? (
-              <View style={styles.noteBadge}>
-                <Text style={styles.noteBadgeText}>Nota pessoal</Text>
-              </View>
-            ) : null}
-
-            {collection.customTags ? (
-              <View style={styles.customTagsBadge}>
-                <Text style={styles.customTagsText}>
-                  {JSON.parse(collection.customTags).length} tags
-                </Text>
-              </View>
-            ) : null}
-          </View>
-        </View>
+        </Card>
       </TouchableOpacity>
     );
   };
 
   return (
-    <View style={styles.container}>
+    <ScreenContainer padded={false}>
       <View style={styles.searchHeader}>
-        <TextInput
-          style={styles.searchInput}
+        <Input
           placeholder="Buscar nos meus jogos..."
-          placeholderTextColor="#64748b"
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
@@ -91,22 +93,16 @@ export default function CollectionScreen() {
 
       {loading && allItemsCount === 0 ? (
         <View style={styles.center}>
-          <ActivityIndicator size="large" color="#6366f1" />
+          <ActivityIndicator size="large" color={tokens.colors.accent.primary} />
           <Text style={styles.emptyText}>Carregando jogos...</Text>
         </View>
       ) : allItemsCount === 0 ? (
-        <View style={styles.center}>
-          <Text style={styles.emptyTitle}>Sua estante está vazia</Text>
-          <Text style={styles.emptySubtitle}>
-            Importe sua coleção do BoardGameGeek para visualizar seus jogos aqui.
-          </Text>
-          <TouchableOpacity
-            style={styles.importButton}
-            onPress={() => router.push('/settings')}
-          >
-            <Text style={styles.importButtonText}>Configurar Usuário BGG</Text>
-          </TouchableOpacity>
-        </View>
+        <EmptyState
+          title="Sua estante está vazia"
+          description="Importe sua coleção do BoardGameGeek para visualizar seus jogos aqui."
+          actionLabel="Configurar Usuário BGG"
+          onAction={() => router.push('/settings')}
+        />
       ) : (
         <FlatList
           data={items}
@@ -114,10 +110,17 @@ export default function CollectionScreen() {
           renderItem={renderGameItem}
           contentContainerStyle={styles.listContent}
           refreshControl={
-            <RefreshControl refreshing={loading} onRefresh={refresh} tintColor="#6366f1" />
+            <RefreshControl
+              refreshing={loading}
+              onRefresh={refresh}
+              tintColor={tokens.colors.accent.primary}
+            />
           }
           ListEmptyComponent={
-            <Text style={styles.noResultsText}>Nenhum jogo encontrado com "{searchQuery}".</Text>
+            <EmptyState
+              title="Nenhum jogo encontrado"
+              description={`Nenhum resultado corresponde à busca "${searchQuery}".`}
+            />
           }
         />
       )}
@@ -138,149 +141,75 @@ export default function CollectionScreen() {
         onClose={() => setSelectedItem(null)}
         onSaved={refresh}
       />
-    </View>
+    </ScreenContainer>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#0f172a',
-  },
   searchHeader: {
-    padding: 16,
-    backgroundColor: '#1e293b',
+    paddingHorizontal: tokens.spacing.md,
+    paddingTop: tokens.spacing.sm,
+    paddingBottom: tokens.spacing.xs,
+    backgroundColor: tokens.colors.surface.elevated,
     borderBottomWidth: 1,
-    borderBottomColor: '#334155',
-  },
-  searchInput: {
-    backgroundColor: '#0f172a',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    color: '#f8fafc',
-    fontSize: 15,
-    borderWidth: 1,
-    borderColor: '#334155',
+    borderBottomColor: tokens.colors.border.subtle,
   },
   listContent: {
-    padding: 16,
+    padding: tokens.spacing.md,
+  },
+  cardTouch: {
+    marginBottom: tokens.spacing.sm,
   },
   card: {
     flexDirection: 'row',
-    backgroundColor: '#1e293b',
-    borderRadius: 12,
-    marginBottom: 12,
     overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#334155',
   },
   thumbnail: {
     width: 90,
-    height: 110,
-    backgroundColor: '#0f172a',
+    height: 112,
+    backgroundColor: tokens.colors.surface.sunken,
   },
   noImage: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   noImageText: {
-    color: '#64748b',
-    fontSize: 12,
+    color: tokens.colors.text.muted,
+    fontSize: tokens.typography.scale.caption.fontSize,
   },
   info: {
     flex: 1,
-    padding: 12,
+    padding: tokens.spacing.sm,
     justifyContent: 'center',
   },
   title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#f8fafc',
-    marginBottom: 4,
+    fontSize: tokens.typography.scale.h3.fontSize,
+    lineHeight: tokens.typography.scale.h3.lineHeight,
+    fontWeight: tokens.typography.weights.bold,
+    color: tokens.colors.text.primary,
+    marginBottom: tokens.spacing['2xs'],
   },
   subtitle: {
-    fontSize: 13,
-    color: '#94a3b8',
-    marginBottom: 8,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    color: tokens.colors.text.secondary,
+    marginBottom: tokens.spacing.xs,
+    fontVariant: ['tabular-nums'],
   },
   tagsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 8,
-  },
-  ratingBadge: {
-    backgroundColor: '#4338ca',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  ratingText: {
-    color: '#fbbf24',
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  noteBadge: {
-    backgroundColor: '#065f46',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  noteBadgeText: {
-    color: '#34d399',
-    fontSize: 11,
-    fontWeight: '500',
-  },
-  customTagsBadge: {
-    backgroundColor: '#334155',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-  },
-  customTagsText: {
-    color: '#93c5fd',
-    fontSize: 11,
+    gap: tokens.spacing.xs,
   },
   center: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 32,
-  },
-  emptyTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#f8fafc',
-    marginBottom: 8,
-  },
-  emptySubtitle: {
-    fontSize: 14,
-    color: '#94a3b8',
-    textAlign: 'center',
-    marginBottom: 20,
-    lineHeight: 20,
+    padding: tokens.spacing.xl,
   },
   emptyText: {
-    color: '#94a3b8',
-    marginTop: 12,
-    fontSize: 14,
-  },
-  noResultsText: {
-    textAlign: 'center',
-    color: '#64748b',
-    marginTop: 32,
-    fontSize: 14,
-  },
-  importButton: {
-    backgroundColor: '#6366f1',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-  },
-  importButtonText: {
-    color: '#ffffff',
-    fontSize: 15,
-    fontWeight: 'bold',
+    color: tokens.colors.text.secondary,
+    marginTop: tokens.spacing.sm,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
   },
 });

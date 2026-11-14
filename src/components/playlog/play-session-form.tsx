@@ -20,6 +20,7 @@ import {
 } from '@/services/playlog-types';
 import { getTodayIsoLocal } from '@/services/play-validation';
 import { PlayerPicker } from './player-picker';
+import { Button, Card, Input, tokens } from '@/ui';
 
 interface PlaySessionFormProps {
   visible: boolean;
@@ -176,24 +177,22 @@ export function PlaySessionForm({
           <ScrollView contentContainerStyle={styles.content}>
             <View style={styles.row}>
               <View style={styles.col}>
-                <Text style={styles.label}>Data (AAAA-MM-DD):</Text>
-                <TextInput
-                  style={styles.input}
+                <Input
+                  label="Data (AAAA-MM-DD)"
                   value={playedOn}
                   onChangeText={setPlayedOn}
                   placeholder="2026-11-14"
-                  placeholderTextColor="#64748b"
+                  tabularNums
                 />
               </View>
               <View style={styles.col}>
-                <Text style={styles.label}>Duração (minutos):</Text>
-                <TextInput
-                  style={styles.input}
+                <Input
+                  label="Duração (minutos)"
                   value={durationText}
                   onChangeText={setDurationText}
                   keyboardType="number-pad"
                   placeholder="Ex: 60"
-                  placeholderTextColor="#64748b"
+                  tabularNums
                 />
               </View>
             </View>
@@ -238,7 +237,7 @@ export function PlaySessionForm({
             />
 
             {!isCoop && draftParticipants.length > 0 && (
-              <View style={styles.scoresSection}>
+              <Card variant="sunken" padding="sm" style={styles.scoresSection}>
                 <Text style={styles.label}>Pontuação e Vencedores:</Text>
                 {draftParticipants.map((dp) => (
                   <View key={dp.playerId} style={styles.participantRow}>
@@ -246,7 +245,7 @@ export function PlaySessionForm({
                     <TextInput
                       style={styles.scoreInput}
                       placeholder="Pontos"
-                      placeholderTextColor="#64748b"
+                      placeholderTextColor={tokens.colors.text.muted}
                       keyboardType="numeric"
                       value={dp.scoreText}
                       onChangeText={(txt) =>
@@ -285,25 +284,25 @@ export function PlaySessionForm({
                     </TouchableOpacity>
                   </View>
                 ))}
-              </View>
+              </Card>
             )}
 
-            <Text style={styles.label}>Comentários da Partida (opcional):</Text>
-            <TextInput
-              style={[styles.input, styles.textArea]}
+            <Input
+              label="Comentários da Partida (opcional)"
               multiline
               placeholder="Destaques, viradas épicas ou variantes usadas..."
-              placeholderTextColor="#64748b"
               value={comments}
               onChangeText={setComments}
               maxLength={2000}
+              style={styles.textArea}
             />
 
-            <TouchableOpacity style={styles.submitBtn} onPress={handleSave}>
-              <Text style={styles.submitBtnText}>
-                {editingSession ? 'Salvar Alterações' : 'Salvar Partida'}
-              </Text>
-            </TouchableOpacity>
+            <Button
+              label={editingSession ? 'Salvar Alterações' : 'Salvar Partida'}
+              variant="primary"
+              size="lg"
+              onPress={handleSave}
+            />
           </ScrollView>
         </View>
       </View>
@@ -314,167 +313,142 @@ export function PlaySessionForm({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.75)',
+    backgroundColor: tokens.colors.surface.overlay,
     justifyContent: 'flex-end',
   },
   sheet: {
-    backgroundColor: '#0f172a',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+    backgroundColor: tokens.colors.surface.elevated,
+    borderTopLeftRadius: tokens.radius.xl,
+    borderTopRightRadius: tokens.radius.xl,
     maxHeight: '90%',
     borderTopWidth: 1,
-    borderColor: '#1e293b',
+    borderColor: tokens.colors.border.subtle,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 16,
+    padding: tokens.spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: '#1e293b',
+    borderBottomColor: tokens.colors.border.subtle,
   },
   title: {
-    color: '#f8fafc',
-    fontSize: 16,
-    fontWeight: '700',
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.h3.fontSize,
+    fontWeight: tokens.typography.weights.bold,
   },
   closeText: {
-    color: '#94a3b8',
-    fontSize: 14,
-    fontWeight: '600',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   errorBox: {
-    marginHorizontal: 16,
-    marginTop: 10,
-    padding: 10,
-    borderRadius: 8,
-    backgroundColor: 'rgba(239,68,68,0.15)',
+    marginHorizontal: tokens.spacing.md,
+    marginTop: tokens.spacing.xs,
+    padding: tokens.spacing.sm,
+    borderRadius: tokens.radius.md,
+    backgroundColor: tokens.colors.surface.sunken,
     borderWidth: 1,
-    borderColor: '#ef4444',
+    borderColor: tokens.colors.semantic.danger,
   },
   errorText: {
-    color: '#fca5a5',
-    fontSize: 13,
+    color: tokens.colors.semantic.danger,
+    fontSize: tokens.typography.scale.caption.fontSize,
   },
   content: {
-    padding: 16,
-    paddingBottom: 36,
+    padding: tokens.spacing.md,
+    paddingBottom: tokens.spacing.xl,
   },
   row: {
     flexDirection: 'row',
-    gap: 10,
-    marginBottom: 12,
+    gap: tokens.spacing.xs,
   },
   col: {
     flex: 1,
   },
   label: {
-    color: '#cbd5e1',
-    fontSize: 13,
-    fontWeight: '600',
-    marginBottom: 6,
-  },
-  input: {
-    backgroundColor: '#1e293b',
-    borderWidth: 1,
-    borderColor: '#334155',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    color: '#f8fafc',
-    fontSize: 13,
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
+    marginBottom: tokens.spacing['2xs'],
   },
   textArea: {
     minHeight: 64,
     textAlignVertical: 'top',
-    marginBottom: 16,
   },
   outcomeRow: {
     flexDirection: 'row',
-    gap: 6,
-    marginBottom: 14,
+    gap: tokens.spacing['2xs'],
+    marginBottom: tokens.spacing.md,
   },
   outcomeBtn: {
     flex: 1,
-    backgroundColor: '#1e293b',
-    paddingVertical: 9,
-    borderRadius: 8,
+    backgroundColor: tokens.colors.surface.sunken,
+    paddingVertical: tokens.spacing.xs,
+    borderRadius: tokens.radius.md,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: tokens.colors.border.subtle,
   },
   outcomeBtnActive: {
-    backgroundColor: '#4f46e5',
-    borderColor: '#6366f1',
+    backgroundColor: tokens.colors.accent.primary,
+    borderColor: tokens.colors.accent.primary,
   },
   outcomeText: {
-    color: '#94a3b8',
-    fontSize: 12,
-    fontWeight: '600',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   outcomeTextActive: {
-    color: '#ffffff',
+    color: tokens.colors.text.inverse,
+    fontWeight: tokens.typography.weights.bold,
   },
   scoresSection: {
-    backgroundColor: '#1e293b',
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 14,
-    gap: 8,
+    marginBottom: tokens.spacing.md,
+    gap: tokens.spacing.xs,
   },
   participantRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: tokens.spacing.xs,
   },
   partName: {
     flex: 1,
-    color: '#f8fafc',
-    fontSize: 14,
-    fontWeight: '600',
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   scoreInput: {
     width: 85,
-    backgroundColor: '#0f172a',
+    backgroundColor: tokens.colors.surface.elevated,
     borderWidth: 1,
-    borderColor: '#334155',
-    borderRadius: 6,
-    paddingHorizontal: 8,
+    borderColor: tokens.colors.border.subtle,
+    borderRadius: tokens.radius.sm,
+    paddingHorizontal: tokens.spacing.xs,
     paddingVertical: 6,
-    color: '#f8fafc',
-    fontSize: 13,
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontVariant: ['tabular-nums'],
   },
   winnerToggle: {
-    backgroundColor: '#0f172a',
-    paddingHorizontal: 10,
+    backgroundColor: tokens.colors.surface.elevated,
+    paddingHorizontal: tokens.spacing.sm,
     paddingVertical: 7,
-    borderRadius: 6,
+    borderRadius: tokens.radius.sm,
     borderWidth: 1,
-    borderColor: '#334155',
+    borderColor: tokens.colors.border.subtle,
   },
   winnerToggleActive: {
-    backgroundColor: '#d97706',
-    borderColor: '#f59e0b',
+    backgroundColor: tokens.colors.accent.primary,
+    borderColor: tokens.colors.accent.primary,
   },
   winnerText: {
-    color: '#94a3b8',
-    fontSize: 12,
-    fontWeight: '600',
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
   },
   winnerTextActive: {
-    color: '#ffffff',
-    fontWeight: '700',
-  },
-  submitBtn: {
-    backgroundColor: '#6366f1',
-    paddingVertical: 12,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  submitBtnText: {
-    color: '#ffffff',
-    fontSize: 15,
-    fontWeight: '700',
+    color: tokens.colors.text.inverse,
+    fontWeight: tokens.typography.weights.bold,
   },
 });
-
