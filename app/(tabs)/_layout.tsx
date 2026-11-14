@@ -20,6 +20,13 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="shelf"
+        options={{
+          title: 'Estante 3D',
+          headerTitle: 'Minha Estante 3D',
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           title: 'Configurações',
