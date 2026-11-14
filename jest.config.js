@@ -7,6 +7,7 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^expo-file-system$': '<rootDir>/tests/mocks/expo-file-system.js',
     '^expo-sqlite$': '<rootDir>/tests/mocks/expo-sqlite.js',
+    '^expo-document-picker$': '<rootDir>/tests/mocks/expo-document-picker.js',
   },
   testMatch: [
     '**/tests/**/*.test.(ts|tsx|js)',

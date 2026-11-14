@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 import { Box3DProps } from './types';
 import { spineGeneratorService, getDeterministicColorFromTitle } from '@/services/spine-generator.service';
@@ -76,7 +76,7 @@ export function GameBoxMesh({ box, isSelected, onSelect, onOpenDetails }: Box3DP
     }
   });
 
-  const handlePointerDown = (e: any) => {
+  const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
     if (isSelected) {
       isDragging.current = true;
@@ -84,7 +84,7 @@ export function GameBoxMesh({ box, isSelected, onSelect, onOpenDetails }: Box3DP
     }
   };
 
-  const handlePointerMove = (e: any) => {
+  const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
     if (isSelected && isDragging.current && meshRef.current) {
       e.stopPropagation();
       const currentX = e.clientX || 0;
@@ -103,7 +103,7 @@ export function GameBoxMesh({ box, isSelected, onSelect, onOpenDetails }: Box3DP
     isDragging.current = false;
   };
 
-  const handleClick = (e: any) => {
+  const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     if (isSelected) {
       onOpenDetails(box.bggId);

@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "VirtualStand",
+    "slug": "virtualstand",
+    "version": "1.0.0",
+    "scheme": "virtualstand",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": false,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.virtualstand.app"
+    },
+    "android": {
+      "package": "com.virtualstand.app"
+    },
+    "plugins": [
+      "expo-router",
+      "@config-plugins/react-native-blob-util",
+      "@config-plugins/react-native-pdf"
+    ]
+  }
+}
+

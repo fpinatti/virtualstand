@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer, real, index } from 'drizzle-orm/sqlite-core';
+import { sqliteTable, text, integer, real, index, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import { relations } from 'drizzle-orm';
 
 /**
@@ -118,6 +118,121 @@ export const sleeveInventory = sqliteTable('sleeve_inventory', {
   updatedAt: integer('updated_at').notNull(),
 });
 
+/**
+ * Offline PDF rulebooks attached to games (no cascade delete from games)
+ */
+export const rulebooks = sqliteTable('rulebooks', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  bggId: integer('bgg_id')
+    .notNull()
+    .references(() => games.bggId),
+  label: text('label').notNull(),
+  docType: text('doc_type').notNull().default('BASE_RULES'),
+  sourceKind: text('source_kind').notNull(),
+  sourceUrl: text('source_url'),
+  relativePath: text('relative_path').notNull().unique(),
+  fileSizeBytes: integer('file_size_bytes').notNull(),
+  md5: text('md5').notNull(),
+  pageCount: integer('page_count'),
+  lastViewedPage: integer('last_viewed_page').notNull().default(1),
+  status: text('status').notNull().default('PENDING_VERIFICATION'),
+  createdAt: integer('created_at').notNull(),
+  updatedAt: integer('updated_at').notNull(),
+}, (table) => ({
+  bggIdIdx: index('idx_rulebooks_bgg_id').on(table.bggId),
+  bggMd5Idx: index('idx_rulebooks_bgg_md5').on(table.bggId, table.md5),
+}));
+
+/**
+ * Titled page bookmarks on rulebooks
+ */
+export const rulebookBookmarks = sqliteTable('rulebook_bookmarks', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  rulebookId: integer('rulebook_id')
+    .notNull()
+    .references(() => rulebooks.id, { onDelete: 'cascade' }),
+  page: integer('page').notNull(),
+  title: text('title').notNull(),
+  createdAt: integer('created_at').notNull(),
+  updatedAt: integer('updated_at').notNull(),
+}, (table) => ({
+  rulebookPageIdx: index('idx_bookmarks_rulebook_page').on(table.rulebookId, table.page),
+}));
+
+/**
+ * Free-text page notes on rulebooks
+ */
+export const rulebookNotes = sqliteTable('rulebook_notes', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  rulebookId: integer('rulebook_id')
+    .notNull()
+    .references(() => rulebooks.id, { onDelete: 'cascade' }),
+  page: integer('page').notNull(),
+  body: text('body').notNull(),
+  createdAt: integer('created_at').notNull(),
+  updatedAt: integer('updated_at').notNull(),
+}, (table) => ({
+  rulebookPageIdx: index('idx_notes_rulebook_page').on(table.rulebookId, table.page),
+}));
+
+/**
+ * Reusable player roster for play session logging
+ */
+export const players = sqliteTable('players', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  name: text('name').notNull().unique(),
+  isHidden: integer('is_hidden').notNull().default(0),
+  createdAt: integer('created_at').notNull(),
+  updatedAt: integer('updated_at').notNull(),
+});
+
+/**
+ * Logged play sessions per game (no cascade delete from games)
+ */
+export const playSessions = sqliteTable('play_sessions', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  bggId: integer('bgg_id')
+    .notNull()
+    .references(() => games.bggId),
+  playedOn: text('played_on').notNull(),
+  durationMinutes: integer('duration_minutes'),
+  outcome: text('outcome').notNull(),
+  comments: text('comments'),
+  createdAt: integer('created_at').notNull(),
+  updatedAt: integer('updated_at').notNull(),
+}, (table) => ({
+  bggDateIdx: index('idx_sessions_bgg_date').on(table.bggId, table.playedOn),
+}));
+
+/**
+ * Participants, scores, and winners per play session
+ */
+export const playParticipants = sqliteTable('play_participants', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  sessionId: integer('session_id')
+    .notNull()
+    .references(() => playSessions.id, { onDelete: 'cascade' }),
+  playerId: integer('player_id')
+    .notNull()
+    .references(() => players.id),
+  score: real('score'),
+  isWinner: integer('is_winner').notNull().default(0),
+}, (table) => ({
+  playerIdx: index('idx_participants_player').on(table.playerId),
+  uniqSessionPlayer: uniqueIndex('uniq_session_player').on(table.sessionId, table.playerId),
+}));
+
+/**
+ * Personal 1-10 user rating per game, independent of BGG rating
+ */
+export const personalRatings = sqliteTable('personal_ratings', {
+  bggId: integer('bgg_id')
+    .primaryKey()
+    .references(() => games.bggId),
+  rating: integer('rating').notNull(),
+  updatedAt: integer('updated_at').notNull(),
+});
+
 // Relationships
 export const gamesRelations = relations(games, ({ one, many }) => ({
   dimensions: one(boxDimensions, {
@@ -126,6 +241,65 @@ export const gamesRelations = relations(games, ({ one, many }) => ({
   }),
   collectionEntries: many(collectionItems),
   sleeves: many(gameSleeves),
+  rulebooks: many(rulebooks),
+  playSessions: many(playSessions),
+  personalRating: one(personalRatings, {
+    fields: [games.bggId],
+    references: [personalRatings.bggId],
+  }),
+}));
+
+export const rulebooksRelations = relations(rulebooks, ({ one, many }) => ({
+  game: one(games, {
+    fields: [rulebooks.bggId],
+    references: [games.bggId],
+  }),
+  bookmarks: many(rulebookBookmarks),
+  notes: many(rulebookNotes),
+}));
+
+export const rulebookBookmarksRelations = relations(rulebookBookmarks, ({ one }) => ({
+  rulebook: one(rulebooks, {
+    fields: [rulebookBookmarks.rulebookId],
+    references: [rulebooks.id],
+  }),
+}));
+
+export const rulebookNotesRelations = relations(rulebookNotes, ({ one }) => ({
+  rulebook: one(rulebooks, {
+    fields: [rulebookNotes.rulebookId],
+    references: [rulebooks.id],
+  }),
+}));
+
+export const playSessionsRelations = relations(playSessions, ({ one, many }) => ({
+  game: one(games, {
+    fields: [playSessions.bggId],
+    references: [games.bggId],
+  }),
+  participants: many(playParticipants),
+}));
+
+export const playParticipantsRelations = relations(playParticipants, ({ one }) => ({
+  session: one(playSessions, {
+    fields: [playParticipants.sessionId],
+    references: [playSessions.id],
+  }),
+  player: one(players, {
+    fields: [playParticipants.playerId],
+    references: [players.id],
+  }),
+}));
+
+export const playersRelations = relations(players, ({ many }) => ({
+  participations: many(playParticipants),
+}));
+
+export const personalRatingsRelations = relations(personalRatings, ({ one }) => ({
+  game: one(games, {
+    fields: [personalRatings.bggId],
+    references: [games.bggId],
+  }),
 }));
 
 export const gameSleevesRelations = relations(gameSleeves, ({ one }) => ({
@@ -167,4 +341,26 @@ export type InsertGameSleeve = typeof gameSleeves.$inferInsert;
 
 export type SleeveInventory = typeof sleeveInventory.$inferSelect;
 export type InsertSleeveInventory = typeof sleeveInventory.$inferInsert;
+
+export type RulebookRow = typeof rulebooks.$inferSelect;
+export type InsertRulebookRow = typeof rulebooks.$inferInsert;
+
+export type RulebookBookmarkRow = typeof rulebookBookmarks.$inferSelect;
+export type InsertRulebookBookmarkRow = typeof rulebookBookmarks.$inferInsert;
+
+export type RulebookNoteRow = typeof rulebookNotes.$inferSelect;
+export type InsertRulebookNoteRow = typeof rulebookNotes.$inferInsert;
+
+export type PlayerRow = typeof players.$inferSelect;
+export type InsertPlayerRow = typeof players.$inferInsert;
+
+export type PlaySessionRow = typeof playSessions.$inferSelect;
+export type InsertPlaySessionRow = typeof playSessions.$inferInsert;
+
+export type PlayParticipantRow = typeof playParticipants.$inferSelect;
+export type InsertPlayParticipantRow = typeof playParticipants.$inferInsert;
+
+export type PersonalRatingRow = typeof personalRatings.$inferSelect;
+export type InsertPersonalRatingRow = typeof personalRatings.$inferInsert;
+
 

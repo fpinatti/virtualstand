@@ -3,6 +3,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { initializeTables } from '@/db/client';
+import { rulebookService } from '@/services/rulebook.service';
 
 export default function RootLayout() {
   const [isReady, setIsReady] = useState(false);
@@ -11,6 +12,9 @@ export default function RootLayout() {
   useEffect(() => {
     try {
       initializeTables();
+      rulebookService.cleanupPending().catch(() => {
+        // Non-blocking startup cleanup
+      });
       setIsReady(true);
     } catch (err) {
       console.error('Failed to initialize local database:', err);
@@ -48,6 +52,13 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="rulebook/[id]"
+          options={{
+            headerShown: true,
+            title: 'Manual de Regras',
+          }}
+        />
       </Stack>
     </>
   );

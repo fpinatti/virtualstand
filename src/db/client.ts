@@ -26,6 +26,8 @@ export function initializeTables(dbInstance?: ReturnType<typeof drizzle<typeof s
   const rawDb = _expoDb ?? openDatabaseSync(DATABASE_NAME);
   
   rawDb.execSync(`
+    PRAGMA foreign_keys = ON;
+
     CREATE TABLE IF NOT EXISTS games (
       bgg_id INTEGER PRIMARY KEY NOT NULL,
       title TEXT NOT NULL,
@@ -115,6 +117,86 @@ export function initializeTables(dbInstance?: ReturnType<typeof drizzle<typeof s
       loose_sleeves INTEGER NOT NULL DEFAULT 0,
       notes TEXT,
       created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS rulebooks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      bgg_id INTEGER NOT NULL REFERENCES games(bgg_id),
+      label TEXT NOT NULL,
+      doc_type TEXT NOT NULL DEFAULT 'BASE_RULES',
+      source_kind TEXT NOT NULL,
+      source_url TEXT,
+      relative_path TEXT NOT NULL UNIQUE,
+      file_size_bytes INTEGER NOT NULL,
+      md5 TEXT NOT NULL,
+      page_count INTEGER,
+      last_viewed_page INTEGER NOT NULL DEFAULT 1,
+      status TEXT NOT NULL DEFAULT 'PENDING_VERIFICATION',
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_rulebooks_bgg_id ON rulebooks(bgg_id);
+    CREATE INDEX IF NOT EXISTS idx_rulebooks_bgg_md5 ON rulebooks(bgg_id, md5);
+
+    CREATE TABLE IF NOT EXISTS rulebook_bookmarks (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      rulebook_id INTEGER NOT NULL REFERENCES rulebooks(id) ON DELETE CASCADE,
+      page INTEGER NOT NULL,
+      title TEXT NOT NULL,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_bookmarks_rulebook_page ON rulebook_bookmarks(rulebook_id, page);
+
+    CREATE TABLE IF NOT EXISTS rulebook_notes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      rulebook_id INTEGER NOT NULL REFERENCES rulebooks(id) ON DELETE CASCADE,
+      page INTEGER NOT NULL,
+      body TEXT NOT NULL,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_notes_rulebook_page ON rulebook_notes(rulebook_id, page);
+
+    CREATE TABLE IF NOT EXISTS players (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      name TEXT NOT NULL COLLATE NOCASE UNIQUE,
+      is_hidden INTEGER NOT NULL DEFAULT 0,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS play_sessions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      bgg_id INTEGER NOT NULL REFERENCES games(bgg_id),
+      played_on TEXT NOT NULL,
+      duration_minutes INTEGER,
+      outcome TEXT NOT NULL,
+      comments TEXT,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_sessions_bgg_date ON play_sessions(bgg_id, played_on DESC);
+
+    CREATE TABLE IF NOT EXISTS play_participants (
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      session_id INTEGER NOT NULL REFERENCES play_sessions(id) ON DELETE CASCADE,
+      player_id INTEGER NOT NULL REFERENCES players(id),
+      score REAL,
+      is_winner INTEGER NOT NULL DEFAULT 0,
+      UNIQUE(session_id, player_id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_participants_player ON play_participants(player_id);
+
+    CREATE TABLE IF NOT EXISTS personal_ratings (
+      bgg_id INTEGER PRIMARY KEY NOT NULL REFERENCES games(bgg_id),
+      rating INTEGER NOT NULL,
       updated_at INTEGER NOT NULL
     );
   `);
