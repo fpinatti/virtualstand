@@ -1,5 +1,5 @@
-import { drizzle } from 'drizzle-orm/expo-sqlite';
-import type { SQLiteDatabase } from 'expo-sqlite';
+import { drizzle as drizzleProxy } from 'drizzle-orm/sqlite-proxy';
+import type { ExpoSQLiteDatabase } from 'drizzle-orm/expo-sqlite';
 import * as schema from './schema';
 
 export const DATABASE_NAME = 'virtualstand.db';
@@ -299,6 +299,18 @@ class WebSQLiteEngine {
       },
       finalizeSync: () => {},
     };
+  }
+
+  runProxyQuery(
+    sqlQuery: string,
+    params: unknown[],
+    method: 'run' | 'all' | 'values' | 'get'
+  ): { rows: unknown[] } {
+    const res = this.execute(sqlQuery, params);
+    if (method === 'get') {
+      return { rows: (res.arrayRows[0] as unknown[]) ?? [] };
+    }
+    return { rows: res.arrayRows };
   }
 
   private execute(
@@ -781,20 +793,28 @@ class WebSQLiteEngine {
   }
 }
 
-let _webEngine: WebSQLiteEngine | null = null;
-let _drizzleDb: ReturnType<typeof drizzle<typeof schema>> | null = null;
+export type AppDatabase = ExpoSQLiteDatabase<typeof schema>;
 
-export function getDatabase() {
+let _webEngine: WebSQLiteEngine | null = null;
+let _drizzleDb: AppDatabase | null = null;
+
+export function getDatabase(): AppDatabase {
   if (!_drizzleDb) {
-    _webEngine = new WebSQLiteEngine();
-    _drizzleDb = drizzle(_webEngine as unknown as SQLiteDatabase, { schema });
+    const engine = new WebSQLiteEngine();
+    _webEngine = engine;
+    const proxyDb = drizzleProxy(
+      async (sqlQuery, params, method) => engine.runProxyQuery(sqlQuery, params, method),
+      { schema }
+    );
+    _drizzleDb = proxyDb as unknown as AppDatabase;
   }
   return _drizzleDb;
 }
 
-export function initializeTables(dbInstance?: ReturnType<typeof drizzle<typeof schema>>) {
+export function initializeTables(dbInstance?: AppDatabase): AppDatabase {
+  if (!_webEngine) {
+    getDatabase();
+  }
   return dbInstance ?? getDatabase();
 }
-
-export type AppDatabase = ReturnType<typeof getDatabase>;
 
