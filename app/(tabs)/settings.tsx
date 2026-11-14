@@ -7,10 +7,35 @@ import {
 import { useSync } from '@/hooks/use-sync';
 import { collectionSyncService } from '@/services/collection-sync.service';
 import { SyncProgressModal } from '@/components/sync-progress-modal';
-import { Button, Card, Input, ScreenContainer, SectionHeader, tokens } from '@/ui';
+import { Badge, Button, Card, Input, ScreenContainer, SectionHeader, tokens } from '@/ui';
+
+const TOKEN_STORAGE_KEY = 'virtualstand_bgg_api_token';
+const USERNAME_STORAGE_KEY = 'virtualstand_bgg_username';
+
+function readWebStorage(key: string): string {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return window.localStorage.getItem(key) ?? '';
+    }
+  } catch {
+    // Ignore storage errors
+  }
+  return '';
+}
+
+function writeWebStorage(key: string, value: string): void {
+  try {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem(key, value);
+    }
+  } catch {
+    // Ignore storage errors
+  }
+}
 
 export default function SettingsScreen() {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(() => readWebStorage(USERNAME_STORAGE_KEY));
+  const [apiToken, setApiToken] = useState(() => readWebStorage(TOKEN_STORAGE_KEY));
   const [lastSync, setLastSync] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -33,8 +58,21 @@ export default function SettingsScreen() {
     }
 
     setValidationError(null);
+    writeWebStorage(USERNAME_STORAGE_KEY, username.trim());
+    writeWebStorage(TOKEN_STORAGE_KEY, apiToken.trim());
+
     setModalVisible(true);
-    const result = await startSync(username.trim());
+    const result = await startSync(username.trim(), apiToken.trim() || undefined, false);
+    if (result.success) {
+      setLastSync(new Date().toLocaleString('pt-BR'));
+    }
+  };
+
+  const handleStartDemoSync = async () => {
+    const targetUsername = username.trim() || 'demo_bgg';
+    setValidationError(null);
+    setModalVisible(true);
+    const result = await startSync(targetUsername, undefined, true);
     if (result.success) {
       setLastSync(new Date().toLocaleString('pt-BR'));
     }
@@ -49,7 +87,7 @@ export default function SettingsScreen() {
 
       <Input
         label="Nome de Usuário no BGG"
-        placeholder="ex: rodneysmith"
+        placeholder="ex: rahdo"
         autoCapitalize="none"
         autoCorrect={false}
         value={username}
@@ -58,6 +96,17 @@ export default function SettingsScreen() {
           if (validationError) setValidationError(null);
         }}
         errorText={validationError}
+      />
+
+      <Input
+        label="Token da API BGG (Bearer Token)"
+        placeholder="Cole seu token de boardgamegeek.com/applications"
+        helperText="O BGG passou a exigir autenticação Bearer na XMLAPI2 (evita o erro HTTP 401)."
+        autoCapitalize="none"
+        autoCorrect={false}
+        secureTextEntry
+        value={apiToken}
+        onChangeText={setApiToken}
       />
 
       {lastSync ? (
@@ -73,7 +122,31 @@ export default function SettingsScreen() {
           disabled={!username.trim() || isSyncing}
           loading={isSyncing}
         />
+
+        <Button
+          label="Sincronizar Coleção Demo (8 Jogos Clássicos — Sem Token)"
+          variant="secondary"
+          size="md"
+          onPress={handleStartDemoSync}
+          disabled={isSyncing}
+        />
       </View>
+
+      <Card variant="elevated" padding="md" style={styles.authCard}>
+        <View style={styles.authHeaderRow}>
+          <Text style={styles.infoTitle}>Por que o BGG retorna erro 401?</Text>
+          <Badge tone="warning" label="Política XMLAPI2" />
+        </View>
+        <Text style={styles.infoItem}>
+          O BoardGameGeek atualizou sua política da <Text style={styles.bold}>XMLAPI2</Text> e bloqueia requisições anônimas com <Text style={styles.bold}>HTTP 401 Unauthorized</Text>.
+        </Text>
+        <Text style={styles.infoItem}>
+          • <Text style={styles.bold}>Para sincronizar sua conta real</Text>: Acesse <Text style={styles.bold}>boardgamegeek.com/applications</Text>, gere um Application Token e cole no campo acima (ou defina <Text style={styles.bold}>EXPO_PUBLIC_BGG_API_TOKEN</Text>).
+        </Text>
+        <Text style={styles.infoItem}>
+          • <Text style={styles.bold}>Para testar agora sem Token</Text>: Clique em <Text style={styles.bold}>"Sincronizar Coleção Demo"</Text> acima para popular sua coleção, caixas 3D e sleeves instantaneamente.
+        </Text>
+      </Card>
 
       <Card variant="elevated" padding="md">
         <Text style={styles.infoTitle}>Como funciona o processo?</Text>
@@ -108,13 +181,23 @@ const styles = StyleSheet.create({
     fontVariant: ['tabular-nums'],
   },
   buttonWrap: {
+    gap: tokens.spacing.sm,
     marginBottom: tokens.spacing.xl,
+  },
+  authCard: {
+    marginBottom: tokens.spacing.md,
+  },
+  authHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: tokens.spacing.xs,
   },
   infoTitle: {
     fontSize: tokens.typography.scale.h3.fontSize,
     fontWeight: tokens.typography.weights.bold,
     color: tokens.colors.text.primary,
-    marginBottom: tokens.spacing.sm,
+    marginBottom: tokens.spacing.xs,
   },
   infoItem: {
     fontSize: tokens.typography.scale.bodySm.fontSize,

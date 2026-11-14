@@ -50,17 +50,20 @@ export interface IBggApiClient {
   /**
    * Fetches the user collection from BGG.
    * Handles HTTP 202 queuing with exponential backoff and jitter.
-   * @throws BggApiError on HTTP 429, timeout, or invalid XML.
+   * @throws BggApiError on HTTP 401, 429, timeout, or invalid XML.
    */
   fetchUserCollection(
     username: string,
-    onQueueProgress?: (attempt: number, delayMs: number) => void
+    onQueueProgress?: (attempt: number, delayMs: number) => void,
+    apiToken?: string
   ): Promise<BggCollectionItemRaw[]>;
 
   /**
    * Fetches game physical version details for a batch of BGG IDs.
    * @param bggIds Array of BGG IDs (recommended max 20 per call).
    */
-  fetchThingVersions(bggIds: number[]): Promise<Map<number, BggThingVersionRaw[]>>;
+  fetchThingVersions(
+    bggIds: number[],
+    apiToken?: string
+  ): Promise<Map<number, BggThingVersionRaw[]>>;
 }
-

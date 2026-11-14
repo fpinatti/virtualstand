@@ -7,28 +7,40 @@ export function useSync() {
   const [progress, setProgress] = useState<SyncProgressUpdate | null>(null);
   const [lastResult, setLastResult] = useState<SyncResult | null>(null);
 
-  const startSync = useCallback(async (username: string): Promise<SyncResult> => {
-    setIsSyncing(true);
-    setProgress({
-      stage: 'QUEUED',
-      message: 'Iniciando sincronização...',
-      itemsProcessed: 0,
-      totalItems: 0,
-    });
+  const startSync = useCallback(
+    async (
+      username: string,
+      apiToken?: string,
+      useDemoDataset?: boolean
+    ): Promise<SyncResult> => {
+      setIsSyncing(true);
+      setProgress({
+        stage: 'QUEUED',
+        message: 'Iniciando sincronização...',
+        itemsProcessed: 0,
+        totalItems: 0,
+      });
 
-    try {
-      const result = await collectionSyncService.synchronize(
-        { username, prefetchThumbnails: true },
-        (update) => {
-          setProgress(update);
-        }
-      );
-      setLastResult(result);
-      return result;
-    } finally {
-      setIsSyncing(false);
-    }
-  }, []);
+      try {
+        const result = await collectionSyncService.synchronize(
+          {
+            username,
+            apiToken,
+            useDemoDataset,
+            prefetchThumbnails: true,
+          },
+          (update) => {
+            setProgress(update);
+          }
+        );
+        setLastResult(result);
+        return result;
+      } finally {
+        setIsSyncing(false);
+      }
+    },
+    []
+  );
 
   const cancelSync = useCallback(async () => {
     await collectionSyncService.cancelSync();
@@ -44,4 +56,3 @@ export function useSync() {
     cancelSync,
   };
 }
-

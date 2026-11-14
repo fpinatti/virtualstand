@@ -1,4 +1,6 @@
 import {
+  BggCollectionItemRaw,
+  BggThingVersionRaw,
   ICollectionSyncService,
   SyncOptions,
   SyncProgressUpdate,
@@ -14,6 +16,92 @@ import { sleeveManagerService, SleeveManagerService } from './sleeve-manager.ser
 import { getDatabase } from '@/db/client';
 import { syncLogs, InsertGame } from '@/db/schema';
 import { desc, eq } from 'drizzle-orm';
+
+const DEMO_BGG_COLLECTION: BggCollectionItemRaw[] = [
+  {
+    objectid: 13,
+    collid: 90001,
+    name: 'Catan',
+    yearpublished: 1995,
+    stats: { minplayers: 3, maxplayers: 4, minplaytime: 60, maxplaytime: 120, rating: 8.5 },
+    status: { own: true, prevowned: false, fortrade: false, want: false, wanttobuy: false, wishlist: false, played: true },
+    comment: 'Clássico de negociação de recursos na ilha.',
+  },
+  {
+    objectid: 822,
+    collid: 90002,
+    name: 'Carcassonne',
+    yearpublished: 2000,
+    stats: { minplayers: 2, maxplayers: 5, minplaytime: 30, maxplaytime: 45, rating: 8.2 },
+    status: { own: true, prevowned: false, fortrade: false, want: false, wanttobuy: false, wishlist: false, played: true },
+    comment: 'Excelente controle de território com meeples.',
+  },
+  {
+    objectid: 230802,
+    collid: 90003,
+    name: 'Azul',
+    yearpublished: 2017,
+    stats: { minplayers: 2, maxplayers: 4, minplaytime: 30, maxplaytime: 45, rating: 9.0 },
+    status: { own: true, prevowned: false, fortrade: false, want: false, wanttobuy: false, wishlist: false, played: true },
+    comment: 'Abstrato tátil impecável de azulejos portugueses.',
+  },
+  {
+    objectid: 68448,
+    collid: 90004,
+    name: '7 Wonders',
+    yearpublished: 2010,
+    stats: { minplayers: 2, maxplayers: 7, minplaytime: 30, maxplaytime: 30, rating: 8.7 },
+    status: { own: true, prevowned: false, fortrade: false, want: false, wanttobuy: false, wishlist: false, played: true },
+    comment: 'Draft dinâmico para mesas grandes.',
+  },
+  {
+    objectid: 167791,
+    collid: 90005,
+    name: 'Terraforming Mars',
+    yearpublished: 2016,
+    stats: { minplayers: 1, maxplayers: 5, minplaytime: 120, maxplaytime: 120, rating: 9.4 },
+    status: { own: true, prevowned: false, fortrade: false, want: false, wanttobuy: false, wishlist: false, played: true },
+    comment: 'Engine building profundo com centenas de cartas únicas.',
+  },
+  {
+    objectid: 266192,
+    collid: 90006,
+    name: 'Wingspan',
+    yearpublished: 2019,
+    stats: { minplayers: 1, maxplayers: 5, minplaytime: 40, maxplaytime: 70, rating: 8.9 },
+    status: { own: true, prevowned: false, fortrade: false, want: false, wanttobuy: false, wishlist: false, played: true },
+    comment: 'Produção belíssima com comedouro de dados.',
+  },
+  {
+    objectid: 169786,
+    collid: 90007,
+    name: 'Scythe',
+    yearpublished: 2016,
+    stats: { minplayers: 1, maxplayers: 5, minplaytime: 90, maxplaytime: 115, rating: 9.1 },
+    status: { own: true, prevowned: false, fortrade: false, want: false, wanttobuy: false, wishlist: false, played: true },
+    comment: 'Estratégia dieselpunk 1920+.',
+  },
+  {
+    objectid: 9209,
+    collid: 90008,
+    name: 'Ticket to Ride',
+    yearpublished: 2004,
+    stats: { minplayers: 2, maxplayers: 5, minplaytime: 30, maxplaytime: 60, rating: 8.0 },
+    status: { own: true, prevowned: false, fortrade: false, want: false, wanttobuy: false, wishlist: false, played: true },
+    comment: 'Ótimo gateway para novos jogadores.',
+  },
+];
+
+const DEMO_BGG_VERSIONS: Record<number, BggThingVersionRaw[]> = {
+  13: [{ versionId: 1013, versionName: 'Standard Edition', widthCm: 29.5, heightCm: 29.5, depthCm: 7.5 }],
+  822: [{ versionId: 1822, versionName: 'Z-Man Edition', widthCm: 27.5, heightCm: 19.0, depthCm: 6.8 }],
+  230802: [{ versionId: 1230802, versionName: 'Plan B Edition', widthCm: 26.0, heightCm: 26.0, depthCm: 7.0 }],
+  68448: [{ versionId: 168448, versionName: 'Repos Second Edition', widthCm: 29.7, heightCm: 29.7, depthCm: 7.5 }],
+  167791: [{ versionId: 1167791, versionName: 'Stronghold Edition', widthCm: 29.8, heightCm: 29.8, depthCm: 7.1 }],
+  266192: [{ versionId: 1266192, versionName: 'Stonemaier Edition', widthCm: 29.6, heightCm: 29.6, depthCm: 7.6 }],
+  169786: [{ versionId: 1169786, versionName: 'Stonemaier Core Box', widthCm: 30.0, heightCm: 36.5, depthCm: 9.8 }],
+  9209: [{ versionId: 19209, versionName: 'Days of Wonder Edition', widthCm: 29.8, heightCm: 29.8, depthCm: 7.6 }],
+};
 
 export class CollectionSyncService implements ICollectionSyncService {
   private currentStage: SyncStage = 'IDLE';
@@ -81,12 +169,22 @@ export class CollectionSyncService implements ICollectionSyncService {
       .returning({ id: syncLogs.id });
 
     try {
-      report('FETCHING_COLLECTION', 'Conectando ao BoardGameGeek...');
+      let rawItems: BggCollectionItemRaw[];
 
-      const rawItems = await this.bggClient.fetchUserCollection(options.username, (attempt, delayMs) => {
-        const seconds = Math.round(delayMs / 1000);
-        report('QUEUED', `BGG está preparando sua coleção. Tentando novamente em ${seconds}s...`, 0, 0, attempt);
-      });
+      if (options.useDemoDataset) {
+        report('FETCHING_COLLECTION', 'Carregando coleção de demonstração completa...');
+        rawItems = DEMO_BGG_COLLECTION;
+      } else {
+        report('FETCHING_COLLECTION', 'Conectando ao BoardGameGeek...');
+        rawItems = await this.bggClient.fetchUserCollection(
+          options.username,
+          (attempt, delayMs) => {
+            const seconds = Math.round(delayMs / 1000);
+            report('QUEUED', `BGG está preparando sua coleção. Tentando novamente em ${seconds}s...`, 0, 0, attempt);
+          },
+          options.apiToken
+        );
+      }
 
       if (this.isCancelled) {
         throw new Error('Sincronização cancelada pelo usuário.');
@@ -129,7 +227,17 @@ export class CollectionSyncService implements ICollectionSyncService {
       if (options.fetchDimensions !== false && rawItems.length > 0) {
         report('FETCHING_DIMENSIONS', 'Obtendo proporções físicas reais das caixas...', 0, totalItems);
         const bggIds = rawItems.map((r) => r.objectid);
-        const versionsMap = await this.bggClient.fetchThingVersions(bggIds);
+        let versionsMap: Map<number, BggThingVersionRaw[]>;
+        if (options.useDemoDataset) {
+          versionsMap = new Map<number, BggThingVersionRaw[]>();
+          for (const id of bggIds) {
+            if (DEMO_BGG_VERSIONS[id]) {
+              versionsMap.set(id, DEMO_BGG_VERSIONS[id]);
+            }
+          }
+        } else {
+          versionsMap = await this.bggClient.fetchThingVersions(bggIds, options.apiToken);
+        }
 
         const dimensionsToUpsert = rawItems.map((r) =>
           this.dimensionCalculator.calculate(r.objectid, versionsMap.get(r.objectid) ?? [])
@@ -137,7 +245,7 @@ export class CollectionSyncService implements ICollectionSyncService {
         await this.gameRepo.batchUpsertDimensions(dimensionsToUpsert);
       }
 
-      // 4. Pre-fetch thumbnails if requested
+      // 5. Pre-fetch thumbnails if requested
       if (options.prefetchThumbnails !== false) {
         report('CACHING_THUMBNAILS', 'Armazenando capas para visualização offline...', 0, totalItems);
         let cachedCount = 0;

@@ -34,6 +34,8 @@ export interface SyncResult {
 
 export interface SyncOptions {
   username: string;
+  apiToken?: string;
+  useDemoDataset?: boolean;
   fetchDimensions?: boolean; // Default: true
   prefetchThumbnails?: boolean; // Default: true
 }
@@ -63,4 +65,3 @@ export interface ICollectionSyncService {
    */
   getLastSyncTimestamp(username: string): Promise<Date | null>;
 }
-
