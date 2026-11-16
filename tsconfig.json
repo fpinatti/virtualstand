@@ -13,10 +13,13 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "react-native",
+    "jsx": "react-jsx",
+    "types": [
+      "jest"
+    ],
     "baseUrl": ".",
     "paths": {
       "@/*": [
