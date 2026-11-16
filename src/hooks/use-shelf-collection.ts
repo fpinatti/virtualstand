@@ -11,6 +11,7 @@ import {
   ShelfDimensions,
 } from '@/components/shelf-3d/types';
 import { shelfLayoutEngine } from '@/services/shelf-layout.service';
+import { decodeHtmlEntities } from '@/api/bgg-xml-parser';
 
 export function useShelfCollection() {
   const [boxes, setBoxes] = useState<PlacedBoxCoords[]>([]);
@@ -37,7 +38,9 @@ export function useShelfCollection() {
           bggId: games.bggId,
           title: games.title,
           thumbnailUrl: games.thumbnailUrl,
+          imageUrl: games.imageUrl,
           localThumbnailUri: games.localThumbnailUri,
+          localImageUri: games.localImageUri,
           widthCm: boxDimensions.widthCm,
           heightCm: boxDimensions.heightCm,
           depthCm: boxDimensions.depthCm,
@@ -48,15 +51,28 @@ export function useShelfCollection() {
         .leftJoin(boxDimensions, eq(games.bggId, boxDimensions.bggId))
         .where(eq(collectionItems.statusOwn, 1));
 
-      const gameSources: GameDimensionsSource[] = rows.map((r) => ({
-        bggId: r.bggId,
-        title: r.title,
-        widthCm: r.widthCm ?? 29.7,
-        heightCm: r.heightCm ?? 29.7,
-        depthCm: r.depthCm ?? 7.1,
-        isEstimated: r.isEstimated === 1 || r.widthCm === null,
-        thumbnailUri: r.localThumbnailUri || r.thumbnailUrl,
-      }));
+      // Deduplicate by bggId so each owned game appears once on the 3D shelf
+      const seenBggIds = new Set<number>();
+      const gameSources: GameDimensionsSource[] = [];
+
+      for (const r of rows) {
+        if (seenBggIds.has(r.bggId)) continue;
+        seenBggIds.add(r.bggId);
+
+        gameSources.push({
+          bggId: r.bggId,
+          title: decodeHtmlEntities(r.title),
+          widthCm: r.widthCm ?? 29.7,
+          heightCm: r.heightCm ?? 29.7,
+          depthCm: r.depthCm ?? 7.1,
+          isEstimated: r.isEstimated === 1 || r.widthCm === null,
+          thumbnailUri:
+            r.localImageUri ||
+            r.localThumbnailUri ||
+            r.imageUrl ||
+            r.thumbnailUrl,
+        });
+      }
 
       const layout = shelfLayoutEngine.calculateLayout(gameSources);
       const aisleLayout = shelfLayoutEngine.calculateAisleLayout(gameSources);

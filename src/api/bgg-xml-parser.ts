@@ -10,6 +10,20 @@ const xmlParser = new XMLParser({
   isArray: (name) => name === 'item',
 });
 
+export function decodeHtmlEntities(input: string): string {
+  if (!input) return '';
+  return input
+    .replace(/&#0*39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&ndash;/g, '–')
+    .replace(/&mdash;/g, '—')
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(Number(dec)));
+}
+
 interface RawXmlItem {
   '@_objectid': number | string;
   '@_collid': number | string;
@@ -69,9 +83,9 @@ export function parseBggCollectionXml(xmlString: string): BggCollectionItemRaw[]
 
     let name = '';
     if (typeof item.name === 'string') {
-      name = item.name;
+      name = decodeHtmlEntities(item.name);
     } else if (item.name && typeof item.name === 'object' && '#text' in item.name) {
-      name = item.name['#text'];
+      name = decodeHtmlEntities(String(item.name['#text']));
     }
 
     const yearPublished = item.yearpublished ? Number(item.yearpublished) : undefined;

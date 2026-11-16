@@ -134,6 +134,48 @@ function purgeLegacyDemoData(store: TableStore): boolean {
     }
   }
 
+  // Decode any HTML entities in stored game titles and deduplicate games/collection_items
+  if (Array.isArray(store.tables.games)) {
+    const seenGames = new Set<number>();
+    const dedupedGames: RowRecord[] = [];
+    for (const g of store.tables.games) {
+      const id = Number(g.bgg_id);
+      if (typeof g.title === 'string') {
+        const cleaned = g.title
+          .replace(/&#0*39;/g, "'")
+          .replace(/&apos;/g, "'")
+          .replace(/&quot;/g, '"')
+          .replace(/&amp;/g, '&');
+        if (cleaned !== g.title) {
+          g.title = cleaned;
+          modified = true;
+        }
+      }
+      if (!seenGames.has(id)) {
+        seenGames.add(id);
+        dedupedGames.push(g);
+      } else {
+        modified = true;
+      }
+    }
+    store.tables.games = dedupedGames;
+  }
+
+  if (Array.isArray(store.tables.collection_items)) {
+    const seenColl = new Set<number>();
+    const dedupedColl: RowRecord[] = [];
+    for (const c of store.tables.collection_items) {
+      const cid = Number(c.coll_id);
+      if (!seenColl.has(cid)) {
+        seenColl.add(cid);
+        dedupedColl.push(c);
+      } else {
+        modified = true;
+      }
+    }
+    store.tables.collection_items = dedupedColl;
+  }
+
   return modified;
 }
 

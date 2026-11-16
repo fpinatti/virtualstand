@@ -108,22 +108,14 @@ export function BookcaseMesh({ aisle, onSelectSide }: BookcaseMeshProps) {
         {Array.from({ length: rows + 1 }).map((_, rIdx) => {
           const y = totalHeight / 2 - thickness / 2 - rIdx * (cubbyHeight + thickness);
           return (
-            <group key={`plank-${side}-${rIdx}`}>
-              <mesh
-                position={[wallCenterX, y, centerZ]}
-                material={materials.shelfMaterial}
-                receiveShadow
-              >
-                <boxGeometry args={[cubbyDepth, thickness, totalLength]} />
-              </mesh>
-              {/* Subtle brass/warm front lip along the aisle edge */}
-              <mesh
-                position={[frontEdgeX, y, centerZ]}
-                material={materials.trimMaterial}
-              >
-                <boxGeometry args={[0.04, thickness * 0.9, totalLength]} />
-              </mesh>
-            </group>
+            <mesh
+              key={`plank-${side}-${rIdx}`}
+              position={[wallCenterX, y, centerZ]}
+              material={materials.shelfMaterial}
+              receiveShadow
+            >
+              <boxGeometry args={[cubbyDepth, thickness, totalLength]} />
+            </mesh>
           );
         })}
 

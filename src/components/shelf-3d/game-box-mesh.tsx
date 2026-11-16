@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { useFrame, ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 import { PlacedAisleBox } from './types';
@@ -6,7 +6,6 @@ import {
   spineGeneratorService,
   getDeterministicColorFromTitle,
 } from '@/services/spine-generator.service';
-import { tokens } from '@/ui';
 
 export interface AisleGameBoxMeshProps {
   box: PlacedAisleBox;
@@ -25,51 +24,73 @@ export function GameBoxMesh({
   const [w, h, d] = box.size;
   const isDragging = useRef(false);
   const previousPointer = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [loadedCover, setLoadedCover] = useState<{
+    coverTexture: THREE.Texture;
+    image: HTMLImageElement;
+  } | null>(null);
 
   const themeColor = useMemo(
     () => getDeterministicColorFromTitle(box.title),
     [box.title]
   );
 
-  // Box materials:
-  // When placed on LEFT wall (baseRotationY = +PI/2), local +Z face points toward +X (aisle center).
-  // When placed on RIGHT wall (baseRotationY = -PI/2), local +Z face points toward -X (aisle center).
-  const materials = useMemo(() => {
-    const cardboardEdgeMaterial = new THREE.MeshStandardMaterial({
-      color: tokens.colors.text.primary,
-      roughness: 0.72,
-      metalness: 0.05,
-    });
+  useEffect(() => {
+    let active = true;
+    if (box.thumbnailUri) {
+      spineGeneratorService.loadCoverArt(box.thumbnailUri, (res) => {
+        if (active) {
+          setLoadedCover(res);
+        }
+      });
+    } else {
+      setLoadedCover(null);
+    }
+    return () => {
+      active = false;
+    };
+  }, [box.thumbnailUri]);
 
+  // Box materials:
+  // 0 (+X) & 1 (-X): Main Box Cover faces (full BGG cover art)
+  // 2 (+Y), 3 (-Y), 4 (+Z), 5 (-Z): Lateral box lid wrap faces (seamless aspect-correct cover wrap)
+  const materials = useMemo(() => {
     const coverSideMaterial = new THREE.MeshStandardMaterial({
-      color: themeColor,
-      roughness: 0.42,
-      metalness: 0.1,
+      color: loadedCover ? '#ffffff' : themeColor,
+      map: loadedCover ? loadedCover.coverTexture : null,
+      roughness: 0.35,
+      metalness: 0.08,
     });
 
     const spineTexture = spineGeneratorService.createSpineTexture(
       box.title,
-      128,
-      512,
-      themeColor
+      256,
+      1024,
+      themeColor,
+      loadedCover?.image ?? null
     );
-    const spineMaterial = new THREE.MeshStandardMaterial({
+    const lateralWrapMaterial = new THREE.MeshStandardMaterial({
       color: spineTexture ? '#ffffff' : themeColor,
       map: spineTexture || null,
       roughness: 0.38,
-      metalness: 0.1,
+      metalness: 0.08,
     });
 
-    // 0: +X (cover), 1: -X (cover), 2: +Y (top), 3: -Y (bottom), 4: +Z (inward aisle spine), 5: -Z (back spine)
+    const topBottomMaterial = new THREE.MeshStandardMaterial({
+      color: loadedCover ? '#D8D0C5' : themeColor,
+      map: loadedCover ? loadedCover.coverTexture : null,
+      roughness: 0.5,
+      metalness: 0.05,
+    });
+
     return [
       coverSideMaterial,
       coverSideMaterial,
-      cardboardEdgeMaterial,
-      cardboardEdgeMaterial,
-      spineMaterial,
-      spineMaterial,
+      topBottomMaterial,
+      topBottomMaterial,
+      lateralWrapMaterial,
+      lateralWrapMaterial,
     ];
-  }, [box.title, themeColor]);
+  }, [box.title, themeColor, loadedCover]);
 
   // Frame animation: lerp between resting shelf position and extracted aisle position
   useFrame((_, delta) => {
@@ -109,6 +130,15 @@ export function GameBoxMesh({
         meshRef.current.rotation.z,
         0,
         lerpSpeed
+      );
+    } else if (!isDragging.current) {
+      // When extracted into the corridor, angle the box so its full Front Cover (+X / -X) faces the user
+      const inspectRotY =
+        box.side === 'LEFT' ? box.baseRotationY - 0.95 : box.baseRotationY + 0.95;
+      meshRef.current.rotation.y = THREE.MathUtils.lerp(
+        meshRef.current.rotation.y,
+        inspectRotY,
+        lerpSpeed * 0.6
       );
     }
   });

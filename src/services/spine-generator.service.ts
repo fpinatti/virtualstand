@@ -12,6 +12,52 @@ const PALETTE = [
   '#713F12', // Ochre Gold
 ];
 
+function cleanEntities(text: string): string {
+  if (!text) return '';
+  return text
+    .replace(/&#0*39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(Number(dec)));
+}
+
+/**
+ * Draws an image onto a canvas using CSS `object-fit: cover` math (center crop, zero distortion).
+ */
+function drawImageCoverFit(
+  ctx: CanvasRenderingContext2D,
+  img: HTMLImageElement,
+  destX: number,
+  destY: number,
+  destW: number,
+  destH: number
+): void {
+  const imgW = img.naturalWidth || img.width || destW;
+  const imgH = img.naturalHeight || img.height || destH;
+  if (imgW <= 0 || imgH <= 0) return;
+
+  const targetRatio = destW / destH;
+  const imgRatio = imgW / imgH;
+
+  let sx = 0;
+  let sy = 0;
+  let sw = imgW;
+  let sh = imgH;
+
+  if (imgRatio > targetRatio) {
+    sw = imgH * targetRatio;
+    sx = (imgW - sw) / 2;
+  } else {
+    sh = imgW / targetRatio;
+    sy = (imgH - sh) / 2;
+  }
+
+  ctx.drawImage(img, sx, sy, sw, sh, destX, destY, destW, destH);
+}
+
 /**
  * Calculates high-contrast text color (#ffffff or #0f172a) based on hex background luminance.
  */
@@ -42,23 +88,114 @@ export function getDeterministicColorFromTitle(title: string): string {
  * Truncates and cleans title string for box spine display.
  */
 export function formatSpineTitle(title: string, maxLength = 45): string {
-  if (title.length <= maxLength) return title;
-  return title.substring(0, maxLength - 3).trim() + '...';
+  const cleaned = cleanEntities(title);
+  if (cleaned.length <= maxLength) return cleaned;
+  return cleaned.substring(0, maxLength - 3).trim() + '...';
+}
+
+/**
+ * Wraps remote BGG CDN URLs (`cf.geekdo-images.com`) in a CORS-safe image proxy when running
+ * in a browser DOM so WebGL `texImage2D` can upload the cover image without SecurityError.
+ */
+export function resolveWebGlSafeImageUrl(uri: string): string {
+  const trimmed = uri.trim();
+  if (
+    typeof window !== 'undefined' &&
+    (trimmed.startsWith('http://') || trimmed.startsWith('https://')) &&
+    !trimmed.includes('wsrv.nl')
+  ) {
+    return `https://wsrv.nl/?url=${encodeURIComponent(trimmed)}&w=512&output=jpg`;
+  }
+  return trimmed;
 }
 
 export class SpineGeneratorService {
   private readonly textureCache = new Map<string, THREE.CanvasTexture>();
+  private readonly coverTextureCache = new Map<string, THREE.Texture>();
+  private readonly coverImageCache = new Map<string, HTMLImageElement>();
 
   /**
-   * Generates a canvas texture for a game spine when canvas context is available.
+   * Loads a remote or local cover image into an HTMLImageElement and THREE.Texture
+   * with CORS enabled and aspect-ratio-preserved cover fit for WebGL 3D rendering.
    */
-  createSpineTexture(title: string, width = 128, height = 512, bgColor?: string): THREE.CanvasTexture | null {
+  loadCoverArt(
+    uri: string,
+    onLoaded: (result: { coverTexture: THREE.Texture; image: HTMLImageElement }) => void
+  ): void {
+    if (!uri) return;
+
+    const safeUrl = resolveWebGlSafeImageUrl(uri);
+
+    if (this.coverTextureCache.has(safeUrl) && this.coverImageCache.has(safeUrl)) {
+      onLoaded({
+        coverTexture: this.coverTextureCache.get(safeUrl)!,
+        image: this.coverImageCache.get(safeUrl)!,
+      });
+      return;
+    }
+
+    if (typeof Image !== 'undefined' && typeof document !== 'undefined') {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = 512;
+          canvas.height = 512;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            drawImageCoverFit(ctx, img, 0, 0, 512, 512);
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.colorSpace = THREE.SRGBColorSpace;
+            tex.needsUpdate = true;
+            this.coverTextureCache.set(safeUrl, tex);
+            this.coverImageCache.set(safeUrl, img);
+            onLoaded({ coverTexture: tex, image: img });
+          }
+        } catch {
+          // Ignore canvas security errors if upstream blocked CORS
+        }
+      };
+      img.src = safeUrl;
+      return;
+    }
+
+    // Native (non-DOM) fallback using THREE.TextureLoader
+    try {
+      const loader = new THREE.TextureLoader();
+      loader.setCrossOrigin('anonymous');
+      loader.load(safeUrl, (tex) => {
+        tex.colorSpace = THREE.SRGBColorSpace;
+        this.coverTextureCache.set(safeUrl, tex);
+        if (tex.image) {
+          onLoaded({ coverTexture: tex, image: tex.image as HTMLImageElement });
+        }
+      });
+    } catch {
+      // Ignore loader failure
+    }
+  }
+
+  /**
+   * Generates a canvas texture for a game box lateral/spine face.
+   * When `coverImage` is available, wraps the cover artwork seamlessly using aspect-correct
+   * center-crop (`drawImageCoverFit`) with no squashed thumbnails or heavy black blocks.
+   */
+  createSpineTexture(
+    title: string,
+    width = 256,
+    height = 1024,
+    bgColor?: string,
+    coverImage?: HTMLImageElement | null
+  ): THREE.CanvasTexture | null {
     if (typeof document === 'undefined') {
       return null; // Non-DOM environment fallback
     }
 
-    const color = bgColor || getDeterministicColorFromTitle(title);
-    const cacheKey = `${title}_${color}_${width}x${height}`;
+    const cleanedTitle = cleanEntities(title);
+    const color = bgColor || getDeterministicColorFromTitle(cleanedTitle);
+    const hasImg = Boolean(coverImage);
+    const cacheKey = `${cleanedTitle}_${color}_${width}x${height}_${hasImg ? (coverImage?.src ?? 'img') : 'plain'}`;
     if (this.textureCache.has(cacheKey)) {
       return this.textureCache.get(cacheKey)!;
     }
@@ -70,29 +207,45 @@ export class SpineGeneratorService {
       const ctx = canvas.getContext('2d');
       if (!ctx) return null;
 
-      // Draw background
+      // 1. Base background
       ctx.fillStyle = color;
       ctx.fillRect(0, 0, width, height);
 
-      // Draw spine borders
-      ctx.strokeStyle = 'rgba(245, 240, 232, 0.22)';
-      ctx.lineWidth = 4;
-      ctx.strokeRect(2, 2, width - 4, height - 4);
+      // 2. When coverImage is loaded, wrap the actual cover art cleanly without distortion!
+      if (coverImage) {
+        drawImageCoverFit(ctx, coverImage, 0, 0, width, height);
 
-      // Draw rotated vertical text
-      const textColor = calculateContrastTextColor(color);
-      ctx.fillStyle = textColor;
-      ctx.font = 'bold 22px sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+        // Subtle warm shading at the edges to simulate box-lid fold depth
+        const edgeGrad = ctx.createLinearGradient(0, 0, width, 0);
+        edgeGrad.addColorStop(0, 'rgba(0, 0, 0, 0.32)');
+        edgeGrad.addColorStop(0.12, 'rgba(0, 0, 0, 0.08)');
+        edgeGrad.addColorStop(0.88, 'rgba(0, 0, 0, 0.08)');
+        edgeGrad.addColorStop(1, 'rgba(0, 0, 0, 0.32)');
+        ctx.fillStyle = edgeGrad;
+        ctx.fillRect(0, 0, width, height);
+      } else {
+        // Fallback when no cover image exists: clean editorial spine with vertical title
+        ctx.strokeStyle = 'rgba(245, 240, 232, 0.22)';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(4, 4, width - 8, height - 8);
 
-      ctx.save();
-      ctx.translate(width / 2, height / 2);
-      ctx.rotate(-Math.PI / 2); // Rotate 90 degrees for vertical spine reading
-      ctx.fillText(formatSpineTitle(title), 0, 0);
-      ctx.restore();
+        const textColor = calculateContrastTextColor(color);
+        ctx.fillStyle = textColor;
+        const fontSize = Math.round(width * 0.18);
+        ctx.font = `700 ${fontSize}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        ctx.save();
+        ctx.translate(width / 2, height / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText(formatSpineTitle(cleanedTitle, 36), 0, 0);
+        ctx.restore();
+      }
 
       const texture = new THREE.CanvasTexture(canvas);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.needsUpdate = true;
       this.textureCache.set(cacheKey, texture);
       return texture;
     } catch {
@@ -106,6 +259,9 @@ export class SpineGeneratorService {
   dispose(): void {
     this.textureCache.forEach((texture) => texture.dispose());
     this.textureCache.clear();
+    this.coverTextureCache.forEach((texture) => texture.dispose());
+    this.coverTextureCache.clear();
+    this.coverImageCache.clear();
   }
 }
 
