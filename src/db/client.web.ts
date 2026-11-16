@@ -46,192 +46,95 @@ const AUTO_INCREMENT_TABLES = new Set([
   'play_participants',
 ]);
 
-function createInitialDemoStore(): TableStore {
-  const now = Date.now();
+const DEMO_COLL_IDS = new Set([
+  1001, 1002, 1003, 1004, 1005, 1006,
+  90001, 90002, 90003, 90004, 90005, 90006, 90007, 90008,
+]);
+
+function createEmptyStore(): TableStore {
   return {
     autoIncrement: {
-      box_dimensions: 7,
-      collection_items: 7,
-      sync_logs: 2,
-      game_sleeves: 6,
-      sleeve_inventory: 3,
-      rulebooks: 2,
-      rulebook_bookmarks: 3,
-      rulebook_notes: 2,
-      players: 4,
-      play_sessions: 3,
-      play_participants: 6,
+      box_dimensions: 1,
+      collection_items: 1,
+      sync_logs: 1,
+      game_sleeves: 1,
+      sleeve_inventory: 1,
+      rulebooks: 1,
+      rulebook_bookmarks: 1,
+      rulebook_notes: 1,
+      players: 1,
+      play_sessions: 1,
+      play_participants: 1,
     },
     tables: {
-      games: [
-        {
-          bgg_id: 13,
-          title: 'Catan',
-          year_published: 1995,
-          min_players: 3,
-          max_players: 4,
-          min_playtime: 60,
-          max_playtime: 120,
-          thumbnail_url: null,
-          image_url: null,
-          local_thumbnail_uri: null,
-          local_image_uri: null,
-          created_at: now,
-          updated_at: now,
-        },
-        {
-          bgg_id: 822,
-          title: 'Carcassonne',
-          year_published: 2000,
-          min_players: 2,
-          max_players: 5,
-          min_playtime: 30,
-          max_playtime: 45,
-          thumbnail_url: null,
-          image_url: null,
-          local_thumbnail_uri: null,
-          local_image_uri: null,
-          created_at: now,
-          updated_at: now,
-        },
-        {
-          bgg_id: 9209,
-          title: 'Ticket to Ride',
-          year_published: 2004,
-          min_players: 2,
-          max_players: 5,
-          min_playtime: 30,
-          max_playtime: 60,
-          thumbnail_url: null,
-          image_url: null,
-          local_thumbnail_uri: null,
-          local_image_uri: null,
-          created_at: now,
-          updated_at: now,
-        },
-        {
-          bgg_id: 230802,
-          title: 'Azul',
-          year_published: 2017,
-          min_players: 2,
-          max_players: 4,
-          min_playtime: 30,
-          max_playtime: 45,
-          thumbnail_url: null,
-          image_url: null,
-          local_thumbnail_uri: null,
-          local_image_uri: null,
-          created_at: now,
-          updated_at: now,
-        },
-        {
-          bgg_id: 266192,
-          title: 'Wingspan',
-          year_published: 2019,
-          min_players: 1,
-          max_players: 5,
-          min_playtime: 40,
-          max_playtime: 70,
-          thumbnail_url: null,
-          image_url: null,
-          local_thumbnail_uri: null,
-          local_image_uri: null,
-          created_at: now,
-          updated_at: now,
-        },
-        {
-          bgg_id: 167791,
-          title: 'Terraforming Mars',
-          year_published: 2016,
-          min_players: 1,
-          max_players: 5,
-          min_playtime: 120,
-          max_playtime: 120,
-          thumbnail_url: null,
-          image_url: null,
-          local_thumbnail_uri: null,
-          local_image_uri: null,
-          created_at: now,
-          updated_at: now,
-        },
-      ],
-      box_dimensions: [
-        { id: 1, bgg_id: 13, width_cm: 29.5, height_cm: 29.5, depth_cm: 7.5, weight_kg: 1.2, version_id: 1, version_name: 'Edição Padrão', is_estimated: 0, updated_at: now },
-        { id: 2, bgg_id: 822, width_cm: 27.5, height_cm: 19.0, depth_cm: 6.8, weight_kg: 0.8, version_id: 2, version_name: 'Edição Padrão', is_estimated: 0, updated_at: now },
-        { id: 3, bgg_id: 9209, width_cm: 29.7, height_cm: 29.7, depth_cm: 7.6, weight_kg: 1.3, version_id: 3, version_name: 'Edição Padrão', is_estimated: 0, updated_at: now },
-        { id: 4, bgg_id: 230802, width_cm: 26.0, height_cm: 26.0, depth_cm: 7.0, weight_kg: 1.1, version_id: 4, version_name: 'Edição Padrão', is_estimated: 0, updated_at: now },
-        { id: 5, bgg_id: 266192, width_cm: 29.6, height_cm: 29.6, depth_cm: 7.5, weight_kg: 1.5, version_id: 5, version_name: 'Edição Padrão', is_estimated: 0, updated_at: now },
-        { id: 6, bgg_id: 167791, width_cm: 29.8, height_cm: 29.8, depth_cm: 7.2, weight_kg: 1.6, version_id: 6, version_name: 'Edição Padrão', is_estimated: 0, updated_at: now },
-      ],
-      collection_items: [
-        { id: 1, coll_id: 1001, bgg_id: 13, status_own: 1, status_wishlist: 0, status_played: 1, bgg_rating: 8.5, bgg_comment: 'Clássico de negociação e rotas', local_notes: 'Caixa com insert organizador', custom_tags: '["Familia","Estrategia"]', acquisition_date: '2024-03-10', created_at: now, updated_at: now },
-        { id: 2, coll_id: 1002, bgg_id: 822, status_own: 1, status_wishlist: 0, status_played: 1, bgg_rating: 8.0, bgg_comment: 'Ótimo para 2 jogadores', local_notes: null, custom_tags: null, acquisition_date: '2024-04-15', created_at: now, updated_at: now },
-        { id: 3, coll_id: 1003, bgg_id: 9209, status_own: 1, status_wishlist: 0, status_played: 1, bgg_rating: 8.2, bgg_comment: null, local_notes: null, custom_tags: null, acquisition_date: '2024-05-20', created_at: now, updated_at: now },
-        { id: 4, coll_id: 1004, bgg_id: 230802, status_own: 1, status_wishlist: 0, status_played: 1, bgg_rating: 8.7, bgg_comment: null, local_notes: null, custom_tags: null, acquisition_date: '2024-06-01', created_at: now, updated_at: now },
-        { id: 5, coll_id: 1005, bgg_id: 266192, status_own: 1, status_wishlist: 0, status_played: 1, bgg_rating: 9.0, bgg_comment: null, local_notes: null, custom_tags: null, acquisition_date: '2024-07-12', created_at: now, updated_at: now },
-        { id: 6, coll_id: 1006, bgg_id: 167791, status_own: 1, status_wishlist: 0, status_played: 1, bgg_rating: 9.2, bgg_comment: null, local_notes: null, custom_tags: null, acquisition_date: '2024-08-19', created_at: now, updated_at: now },
-      ],
-      sync_logs: [
-        { id: 1, username: 'demo_web', status: 'COMPLETED', total_items: 6, items_inserted: 6, items_updated: 0, error_message: null, started_at: now - 5000, completed_at: now },
-      ],
-      game_sleeves: [
-        { id: 1, bgg_id: 13, card_set_name: 'Recursos e Desenvolvimento', format_name: 'Chimera (57.5x89mm)', width_mm: 57.5, height_mm: 89, card_count: 120, is_sleeved: 1, created_at: now, updated_at: now },
-        { id: 2, bgg_id: 9209, card_set_name: 'Vagões e Bilhetes', format_name: 'Mini USA (41x63mm)', width_mm: 41, height_mm: 63, card_count: 144, is_sleeved: 0, created_at: now, updated_at: now },
-        { id: 3, bgg_id: 266192, card_set_name: 'Cartas de Pássaros e Bônus', format_name: 'Chimera (57.5x89mm)', width_mm: 57.5, height_mm: 89, card_count: 196, is_sleeved: 0, created_at: now, updated_at: now },
-        { id: 4, bgg_id: 167791, card_set_name: 'Projetos e Corporações', format_name: 'Padrão / Standard (63.5x88mm)', width_mm: 63.5, height_mm: 88, card_count: 233, is_sleeved: 0, created_at: now, updated_at: now },
-      ],
-      sleeve_inventory: [
-        { id: 1, format_name: 'Padrão / Standard (63.5x88mm)', width_mm: 63.5, height_mm: 88, brand: 'Bucaneiros', pack_size: 100, packs_owned: 2, loose_sleeves: 15, notes: 'Espessura tradicional', created_at: now, updated_at: now },
-        { id: 2, format_name: 'Chimera (57.5x89mm)', width_mm: 57.5, height_mm: 89, brand: 'Meeple Virus', pack_size: 100, packs_owned: 1, loose_sleeves: 0, notes: null, created_at: now, updated_at: now },
-      ],
-      rulebooks: [
-        {
-          id: 1,
-          bgg_id: 13,
-          label: 'Manual Base & Almanaque — Catan',
-          doc_type: 'BASE_RULES',
-          source_kind: 'LOCAL_PICKER',
-          source_url: null,
-          relative_path: 'rulebooks/13/demo-catan-manual.pdf',
-          file_size_bytes: 2450120,
-          md5: 'd41d8cd98f00b204e9800998ecf8427e',
-          page_count: 16,
-          last_viewed_page: 4,
-          status: 'READY',
-          created_at: now,
-          updated_at: now,
-        },
-      ],
-      rulebook_bookmarks: [
-        { id: 1, rulebook_id: 1, page: 3, title: 'Preparação do Tabuleiro (Setup)', created_at: now, updated_at: now },
-        { id: 2, rulebook_id: 1, page: 7, title: 'Regras do Ladrão e Descarte', created_at: now, updated_at: now },
-      ],
-      rulebook_notes: [
-        { id: 1, rulebook_id: 1, page: 4, body: 'Em 4 jogadores usar sempre a distribuição variável de números nas matérias-primas.', created_at: now, updated_at: now },
-      ],
-      players: [
-        { id: 1, name: 'Você', is_hidden: 0, created_at: now, updated_at: now },
-        { id: 2, name: 'Mariana', is_hidden: 0, created_at: now, updated_at: now },
-        { id: 3, name: 'Lucas', is_hidden: 0, created_at: now, updated_at: now },
-      ],
-      play_sessions: [
-        { id: 1, bgg_id: 13, played_on: '2026-11-10', duration_minutes: 85, outcome: 'WIN', comments: 'Vitória fechando a Maior Estrada na última rodada!', created_at: now - 86400000, updated_at: now - 86400000 },
-        { id: 2, bgg_id: 13, played_on: '2026-11-12', duration_minutes: 75, outcome: 'LOSS', comments: 'Mariana dominou os portos de trigo.', created_at: now, updated_at: now },
-      ],
-      play_participants: [
-        { id: 1, session_id: 1, player_id: 1, score: 10, is_winner: 1 },
-        { id: 2, session_id: 1, player_id: 2, score: 8, is_winner: 0 },
-        { id: 3, session_id: 1, player_id: 3, score: 7, is_winner: 0 },
-        { id: 4, session_id: 2, player_id: 1, score: 8, is_winner: 0 },
-        { id: 5, session_id: 2, player_id: 2, score: 10, is_winner: 1 },
-      ],
-      personal_ratings: [
-        { bgg_id: 13, rating: 9, updated_at: now },
-        { bgg_id: 266192, rating: 10, updated_at: now },
-        { bgg_id: 167791, rating: 9, updated_at: now },
-      ],
+      games: [],
+      box_dimensions: [],
+      collection_items: [],
+      sync_logs: [],
+      game_sleeves: [],
+      sleeve_inventory: [],
+      rulebooks: [],
+      rulebook_bookmarks: [],
+      rulebook_notes: [],
+      players: [],
+      play_sessions: [],
+      play_participants: [],
+      personal_ratings: [],
     },
   };
+}
+
+function purgeLegacyDemoData(store: TableStore): boolean {
+  let modified = false;
+
+  const collItems = store.tables.collection_items ?? [];
+  const filteredColl = collItems.filter((row) => !DEMO_COLL_IDS.has(Number(row.coll_id)));
+  if (filteredColl.length !== collItems.length) {
+    store.tables.collection_items = filteredColl;
+    modified = true;
+  }
+
+  const syncLogs = store.tables.sync_logs ?? [];
+  const filteredLogs = syncLogs.filter(
+    (row) => row.username !== 'demo_web' && row.username !== 'demo_bgg'
+  );
+  if (filteredLogs.length !== syncLogs.length) {
+    store.tables.sync_logs = filteredLogs;
+    modified = true;
+  }
+
+  if (modified) {
+    // Keep only games and related metadata that belong to remaining real BGG collection_items
+    const validBggIds = new Set(
+      (store.tables.collection_items ?? []).map((row) => Number(row.bgg_id))
+    );
+
+    store.tables.games = (store.tables.games ?? []).filter((r) =>
+      validBggIds.has(Number(r.bgg_id))
+    );
+    store.tables.box_dimensions = (store.tables.box_dimensions ?? []).filter((r) =>
+      validBggIds.has(Number(r.bgg_id))
+    );
+    store.tables.game_sleeves = (store.tables.game_sleeves ?? []).filter((r) =>
+      validBggIds.has(Number(r.bgg_id))
+    );
+    store.tables.personal_ratings = (store.tables.personal_ratings ?? []).filter((r) =>
+      validBggIds.has(Number(r.bgg_id))
+    );
+
+    // Remove pre-seeded demo rulebooks/sessions if no real collection items exist yet
+    if (validBggIds.size === 0) {
+      store.tables.sleeve_inventory = [];
+      store.tables.rulebooks = [];
+      store.tables.rulebook_bookmarks = [];
+      store.tables.rulebook_notes = [];
+      store.tables.players = [];
+      store.tables.play_sessions = [];
+      store.tables.play_participants = [];
+    }
+  }
+
+  return modified;
 }
 
 class WebSQLiteEngine {
@@ -244,7 +147,6 @@ class WebSQLiteEngine {
   private loadFromStorage(): TableStore {
     try {
       if (typeof window !== 'undefined' && window.localStorage) {
-        // Non-sensitive boardgame catalog cache in localStorage for Web preview
         const raw = window.localStorage.getItem(STORAGE_KEY);
         if (raw) {
           const parsed = JSON.parse(raw) as TableStore;
@@ -254,6 +156,9 @@ class WebSQLiteEngine {
                 parsed.tables[table] = [];
               }
             }
+            if (purgeLegacyDemoData(parsed)) {
+              this.saveToStorage(parsed);
+            }
             return parsed;
           }
         }
@@ -261,7 +166,7 @@ class WebSQLiteEngine {
     } catch {
       // Ignore storage access errors in private/sandboxed browsing
     }
-    const initial = createInitialDemoStore();
+    const initial = createEmptyStore();
     this.saveToStorage(initial);
     return initial;
   }

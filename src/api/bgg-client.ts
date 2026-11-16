@@ -121,10 +121,11 @@ export class BggClient implements IBggApiClient {
       }
 
       if (response.status === 401) {
-        throw new BggApiError(
-          'A API do BoardGameGeek retornou HTTP 401 (Não Autorizado). O BGG agora exige um Token de Acesso (Bearer Token) gerado em boardgamegeek.com/applications, ou você pode usar a opção "Sincronizar Coleção Demo" na tela de Configurações.',
-          401
-        );
+        const hadToken = Boolean((apiToken ?? this.defaultApiToken ?? '').trim());
+        const detail = hadToken
+          ? 'O token informado foi recusado pelo BGG (HTTP 401). Verifique se você colou o código secreto gerado ao clicar em "Create Token" (e não apenas o nome do token, como "apikey-virtualstand").'
+          : 'A API do BoardGameGeek retornou HTTP 401 (Não Autorizado). Informe o código secreto do seu Bearer Token (gerado em boardgamegeek.com/applications ao clicar em "Create Token") ou use o botão "Sincronizar Coleção Demo".';
+        throw new BggApiError(detail, 401);
       }
 
       throw new BggApiError(

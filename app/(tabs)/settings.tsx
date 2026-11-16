@@ -36,6 +36,7 @@ function writeWebStorage(key: string, value: string): void {
 export default function SettingsScreen() {
   const [username, setUsername] = useState(() => readWebStorage(USERNAME_STORAGE_KEY));
   const [apiToken, setApiToken] = useState(() => readWebStorage(TOKEN_STORAGE_KEY));
+  const [showToken, setShowToken] = useState(false);
   const [lastSync, setLastSync] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -62,17 +63,7 @@ export default function SettingsScreen() {
     writeWebStorage(TOKEN_STORAGE_KEY, apiToken.trim());
 
     setModalVisible(true);
-    const result = await startSync(username.trim(), apiToken.trim() || undefined, false);
-    if (result.success) {
-      setLastSync(new Date().toLocaleString('pt-BR'));
-    }
-  };
-
-  const handleStartDemoSync = async () => {
-    const targetUsername = username.trim() || 'demo_bgg';
-    setValidationError(null);
-    setModalVisible(true);
-    const result = await startSync(targetUsername, undefined, true);
+    const result = await startSync(username.trim(), apiToken.trim() || undefined);
     if (result.success) {
       setLastSync(new Date().toLocaleString('pt-BR'));
     }
@@ -87,7 +78,7 @@ export default function SettingsScreen() {
 
       <Input
         label="Nome de Usuário no BGG"
-        placeholder="ex: rahdo"
+        placeholder="ex: seu_usuario_bgg"
         autoCapitalize="none"
         autoCorrect={false}
         value={username}
@@ -99,15 +90,24 @@ export default function SettingsScreen() {
       />
 
       <Input
-        label="Token da API BGG (Bearer Token)"
-        placeholder="Cole seu token de boardgamegeek.com/applications"
-        helperText="O BGG passou a exigir autenticação Bearer na XMLAPI2 (evita o erro HTTP 401)."
+        label="Token da API BGG (Bearer Token Secreto)"
+        placeholder="Cole o código secreto gerado ao clicar em Create Token"
+        helperText='Atenção: cole o código secreto exibido uma única vez ao clicar em "Create Token" (e não o nome do token).'
         autoCapitalize="none"
         autoCorrect={false}
-        secureTextEntry
+        secureTextEntry={!showToken}
         value={apiToken}
         onChangeText={setApiToken}
       />
+
+      <View style={styles.tokenToggleRow}>
+        <Button
+          label={showToken ? 'Ocultar Token' : 'Mostrar Token Digitado'}
+          variant="ghost"
+          size="sm"
+          onPress={() => setShowToken((prev) => !prev)}
+        />
+      </View>
 
       {lastSync ? (
         <Text style={styles.lastSyncText}>Última sincronização com sucesso: {lastSync}</Text>
@@ -122,29 +122,18 @@ export default function SettingsScreen() {
           disabled={!username.trim() || isSyncing}
           loading={isSyncing}
         />
-
-        <Button
-          label="Sincronizar Coleção Demo (8 Jogos Clássicos — Sem Token)"
-          variant="secondary"
-          size="md"
-          onPress={handleStartDemoSync}
-          disabled={isSyncing}
-        />
       </View>
 
       <Card variant="elevated" padding="md" style={styles.authCard}>
         <View style={styles.authHeaderRow}>
-          <Text style={styles.infoTitle}>Por que o BGG retorna erro 401?</Text>
-          <Badge tone="warning" label="Política XMLAPI2" />
+          <Text style={styles.infoTitle}>Autenticação Bearer Token (BGG XMLAPI2)</Text>
+          <Badge tone="warning" label="Obrigatório no BGG" />
         </View>
         <Text style={styles.infoItem}>
-          O BoardGameGeek atualizou sua política da <Text style={styles.bold}>XMLAPI2</Text> e bloqueia requisições anônimas com <Text style={styles.bold}>HTTP 401 Unauthorized</Text>.
+          O BoardGameGeek exige autenticação <Text style={styles.bold}>Bearer Token</Text> em todas as consultas à <Text style={styles.bold}>XMLAPI2</Text>.
         </Text>
         <Text style={styles.infoItem}>
-          • <Text style={styles.bold}>Para sincronizar sua conta real</Text>: Acesse <Text style={styles.bold}>boardgamegeek.com/applications</Text>, gere um Application Token e cole no campo acima (ou defina <Text style={styles.bold}>EXPO_PUBLIC_BGG_API_TOKEN</Text>).
-        </Text>
-        <Text style={styles.infoItem}>
-          • <Text style={styles.bold}>Para testar agora sem Token</Text>: Clique em <Text style={styles.bold}>"Sincronizar Coleção Demo"</Text> acima para popular sua coleção, caixas 3D e sleeves instantaneamente.
+          • Acesse <Text style={styles.bold}>boardgamegeek.com/applications</Text>, clique em <Text style={styles.bold}>Create Token</Text> e copie o código secreto exibido no modal para o campo acima.
         </Text>
       </Card>
 
@@ -179,6 +168,11 @@ const styles = StyleSheet.create({
     color: tokens.colors.semantic.success,
     marginBottom: tokens.spacing.md,
     fontVariant: ['tabular-nums'],
+  },
+  tokenToggleRow: {
+    alignItems: 'flex-start',
+    marginTop: -tokens.spacing.xs,
+    marginBottom: tokens.spacing.sm,
   },
   buttonWrap: {
     gap: tokens.spacing.sm,

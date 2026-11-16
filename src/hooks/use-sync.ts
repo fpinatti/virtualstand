@@ -8,11 +8,7 @@ export function useSync() {
   const [lastResult, setLastResult] = useState<SyncResult | null>(null);
 
   const startSync = useCallback(
-    async (
-      username: string,
-      apiToken?: string,
-      useDemoDataset?: boolean
-    ): Promise<SyncResult> => {
+    async (username: string, apiToken?: string): Promise<SyncResult> => {
       setIsSyncing(true);
       setProgress({
         stage: 'QUEUED',
@@ -26,7 +22,6 @@ export function useSync() {
           {
             username,
             apiToken,
-            useDemoDataset,
             prefetchThumbnails: true,
           },
           (update) => {
