@@ -11,7 +11,7 @@ import { useRouter } from 'expo-router';
 import { Rulebook, RulebookDocType } from '@/services/rulebook-types';
 import { useRulebooks } from '@/hooks/use-rulebooks';
 import { RulebookImportSheet } from './rulebook-import-sheet';
-import { Button, Card, tokens } from '@/ui';
+import { Badge, Button, Card, tokens } from '@/ui';
 
 const DOC_TYPE_LABELS: Record<RulebookDocType, string> = {
   BASE_RULES: 'Regras base',
@@ -124,7 +124,12 @@ export function RulebookList({ bggId, onBeforeOpenReader }: RulebookListProps) {
                   style={styles.mainInfo}
                   onPress={() => openReader(rb.id)}
                 >
-                  <Text style={styles.docLabel}>{rb.label}</Text>
+                  <View style={styles.titleRow}>
+                    <Text style={styles.docLabel}>{rb.label}</Text>
+                    {rb.sourceKind === 'BUNDLED_ASSET' || rb.label.includes('PT-BR') ? (
+                      <Badge label="PT-BR" tone="accent" />
+                    ) : null}
+                  </View>
                   <Text style={styles.docMeta}>
                     {DOC_TYPE_LABELS[rb.docType] ?? rb.docType} •{' '}
                     {rb.pageCount ? `${rb.pageCount} págs` : 'Verificando'} •{' '}
@@ -230,6 +235,11 @@ const styles = StyleSheet.create({
   },
   mainInfo: {
     marginBottom: tokens.spacing['2xs'],
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: tokens.spacing.xs,
   },
   docLabel: {
     color: tokens.colors.text.primary,

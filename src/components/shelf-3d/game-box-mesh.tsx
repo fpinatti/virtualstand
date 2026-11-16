@@ -26,7 +26,7 @@ export function GameBoxMesh({
   const previousPointer = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const [loadedCover, setLoadedCover] = useState<{
     coverTexture: THREE.Texture;
-    image: HTMLImageElement;
+    image: HTMLImageElement | null;
   } | null>(null);
 
   const themeColor = useMemo(
@@ -52,11 +52,14 @@ export function GameBoxMesh({
 
   // Box materials:
   // 0 (+X) & 1 (-X): Main Box Cover faces (full BGG cover art)
-  // 2 (+Y), 3 (-Y), 4 (+Z), 5 (-Z): Lateral box lid wrap faces (seamless aspect-correct cover wrap)
+  // 2 (+Y), 3 (-Y): Top and bottom box lid
+  // 4 (+Z), 5 (-Z): Lateral spine faces (facing the aisle)
   const materials = useMemo(() => {
+    const hasCover = Boolean(loadedCover?.coverTexture);
+
     const coverSideMaterial = new THREE.MeshStandardMaterial({
-      color: loadedCover ? '#ffffff' : themeColor,
-      map: loadedCover ? loadedCover.coverTexture : null,
+      color: hasCover ? '#ffffff' : themeColor,
+      map: loadedCover?.coverTexture || null,
       roughness: 0.35,
       metalness: 0.08,
     });
@@ -68,16 +71,19 @@ export function GameBoxMesh({
       themeColor,
       loadedCover?.image ?? null
     );
+
+    const resolvedSpineMap = spineTexture || loadedCover?.coverTexture || null;
+
     const lateralWrapMaterial = new THREE.MeshStandardMaterial({
-      color: spineTexture ? '#ffffff' : themeColor,
-      map: spineTexture || null,
+      color: resolvedSpineMap ? '#ffffff' : themeColor,
+      map: resolvedSpineMap,
       roughness: 0.38,
       metalness: 0.08,
     });
 
     const topBottomMaterial = new THREE.MeshStandardMaterial({
-      color: loadedCover ? '#D8D0C5' : themeColor,
-      map: loadedCover ? loadedCover.coverTexture : null,
+      color: hasCover ? '#D8D0C5' : themeColor,
+      map: loadedCover?.coverTexture || null,
       roughness: 0.5,
       metalness: 0.05,
     });

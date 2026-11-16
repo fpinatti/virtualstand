@@ -5,7 +5,7 @@ import {
   IAisleCameraController,
 } from '@/components/shelf-3d/types';
 
-export const WALK_SENSITIVITY_Z_PER_PX = 0.028;
+export const WALK_SENSITIVITY_Z_PER_PX = 0.016;
 export const DRAG_THRESHOLD_PX = 8;
 export const SIDE_YAW_RADIANS = 1.15; // ~66 degrees toward selected shelf wall
 export const SIDE_LATERAL_STEP_X = 0.65; // Steps slightly back from focused wall for wider framing

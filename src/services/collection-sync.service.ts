@@ -11,6 +11,7 @@ import { collectionRepository, CollectionRepository } from '@/db/repositories/co
 import { imageCacheService, ImageCacheService } from './image-cache.service';
 import { dimensionCalculatorService, DimensionCalculatorService } from './dimension-calculator.service';
 import { sleeveManagerService, SleeveManagerService } from './sleeve-manager.service';
+import { preloadedRulebookService } from './preloaded-rulebook.service';
 import { getDatabase } from '@/db/client';
 import { syncLogs, InsertGame } from '@/db/schema';
 import { desc, eq } from 'drizzle-orm';
@@ -127,6 +128,7 @@ export class CollectionSyncService implements ICollectionSyncService {
       for (const item of rawItems) {
         if (this.isCancelled) break;
         await this.sleeveManager.seedGameSleevesFromCatalog(item.objectid);
+        await preloadedRulebookService.syncBundledRulebookForGame(item.objectid).catch(() => {});
       }
 
       // 4. Fetch physical box dimensions (US3)

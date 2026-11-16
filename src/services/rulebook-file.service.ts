@@ -116,8 +116,14 @@ export class RulebookFileService {
    */
   toAbsoluteUri(relativePath: string): string {
     const normalized = relativePath.replace(/\\/g, '/').replace(/^\/+/, '');
-    if (normalized.includes('..') || !normalized.startsWith('rulebooks/')) {
+    const isAllowedDir =
+      normalized.startsWith('rulebooks/') ||
+      normalized.startsWith('assets/rulebooks/');
+    if (normalized.includes('..') || !isAllowedDir) {
       throw new Error('Invalid rulebook relative path');
+    }
+    if (typeof window !== 'undefined' && normalized.startsWith('assets/rulebooks/')) {
+      return `/${normalized}`;
     }
     return `${FileSystem.documentDirectory ?? ''}${normalized}`;
   }

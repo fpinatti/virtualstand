@@ -4,7 +4,7 @@
  */
 
 export type RulebookDocType = 'BASE_RULES' | 'EXPANSION' | 'QUICK_REFERENCE' | 'FAQ' | 'OTHER';
-export type RulebookSourceKind = 'DEVICE_FILE' | 'DOWNLOAD';
+export type RulebookSourceKind = 'DEVICE_FILE' | 'DOWNLOAD' | 'BUNDLED_ASSET';
 export type RulebookStatus = 'PENDING_VERIFICATION' | 'READY';
 
 export const MAX_RULEBOOK_SIZE_BYTES = 100 * 1024 * 1024;

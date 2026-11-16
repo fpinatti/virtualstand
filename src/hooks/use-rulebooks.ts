@@ -8,6 +8,7 @@ import {
   RulebookImportResult,
 } from '@/services/rulebook-types';
 import { rulebookService } from '@/services/rulebook.service';
+import { preloadedRulebookService } from '@/services/preloaded-rulebook.service';
 
 export function useRulebooks(bggId: number | null) {
   const [rulebooks, setRulebooks] = useState<Rulebook[]>([]);
@@ -23,6 +24,7 @@ export function useRulebooks(bggId: number | null) {
     }
     setLoading(true);
     try {
+      await preloadedRulebookService.syncBundledRulebookForGame(bggId).catch(() => {});
       const list = await rulebookService.listByGame(bggId);
       setRulebooks(list);
     } finally {

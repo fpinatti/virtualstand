@@ -1,0 +1,111 @@
+import { BundledRulebookItem } from '../../specs/009-prepopulated-sleeves-manuals/contracts/preloaded-content-contract';
+
+export const BUNDLED_RULEBOOKS_CATALOG: BundledRulebookItem[] = [
+  {
+    bggId: 13,
+    gameTitle: 'Catan',
+    label: 'Manual Oficial em Português (PT-BR)',
+    language: 'pt-BR',
+    relativeAssetPath: 'assets/rulebooks/catan-regras-ptbr.pdf',
+    fileSizeBytes: 18420,
+    md5: 'catan-ptbr-rules-v1',
+    pageCount: 16,
+  },
+  {
+    bggId: 230802,
+    gameTitle: 'Azul',
+    label: 'Livro de Regras em Português (PT-BR)',
+    language: 'pt-BR',
+    relativeAssetPath: 'assets/rulebooks/azul-regras-ptbr.pdf',
+    fileSizeBytes: 14200,
+    md5: 'azul-ptbr-rules-v1',
+    pageCount: 6,
+  },
+  {
+    bggId: 30549,
+    gameTitle: 'Pandemic',
+    label: 'Manual de Regras em Português (PT-BR)',
+    language: 'pt-BR',
+    relativeAssetPath: 'assets/rulebooks/pandemic-regras-ptbr.pdf',
+    fileSizeBytes: 19800,
+    md5: 'pandemic-ptbr-rules-v1',
+    pageCount: 8,
+  },
+  {
+    bggId: 266192,
+    gameTitle: 'Wingspan',
+    label: 'Guia de Regras em Português (PT-BR)',
+    language: 'pt-BR',
+    relativeAssetPath: 'assets/rulebooks/wingspan-regras-ptbr.pdf',
+    fileSizeBytes: 24500,
+    md5: 'wingspan-ptbr-rules-v1',
+    pageCount: 12,
+  },
+  {
+    bggId: 822,
+    gameTitle: 'Carcassonne',
+    label: 'Manual Básico em Português (PT-BR)',
+    language: 'pt-BR',
+    relativeAssetPath: 'assets/rulebooks/carcassonne-regras-ptbr.pdf',
+    fileSizeBytes: 12300,
+    md5: 'carcassonne-ptbr-rules-v1',
+    pageCount: 6,
+  },
+  {
+    bggId: 68448,
+    gameTitle: '7 Wonders',
+    label: 'Livro de Regras em Português (PT-BR)',
+    language: 'pt-BR',
+    relativeAssetPath: 'assets/rulebooks/7wonders-regras-ptbr.pdf',
+    fileSizeBytes: 21100,
+    md5: '7wonders-ptbr-rules-v1',
+    pageCount: 12,
+  },
+  {
+    bggId: 9209,
+    gameTitle: 'Ticket to Ride',
+    label: 'Regras do Jogo em Português (PT-BR)',
+    language: 'pt-BR',
+    relativeAssetPath: 'assets/rulebooks/tickettoride-regras-ptbr.pdf',
+    fileSizeBytes: 16800,
+    md5: 'tickettoride-ptbr-rules-v1',
+    pageCount: 8,
+  },
+  {
+    bggId: 131357,
+    gameTitle: 'Coup',
+    label: 'Manual de Regras em Português (PT-BR)',
+    language: 'pt-BR',
+    relativeAssetPath: 'assets/rulebooks/coup-regras-ptbr.pdf',
+    fileSizeBytes: 9500,
+    md5: 'coup-ptbr-rules-v1',
+    pageCount: 4,
+  },
+  {
+    bggId: 167791,
+    gameTitle: 'Terraforming Mars',
+    label: 'Manual de Instruções em Português (PT-BR)',
+    language: 'pt-BR',
+    relativeAssetPath: 'assets/rulebooks/terraformingmars-regras-ptbr.pdf',
+    fileSizeBytes: 32000,
+    md5: 'terraformingmars-ptbr-rules-v1',
+    pageCount: 16,
+  },
+  {
+    bggId: 169786,
+    gameTitle: 'Scythe',
+    label: 'Livro de Regras em Português (PT-BR)',
+    language: 'pt-BR',
+    relativeAssetPath: 'assets/rulebooks/scythe-regras-ptbr.pdf',
+    fileSizeBytes: 38000,
+    md5: 'scythe-ptbr-rules-v1',
+    pageCount: 32,
+  },
+];
+
+const bundledMap = new Map<number, BundledRulebookItem>();
+BUNDLED_RULEBOOKS_CATALOG.forEach((item) => bundledMap.set(item.bggId, item));
+
+export function findBundledRulebookByBggId(bggId: number): BundledRulebookItem | null {
+  return bundledMap.get(bggId) ?? null;
+}

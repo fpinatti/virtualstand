@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { initializeTables } from '@/db/client';
 import { rulebookService } from '@/services/rulebook.service';
+import { preloadedRulebookService } from '@/services/preloaded-rulebook.service';
 import { tokens } from '@/ui';
 
 export default function RootLayout() {
@@ -15,6 +16,9 @@ export default function RootLayout() {
       initializeTables();
       rulebookService.cleanupPending().catch(() => {
         // Non-blocking startup cleanup
+      });
+      preloadedRulebookService.syncAllBundledRulebooks().catch(() => {
+        // Non-blocking startup seed of bundled PT-BR rulebooks
       });
       setIsReady(true);
     } catch (err) {

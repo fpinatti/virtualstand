@@ -102,7 +102,6 @@ export function formatSpineTitle(title: string, maxLength = 45): string {
 export function resolveWebGlSafeImageUrl(uri: string): string {
   const trimmed = uri.trim();
   if (
-    typeof window !== 'undefined' &&
     (trimmed.startsWith('http://') || trimmed.startsWith('https://')) &&
     !trimmed.includes('wsrv.nl')
   ) {
@@ -122,16 +121,16 @@ export class SpineGeneratorService {
    */
   loadCoverArt(
     uri: string,
-    onLoaded: (result: { coverTexture: THREE.Texture; image: HTMLImageElement }) => void
+    onLoaded: (result: { coverTexture: THREE.Texture; image: HTMLImageElement | null }) => void
   ): void {
     if (!uri) return;
 
     const safeUrl = resolveWebGlSafeImageUrl(uri);
 
-    if (this.coverTextureCache.has(safeUrl) && this.coverImageCache.has(safeUrl)) {
+    if (this.coverTextureCache.has(safeUrl)) {
       onLoaded({
         coverTexture: this.coverTextureCache.get(safeUrl)!,
-        image: this.coverImageCache.get(safeUrl)!,
+        image: this.coverImageCache.get(safeUrl) ?? null,
       });
       return;
     }
@@ -166,15 +165,24 @@ export class SpineGeneratorService {
     try {
       const loader = new THREE.TextureLoader();
       loader.setCrossOrigin('anonymous');
-      loader.load(safeUrl, (tex) => {
-        tex.colorSpace = THREE.SRGBColorSpace;
-        this.coverTextureCache.set(safeUrl, tex);
-        if (tex.image) {
-          onLoaded({ coverTexture: tex, image: tex.image as HTMLImageElement });
+      loader.load(
+        safeUrl,
+        (tex) => {
+          tex.colorSpace = THREE.SRGBColorSpace;
+          tex.needsUpdate = true;
+          this.coverTextureCache.set(safeUrl, tex);
+          onLoaded({
+            coverTexture: tex,
+            image: (tex.image as HTMLImageElement) || null,
+          });
+        },
+        undefined,
+        (err) => {
+          console.warn('[SpineGenerator] Failed to load cover texture for:', safeUrl, err);
         }
-      });
-    } catch {
-      // Ignore loader failure
+      );
+    } catch (err) {
+      console.warn('[SpineGenerator] Error in TextureLoader:', err);
     }
   }
 

@@ -103,10 +103,13 @@ export function ShelfScene({
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => false,
+      onStartShouldSetPanResponderCapture: () => false,
       onMoveShouldSetPanResponder: (_, gestureState) =>
         aisleCameraController.isDragGesture(gestureState.dx, gestureState.dy),
-      onPanResponderGrant: () => {
-        lastPanYRef.current = 0;
+      onMoveShouldSetPanResponderCapture: (_, gestureState) =>
+        Math.abs(gestureState.dy) > 6,
+      onPanResponderGrant: (_, gestureState) => {
+        lastPanYRef.current = gestureState.dy;
         wasDragRef.current = false;
       },
       onPanResponderMove: (_, gestureState) => {
@@ -120,10 +123,15 @@ export function ShelfScene({
           aisleCameraController.applyWalkDelta(prevZ, stepDeltaY, cameraBounds)
         );
       },
+      onPanResponderTerminationRequest: () => false,
+      onPanResponderTerminate: () => {
+        wasDragRef.current = false;
+        lastPanYRef.current = 0;
+      },
       onPanResponderRelease: () => {
         setTimeout(() => {
           wasDragRef.current = false;
-        }, 60);
+        }, 160);
       },
     })
   ).current;

@@ -69,6 +69,18 @@ export class SleeveManagerService implements ISleeveManagerService {
     return true;
   }
 
+  /**
+   * Batch seeds all games in a collection with community sleeve specs.
+   */
+  async seedAllCollectionSleeves(bggIds: number[]): Promise<number> {
+    let count = 0;
+    for (const bggId of bggIds) {
+      const seeded = await this.seedGameSleevesFromCatalog(bggId);
+      if (seeded) count++;
+    }
+    return count;
+  }
+
   async saveGameSleeve(item: GameSleeveItem): Promise<void> {
     await this.repo.saveGameSleeve({
       id: item.id,

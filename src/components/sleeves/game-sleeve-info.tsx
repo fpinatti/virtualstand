@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 import { GameSleeveInfoProps, GameSleeveItem } from '@/services/sleeve-types';
 import { sleeveManagerService } from '@/services/sleeve-manager.service';
+import { isZeroCardGame } from '@/data/community-sleeves-catalog';
 import { Badge, Button, Card, Input, SectionHeader, tokens } from '@/ui';
 
 export function GameSleeveInfoSection({ bggId }: GameSleeveInfoProps) {
@@ -93,9 +94,17 @@ export function GameSleeveInfoSection({ bggId }: GameSleeveInfoProps) {
       {errorMsg ? <Text style={styles.errorText}>{errorMsg}</Text> : null}
 
       {sleeves.length === 0 && !showAddForm ? (
-        <Text style={styles.emptyText}>
-          Nenhum requisito de sleeve registrado para este jogo.
-        </Text>
+        isZeroCardGame(bggId) ? (
+          <View style={styles.zeroCardBox}>
+            <Text style={styles.zeroCardText}>
+              Este jogo não utiliza cartas (jogos de peças/tabuleiro).
+            </Text>
+          </View>
+        ) : (
+          <Text style={styles.emptyText}>
+            Nenhum requisito de sleeve registrado para este jogo.
+          </Text>
+        )
       ) : (
         sleeves.map((s) => (
           <Card
@@ -207,6 +216,19 @@ const styles = StyleSheet.create({
     color: tokens.colors.text.muted,
     fontSize: tokens.typography.scale.caption.fontSize,
     fontStyle: 'italic',
+  },
+  zeroCardBox: {
+    paddingVertical: tokens.spacing.xs,
+    paddingHorizontal: tokens.spacing.sm,
+    backgroundColor: tokens.colors.surface.card,
+    borderRadius: tokens.radii.sm,
+    borderWidth: 1,
+    borderColor: tokens.colors.border.subtle,
+    marginVertical: tokens.spacing['2xs'],
+  },
+  zeroCardText: {
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.caption.fontSize,
   },
   sleeveRow: {
     flexDirection: 'row',
