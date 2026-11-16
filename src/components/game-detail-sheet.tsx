@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { CollectionWithGame, collectionRepository } from '@/db/repositories/collection.repository';
 import { BoxDimensionEditor } from './box-dimension-editor';
-import { GameSleeveManagerModal } from './sleeves/game-sleeve-manager';
+import { GameSleeveInfoSection } from './sleeves/game-sleeve-info';
 import { RulebookList } from './rulebooks/rulebook-list';
 import { PersonalRatingInput } from './personal-rating-input';
 import { PlayStatsCard } from './playlog/play-stats-card';
@@ -51,7 +51,6 @@ export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailS
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [showDimensionEditor, setShowDimensionEditor] = useState(false);
-  const [showSleeveModal, setShowSleeveModal] = useState(false);
   const [showPlayForm, setShowPlayForm] = useState(false);
   const [editingSession, setEditingSession] = useState<PlaySession | null>(null);
 
@@ -149,6 +148,11 @@ export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailS
               </Card>
             ) : null}
 
+            {/* Direct Per-Game Sleeve Information (Feature 007) */}
+            <View style={styles.section}>
+              <GameSleeveInfoSection bggId={game.bggId} />
+            </View>
+
             {/* Offline PDF Rulebooks Section (US1) */}
             <View style={styles.section}>
               <SectionHeader title="Manuais de Regras (PDF Offline)" />
@@ -212,15 +216,6 @@ export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailS
             </View>
 
             <View style={styles.section}>
-              <SectionHeader title="Proteção de Cartas (Sleeves)" />
-              <Button
-                label="🃏 Gerenciar Sleeves e Quantidade de Cartas"
-                variant="secondary"
-                onPress={() => setShowSleeveModal(true)}
-              />
-            </View>
-
-            <View style={styles.section}>
               <SectionHeader title="Dimensões Físicas da Caixa (Estante 3D)" />
               <Button
                 label="📐 Visualizar / Calibrar Medidas da Caixa"
@@ -250,14 +245,6 @@ export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailS
           visible={showDimensionEditor}
           onClose={() => setShowDimensionEditor(false)}
           onSaved={onSaved}
-        />
-
-        <GameSleeveManagerModal
-          bggId={game.bggId}
-          gameTitle={game.title}
-          visible={showSleeveModal}
-          onClose={() => setShowSleeveModal(false)}
-          onUpdated={onSaved}
         />
 
         <PlaySessionForm
