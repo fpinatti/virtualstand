@@ -7,7 +7,7 @@ import {
   AppState,
   AppStateStatus,
 } from 'react-native';
-import Pdf from 'react-native-pdf';
+import Constants from 'expo-constants';
 import { Rulebook } from '@/services/rulebook-types';
 import { rulebookService } from '@/services/rulebook.service';
 import { useAnnotations } from '@/hooks/use-annotations';
@@ -20,7 +20,47 @@ interface PdfReaderProps {
   onUnreadable?: () => void;
 }
 
+interface NativePdfInstance {
+  setPage?: (page: number) => void;
+}
+
+type NativePdfComponentType = React.ComponentType<{
+  ref?: React.Ref<NativePdfInstance>;
+  source: { uri: string };
+  page?: number;
+  enablePaging?: boolean;
+  minScale?: number;
+  maxScale?: number;
+  style?: object;
+  onLoadComplete?: (numberOfPages: number) => void;
+  onPageChanged?: (page: number, numberOfPages: number) => void;
+  onError?: () => void;
+}>;
+
+/**
+ * Resolves `react-native-pdf` only when running in a standalone/dev-client build.
+ * Inside standard Expo Go (`storeClient`), custom native modules like `RNPDFPdfView`
+ * are not compiled into the Expo Go binary, so we return null to avoid TurboModule crashes.
+ */
+function resolveNativePdfComponent(): NativePdfComponentType | null {
+  try {
+    const isExpoGo =
+      Constants.executionEnvironment === 'storeClient' ||
+      Constants.appOwnership === 'expo';
+    if (isExpoGo) {
+      return null;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const mod = require('react-native-pdf');
+    return (mod?.default ?? mod) as NativePdfComponentType;
+  } catch {
+    return null;
+  }
+}
+
 export function PdfReader({ rulebook, onVerified, onUnreadable }: PdfReaderProps) {
+  const NativePdf = useRef<NativePdfComponentType | null>(resolveNativePdfComponent()).current;
+
   const [currentPage, setCurrentPage] = useState<number>(
     Math.max(1, rulebook.lastViewedPage || 1)
   );
@@ -29,7 +69,7 @@ export function PdfReader({ rulebook, onVerified, onUnreadable }: PdfReaderProps
   const [showAnnotations, setShowAnnotations] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  const pdfRef = useRef<Pdf | null>(null);
+  const pdfRef = useRef<NativePdfInstance | null>(null);
   const latestPageRef = useRef<number>(currentPage);
   const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -45,6 +85,19 @@ export function PdfReader({ rulebook, onVerified, onUnreadable }: PdfReaderProps
     updateNote,
     deleteNote,
   } = useAnnotations(rulebook.id);
+
+  useEffect(() => {
+    if (!NativePdf && rulebook.status === 'PENDING_VERIFICATION') {
+      const pages = rulebook.pageCount ?? 1;
+      setTotalPages(pages);
+      rulebookService
+        .markVerified(rulebook.id, pages)
+        .then(() => {
+          if (onVerified) onVerified(pages);
+        })
+        .catch(() => {});
+    }
+  }, [NativePdf, rulebook.id, rulebook.status, rulebook.pageCount, onVerified]);
 
   const flushLastPage = useCallback((pageToSave: number) => {
     if (debounceTimerRef.current) {
@@ -147,37 +200,46 @@ export function PdfReader({ rulebook, onVerified, onUnreadable }: PdfReaderProps
         </View>
       </View>
 
-      {/* PDF Canvas */}
-      <Pdf
-        ref={pdfRef}
-        source={{ uri: rulebook.fileUri }}
-        page={rulebook.lastViewedPage || 1}
-        enablePaging
-        minScale={1.0}
-        maxScale={4.0}
-        style={styles.pdfView}
-        onLoadComplete={(numberOfPages) => {
-          setTotalPages(numberOfPages);
-          if (rulebook.status === 'PENDING_VERIFICATION') {
-            rulebookService.markVerified(rulebook.id, numberOfPages).then(() => {
-              if (onVerified) onVerified(numberOfPages);
-            });
-          }
-        }}
-        onPageChanged={(page, numberOfPages) => {
-          if (numberOfPages > 0) setTotalPages(numberOfPages);
-          setCurrentPage(page);
-          scheduleSavePage(page);
-        }}
-        onError={() => {
-          setLoadError('Arquivo PDF inválido, corrompido ou protegido por senha.');
-          if (rulebook.status === 'PENDING_VERIFICATION') {
-            rulebookService.rejectUnreadable(rulebook.id).then(() => {
-              if (onUnreadable) onUnreadable();
-            });
-          }
-        }}
-      />
+      {/* PDF Canvas or Expo Go Fallback */}
+      {NativePdf ? (
+        <NativePdf
+          ref={pdfRef}
+          source={{ uri: rulebook.fileUri }}
+          page={rulebook.lastViewedPage || 1}
+          enablePaging
+          minScale={1.0}
+          maxScale={4.0}
+          style={styles.pdfView}
+          onLoadComplete={(numberOfPages: number) => {
+            setTotalPages(numberOfPages);
+            if (rulebook.status === 'PENDING_VERIFICATION') {
+              rulebookService.markVerified(rulebook.id, numberOfPages).then(() => {
+                if (onVerified) onVerified(numberOfPages);
+              });
+            }
+          }}
+          onPageChanged={(page: number, numberOfPages: number) => {
+            if (numberOfPages > 0) setTotalPages(numberOfPages);
+            setCurrentPage(page);
+            scheduleSavePage(page);
+          }}
+          onError={() => {
+            setLoadError('Arquivo PDF inválido, corrompido ou protegido por senha.');
+            if (rulebook.status === 'PENDING_VERIFICATION') {
+              rulebookService.rejectUnreadable(rulebook.id).then(() => {
+                if (onUnreadable) onUnreadable();
+              });
+            }
+          }}
+        />
+      ) : (
+        <View style={styles.expoGoFallback}>
+          <Text style={styles.expoGoTitle}>{rulebook.label}</Text>
+          <Text style={styles.expoGoSubtitle}>
+            No modo Expo Go você pode gerenciar marcadores e notas de regras por página usando a barra superior.
+          </Text>
+        </View>
+      )}
 
       <AnnotationsPanel
         visible={showAnnotations}
@@ -248,6 +310,26 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     backgroundColor: tokens.colors.surface.canvas,
+  },
+  expoGoFallback: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: tokens.spacing.xl,
+  },
+  expoGoTitle: {
+    color: tokens.colors.text.primary,
+    fontSize: tokens.typography.scale.h2.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    marginBottom: tokens.spacing.xs,
+    textAlign: 'center',
+  },
+  expoGoSubtitle: {
+    color: tokens.colors.text.secondary,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    textAlign: 'center',
+    maxWidth: 420,
+    lineHeight: tokens.typography.scale.bodySm.lineHeight,
   },
   errorContainer: {
     flex: 1,

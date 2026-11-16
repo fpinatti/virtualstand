@@ -14,11 +14,25 @@
     "android": {
       "package": "com.virtualstand.app"
     },
+    "web": {
+      "bundler": "metro"
+    },
     "plugins": [
       "expo-router",
       "@config-plugins/react-native-blob-util",
       "@config-plugins/react-native-pdf"
-    ]
+    ],
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "e6a3e632-080f-412a-83d0-1a19ca8fcc1a"
+      }
+    },
+    "owner": "fpinatti"
   }
 }
-

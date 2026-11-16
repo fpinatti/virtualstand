@@ -32,12 +32,6 @@ export function BookcaseMesh({ aisle, onSelectSide }: BookcaseMeshProps) {
       metalness: 0.08,
     });
 
-    const trimMaterial = new THREE.MeshStandardMaterial({
-      color: tokens.colors.accent.primary,
-      roughness: 0.45,
-      metalness: 0.25,
-    });
-
     const backboardMaterial = new THREE.MeshStandardMaterial({
       color: tokens.colors.shelf3d.frameWood,
       roughness: 0.85,
@@ -72,7 +66,6 @@ export function BookcaseMesh({ aisle, onSelectSide }: BookcaseMeshProps) {
 
     return {
       shelfMaterial,
-      trimMaterial,
       backboardMaterial,
       floorMaterial,
       ceilingMaterial,
@@ -92,7 +85,6 @@ export function BookcaseMesh({ aisle, onSelectSide }: BookcaseMeshProps) {
     const sign = side === 'LEFT' ? -1 : 1;
     const wallCenterX = sign * (halfAisle + cubbyDepth / 2);
     const backPanelX = sign * (halfAisle + cubbyDepth + thickness / 4);
-    const frontEdgeX = sign * (halfAisle + 0.02);
 
     return (
       <group key={`wall-${side}`} onClick={handleWallClick(side)}>

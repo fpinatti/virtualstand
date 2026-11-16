@@ -16,11 +16,13 @@ function cleanEntities(text: string): string {
   if (!text) return '';
   return text
     .replace(/&#0*39;/g, "'")
+    .replace(/&#x0*27;/gi, "'")
     .replace(/&apos;/g, "'")
     .replace(/&quot;/g, '"')
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
     .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(Number(dec)));
 }
 
