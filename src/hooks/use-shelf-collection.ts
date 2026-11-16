@@ -2,12 +2,26 @@ import { useState, useEffect, useCallback } from 'react';
 import { getDatabase } from '@/db/client';
 import { games, collectionItems, boxDimensions } from '@/db/schema';
 import { eq } from 'drizzle-orm';
-import { GameDimensionsSource, PlacedBoxCoords, ShelfDimensions } from '@/components/shelf-3d/types';
+import {
+  AisleCameraBounds,
+  AisleShelfDimensions,
+  GameDimensionsSource,
+  PlacedAisleBox,
+  PlacedBoxCoords,
+  ShelfDimensions,
+} from '@/components/shelf-3d/types';
 import { shelfLayoutEngine } from '@/services/shelf-layout.service';
 
 export function useShelfCollection() {
   const [boxes, setBoxes] = useState<PlacedBoxCoords[]>([]);
   const [shelf, setShelf] = useState<ShelfDimensions | null>(null);
+  const [aisle, setAisle] = useState<AisleShelfDimensions | null>(null);
+  const [aisleBoxes, setAisleBoxes] = useState<PlacedAisleBox[]>([]);
+  const [cameraBounds, setCameraBounds] = useState<AisleCameraBounds>({
+    minZ: -8,
+    maxZ: 1.8,
+    defaultZ: 1.2,
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,8 +59,13 @@ export function useShelfCollection() {
       }));
 
       const layout = shelfLayoutEngine.calculateLayout(gameSources);
+      const aisleLayout = shelfLayoutEngine.calculateAisleLayout(gameSources);
+
       setShelf(layout.shelf);
       setBoxes(layout.boxes);
+      setAisle(aisleLayout.aisle);
+      setAisleBoxes(aisleLayout.boxes);
+      setCameraBounds(aisleLayout.cameraBounds);
     } catch (err) {
       console.error('Failed to load shelf collection from SQLite:', err);
       setError(err instanceof Error ? err.message : String(err));
@@ -62,9 +81,11 @@ export function useShelfCollection() {
   return {
     boxes,
     shelf,
+    aisle,
+    aisleBoxes,
+    cameraBounds,
     loading,
     error,
     refresh: loadShelfData,
   };
 }
-
