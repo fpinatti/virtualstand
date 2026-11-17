@@ -43,6 +43,87 @@ const geminiApiKey =
   process.env.EXPO_PUBLIC_GEMINI_API_KEY ||
   process.env.GEMINI_API_KEY;
 
+const ludopediaCookie =
+  process.env.LUDOPEDIA_COOKIE ||
+  null;
+
+const ludopediaUserAgent =
+  process.env.LUDOPEDIA_USER_AGENT ||
+  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
+
+async function findRulebookOnLudopedia(gameTitle, cookie) {
+  if (!cookie) return { skipped: true };
+
+  const headers = {
+    'User-Agent': ludopediaUserAgent,
+    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+    'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+    'Referer': 'https://ludopedia.com.br/',
+    'Cookie': cookie,
+  };
+
+  try {
+    const searchUrl = `https://ludopedia.com.br/busca?q=${encodeURIComponent(gameTitle)}`;
+    const searchRes = await fetch(searchUrl, { headers });
+    if (searchRes.status === 403 || searchRes.status === 503) {
+      const text = await searchRes.text();
+      if (text.includes('Just a moment...') || text.includes('challenges.cloudflare.com')) {
+        return { blocked: true };
+      }
+    }
+    if (!searchRes.ok) return { notFound: true };
+
+    const searchHtml = await searchRes.text();
+    const gameLinkMatch = searchHtml.match(/href="(https:\/\/ludopedia\.com\.br\/jogo\/[^"#\?]+)"/i);
+    if (!gameLinkMatch) return { notFound: true };
+
+    const gameUrl = gameLinkMatch[1];
+    const anexosUrls = [`${gameUrl}?aba=anexos`, `${gameUrl}/anexos`, gameUrl];
+
+    for (const aUrl of anexosUrls) {
+      const pageRes = await fetch(aUrl, { headers });
+      if (!pageRes.ok) continue;
+      const pageHtml = await pageRes.text();
+
+      const linkRegex = /href="([^"]*(?:anexo\/download|\/anexo\/|\.pdf)[^"]*)"([^>]*)>([\s\S]*?)<\/a>/gi;
+      let match;
+      const candidates = [];
+
+      while ((match = linkRegex.exec(pageHtml)) !== null) {
+        const href = match[1];
+        const linkAttrs = match[2];
+        const linkText = match[3].replace(/<[^>]+>/g, '').trim();
+        const combined = `${href} ${linkAttrs} ${linkText}`.toLowerCase();
+
+        const isRule =
+          combined.includes('regra') ||
+          combined.includes('manual') ||
+          combined.includes('rule') ||
+          combined.includes('livro') ||
+          combined.includes('.pdf');
+
+        const isNonPortuguese =
+          combined.includes('ingles') || combined.includes('english') || combined.includes('espanhol');
+
+        if (isRule && !isNonPortuguese) {
+          candidates.push({ href, text: linkText });
+        }
+      }
+
+      if (candidates.length > 0) {
+        let downloadUrl = candidates[0].href;
+        if (!downloadUrl.startsWith('http')) {
+          downloadUrl = `https://ludopedia.com.br${downloadUrl.startsWith('/') ? '' : '/'}${downloadUrl}`;
+        }
+        return { found: true, downloadUrl, title: candidates[0].text, gameUrl };
+      }
+    }
+    return { notFound: true, gameUrl };
+  } catch {
+    return { error: true };
+  }
+}
+
 async function searchRulebookWithGemini(title, apiKey) {
   if (!apiKey) return null;
   try {
@@ -58,10 +139,10 @@ async function searchRulebookWithGemini(title, apiKey) {
           {
             parts: [
               {
-                text: `Você é um assistente que localiza links de download de manuais oficiais em português (PT-BR) de jogos de tabuleiro em formato PDF.
-Para o jogo: "${title}"
-Pesquise na internet e me forneça a URL direta para o arquivo PDF oficial em português (PT-BR), ou uma URL pública do Google Drive / Dropbox / PaperGames / Galápagos / editora onde o PDF pode ser baixado.
-Responda EXCLUSIVAMENTE em formato JSON puro:
+                text: `Você é um especialista em jogos de tabuleiro que localiza manuais oficiais em português (PT-BR) em PDF.
+Para o jogo de tabuleiro: "${title}" (board game)
+Pesquise na internet (em sites como Table Games, Panda Board Games, editoras brasileiras como Galápagos, Devir, PaperGames, Grok Games, MeepleBR ou repositórios públicos como Google Drive, Dropbox ou OneDrive) e encontre a URL de download do manual de regras oficial em português (PT-BR) em formato PDF.
+Responda EXCLUSIVAMENTE em formato JSON:
 {
   "found": true,
   "downloadUrl": "https://..."
@@ -197,10 +278,24 @@ function resolveDownloadUrl(bggId, title, pandaMap) {
   return null;
 }
 
-async function downloadRulebookPdf(url, targetPath) {
-  const res = await fetch(url, {
-    headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' },
-  });
+async function downloadRulebookPdf(url, targetPath, cookie = null) {
+  let referer = 'https://google.com/';
+  try {
+    referer = new URL(url).origin + '/';
+  } catch {}
+
+  const headers = {
+    'User-Agent':
+      ludopediaUserAgent ||
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    'Accept': 'application/pdf,application/octet-stream,*/*',
+    'Referer': referer,
+  };
+  if (cookie && url.includes('ludopedia.com.br')) {
+    headers['Cookie'] = cookie;
+  }
+
+  const res = await fetch(url, { headers });
   if (!res.ok) {
     throw new Error(`Download HTTP error ${res.status}`);
   }
@@ -253,7 +348,11 @@ async function main() {
   }
 
   const existingFiles = fs.readdirSync(targetDir).filter((f) => f.endsWith('.pdf'));
-  console.log(`Pasta assets/rulebooks/ possui atualmente ${existingFiles.length} arquivos PDF oficiais.\n`);
+  console.log(`Pasta assets/rulebooks/ possui atualmente ${existingFiles.length} arquivos PDF oficiais.`);
+  console.log(`Fontes de busca ativas:`);
+  console.log(`  • Registro Curado & Panda Board Games: Ativo (${pandaMap ? Object.keys(pandaMap).length : 0} manuais mapeados)`);
+  console.log(`  • Ludopedia: ${ludopediaCookie ? 'Ativo (LUDOPEDIA_COOKIE configurado)' : 'Desativado (sem cookie no .env)'}`);
+  console.log(`  • Gemini AI (Search Grounding): ${geminiApiKey ? 'Ativo (chave de API configurada)' : 'Desativado (sem chave)'}\n`);
 
   let alreadyHad = 0;
   let newlyDownloaded = 0;
@@ -278,20 +377,41 @@ async function main() {
     }
 
     let downloadUrl = resolveDownloadUrl(g.bggId, g.title, pandaMap);
+    let source = 'Registro Curado / Panda DB';
+
+    // 1. Tentar Ludopedia caso configurado
+    if (!downloadUrl && ludopediaCookie) {
+      process.stdout.write(`[${i + 1}/${games.length}] Buscando na Ludopedia para "${g.title}"... `);
+      const ludoResult = await findRulebookOnLudopedia(g.title, ludopediaCookie);
+      if (ludoResult.found && ludoResult.downloadUrl) {
+        console.log(`encontrado anexos!`);
+        downloadUrl = ludoResult.downloadUrl;
+        source = 'Ludopedia';
+      } else if (ludoResult.blocked) {
+        console.log(`bloqueado pelo Cloudflare.`);
+      } else if (ludoResult.gameUrl) {
+        console.log(`página encontrada, mas sem PDF em anexos.`);
+      } else {
+        console.log(`não localizado.`);
+      }
+    }
+
+    // 2. Tentar Gemini AI com Google Search grounding
     if (!downloadUrl && geminiApiKey) {
       process.stdout.write(`[${i + 1}/${games.length}] Buscando via Gemini AI para "${g.title}"... `);
       downloadUrl = await searchRulebookWithGemini(g.title, geminiApiKey);
       if (downloadUrl) {
         console.log(`URL localizada!`);
+        source = 'Gemini AI';
       } else {
         console.log(`não localizado.`);
       }
     }
 
     if (downloadUrl) {
-      process.stdout.write(`[${i + 1}/${games.length}] Baixando manual em PT-BR de "${g.title}"... `);
+      process.stdout.write(`[${i + 1}/${games.length}] Baixando manual em PT-BR de "${g.title}" (${source})... `);
       try {
-        const sizeBytes = await downloadRulebookPdf(downloadUrl, expectedFilePath);
+        const sizeBytes = await downloadRulebookPdf(downloadUrl, expectedFilePath, ludopediaCookie);
         const mb = (sizeBytes / (1024 * 1024)).toFixed(1);
         console.log(`✓ Salvo (${mb} MB)`);
         newlyDownloaded++;
