@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { Platform } from 'react-native';
+import * as FileSystem from 'expo-file-system/legacy';
 
 const PALETTE = [
   '#7C2D12', // Warm Terracotta
@@ -96,8 +98,7 @@ export function formatSpineTitle(title: string, maxLength = 45): string {
 }
 
 /**
- * Wraps remote BGG CDN URLs (`cf.geekdo-images.com`) in a CORS-safe image proxy when running
- * in a browser DOM so WebGL `texImage2D` can upload the cover image without SecurityError.
+ * Wraps remote BGG CDN URLs in a CORS-safe image proxy when running in a browser DOM.
  */
 export function resolveWebGlSafeImageUrl(uri: string): string {
   const trimmed = uri.trim();
@@ -116,61 +117,78 @@ export class SpineGeneratorService {
   private readonly coverImageCache = new Map<string, HTMLImageElement>();
 
   /**
-   * Loads a remote or local cover image into an HTMLImageElement and THREE.Texture
-   * with CORS enabled and aspect-ratio-preserved cover fit for WebGL 3D rendering.
+   * Loads a remote or local cover image into THREE.Texture.
+   * Cross-platform: Uses browser Canvas on Web, and FileSystem local caching + TextureLoader on Native.
    */
-  loadCoverArt(
+  async loadCoverArt(
     uri: string,
     onLoaded: (result: { coverTexture: THREE.Texture; image: HTMLImageElement | null }) => void
-  ): void {
+  ): Promise<void> {
     if (!uri) return;
 
-    const safeUrl = resolveWebGlSafeImageUrl(uri);
-
-    if (this.coverTextureCache.has(safeUrl)) {
+    if (this.coverTextureCache.has(uri)) {
       onLoaded({
-        coverTexture: this.coverTextureCache.get(safeUrl)!,
-        image: this.coverImageCache.get(safeUrl) ?? null,
+        coverTexture: this.coverTextureCache.get(uri)!,
+        image: this.coverImageCache.get(uri) ?? null,
       });
       return;
     }
 
-    if (typeof Image !== 'undefined' && typeof document !== 'undefined') {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        try {
-          const canvas = document.createElement('canvas');
-          canvas.width = 512;
-          canvas.height = 512;
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            drawImageCoverFit(ctx, img, 0, 0, 512, 512);
-            const tex = new THREE.CanvasTexture(canvas);
-            tex.colorSpace = THREE.SRGBColorSpace;
-            tex.needsUpdate = true;
-            this.coverTextureCache.set(safeUrl, tex);
-            this.coverImageCache.set(safeUrl, img);
-            onLoaded({ coverTexture: tex, image: img });
+    if (Platform.OS === 'web') {
+      const safeUrl = resolveWebGlSafeImageUrl(uri);
+      if (typeof Image !== 'undefined' && typeof document !== 'undefined') {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              drawImageCoverFit(ctx, img, 0, 0, 512, 512);
+              const tex = new THREE.CanvasTexture(canvas);
+              tex.colorSpace = THREE.SRGBColorSpace;
+              tex.needsUpdate = true;
+              this.coverTextureCache.set(uri, tex);
+              this.coverImageCache.set(uri, img);
+              onLoaded({ coverTexture: tex, image: img });
+            }
+          } catch {
+            // Ignore canvas security errors
           }
-        } catch {
-          // Ignore canvas security errors if upstream blocked CORS
-        }
-      };
-      img.src = safeUrl;
+        };
+        img.src = safeUrl;
+      }
       return;
     }
 
-    // Native (non-DOM) fallback using THREE.TextureLoader
+    // Native Mobile (React Native / Expo)
     try {
+      let localFileUri = uri;
+      if (uri.startsWith('http://') || uri.startsWith('https://')) {
+        const cleanName = uri.split('/').pop()?.split('?')[0] || 'cover.jpg';
+        const targetPath = `${FileSystem.cacheDirectory ?? FileSystem.documentDirectory ?? ''}covers_${cleanName}`;
+        try {
+          const info = await FileSystem.getInfoAsync(targetPath);
+          if (!info.exists) {
+            const res = await FileSystem.downloadAsync(uri, targetPath);
+            localFileUri = res.uri;
+          } else {
+            localFileUri = targetPath;
+          }
+        } catch {
+          localFileUri = uri;
+        }
+      }
+
       const loader = new THREE.TextureLoader();
-      loader.setCrossOrigin('anonymous');
       loader.load(
-        safeUrl,
+        localFileUri,
         (tex) => {
           tex.colorSpace = THREE.SRGBColorSpace;
           tex.needsUpdate = true;
-          this.coverTextureCache.set(safeUrl, tex);
+          this.coverTextureCache.set(uri, tex);
           onLoaded({
             coverTexture: tex,
             image: (tex.image as HTMLImageElement) || null,
@@ -178,18 +196,17 @@ export class SpineGeneratorService {
         },
         undefined,
         (err) => {
-          console.warn('[SpineGenerator] Failed to load cover texture for:', safeUrl, err);
+          console.warn('[SpineGenerator] Failed to load cover texture on native for:', uri, err);
         }
       );
     } catch (err) {
-      console.warn('[SpineGenerator] Error in TextureLoader:', err);
+      console.warn('[SpineGenerator] Native cover load error:', err);
     }
   }
 
   /**
-   * Generates a canvas texture for a game box lateral/spine face.
-   * When `coverImage` is available, wraps the cover artwork seamlessly using aspect-correct
-   * center-crop (`drawImageCoverFit`) with no squashed thumbnails or heavy black blocks.
+   * Generates a canvas texture for a game box lateral/spine face in DOM environments.
+   * Returns null safely without throwing when running in React Native (non-DOM).
    */
   createSpineTexture(
     title: string,
@@ -199,7 +216,7 @@ export class SpineGeneratorService {
     coverImage?: HTMLImageElement | null
   ): THREE.CanvasTexture | null {
     if (typeof document === 'undefined') {
-      return null; // Non-DOM environment fallback
+      return null; // Safe non-DOM fallback
     }
 
     const cleanedTitle = cleanEntities(title);
@@ -221,11 +238,10 @@ export class SpineGeneratorService {
       ctx.fillStyle = color;
       ctx.fillRect(0, 0, width, height);
 
-      // 2. When coverImage is loaded, wrap the actual cover art cleanly without distortion!
+      // 2. When coverImage is loaded, wrap cover art cleanly without distortion
       if (coverImage) {
         drawImageCoverFit(ctx, coverImage, 0, 0, width, height);
 
-        // Subtle warm shading at the edges to simulate box-lid fold depth
         const edgeGrad = ctx.createLinearGradient(0, 0, width, 0);
         edgeGrad.addColorStop(0, 'rgba(0, 0, 0, 0.32)');
         edgeGrad.addColorStop(0.12, 'rgba(0, 0, 0, 0.08)');

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { tokens } from '@/ui';
 
 export default function TabsLayout() {
@@ -30,6 +31,13 @@ export default function TabsLayout() {
         options={{
           title: 'Coleção',
           headerTitle: 'Minha Coleção',
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'library' : 'library-outline'}
+              size={size ?? 24}
+              color={typeof color === 'string' ? color : tokens.colors.accent.primary}
+            />
+          ),
         }}
       />
       <Tabs.Screen
@@ -37,6 +45,13 @@ export default function TabsLayout() {
         options={{
           title: 'Estante 3D',
           headerTitle: 'Minha Estante 3D',
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'cube' : 'cube-outline'}
+              size={size ?? 24}
+              color={typeof color === 'string' ? color : tokens.colors.accent.primary}
+            />
+          ),
         }}
       />
       <Tabs.Screen
@@ -44,6 +59,13 @@ export default function TabsLayout() {
         options={{
           title: 'Configurações',
           headerTitle: 'Configurações BGG',
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? 'settings' : 'settings-outline'}
+              size={size ?? 24}
+              color={typeof color === 'string' ? color : tokens.colors.accent.primary}
+            />
+          ),
         }}
       />
     </Tabs>

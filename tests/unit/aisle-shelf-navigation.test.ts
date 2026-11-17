@@ -69,28 +69,33 @@ describe('3D Parallel Aisle Shelf Layout & First-Person Navigation (Feature 006)
   describe('US2: Lateral Camera Turn (LEFT / RIGHT) & Return to Central View (CENTER)', () => {
     const bounds = { minZ: -12, maxZ: 1.8, defaultZ: 1.2 };
 
-    it('turns camera toward LEFT shelf and steps slightly right for optimal framing', () => {
+    it('turns camera toward LEFT shelf and steps slightly right for optimal framing with wider FOV', () => {
+      expect(SIDE_YAW_RADIANS).toBeCloseTo(0.92, 2);
+      expect(SIDE_LATERAL_STEP_X).toBeCloseTo(1.05, 2);
       const pose = aisleCameraController.computeCameraPose(-3.5, 'LEFT', bounds);
       expect(pose.focusSide).toBe('LEFT');
       expect(pose.yawRadians).toBeCloseTo(SIDE_YAW_RADIANS, 3);
       expect(pose.position[0]).toBeCloseTo(SIDE_LATERAL_STEP_X, 3);
       expect(pose.position[2]).toBeCloseTo(-3.5, 3);
+      expect(pose.fov).toBe(70);
     });
 
-    it('turns camera toward RIGHT shelf and steps slightly left for optimal framing', () => {
+    it('turns camera toward RIGHT shelf and steps slightly left for optimal framing with wider FOV', () => {
       const pose = aisleCameraController.computeCameraPose(-3.5, 'RIGHT', bounds);
       expect(pose.focusSide).toBe('RIGHT');
       expect(pose.yawRadians).toBeCloseTo(-SIDE_YAW_RADIANS, 3);
       expect(pose.position[0]).toBeCloseTo(-SIDE_LATERAL_STEP_X, 3);
       expect(pose.position[2]).toBeCloseTo(-3.5, 3);
+      expect(pose.fov).toBe(70);
     });
 
-    it('restores default central corridor alignment when focusSide is CENTER', () => {
+    it('restores default central corridor alignment and standard FOV when focusSide is CENTER', () => {
       const pose = aisleCameraController.computeCameraPose(-3.5, 'CENTER', bounds);
       expect(pose.focusSide).toBe('CENTER');
       expect(pose.yawRadians).toBe(0);
       expect(pose.position[0]).toBe(0);
       expect(pose.position[2]).toBeCloseTo(-3.5, 3);
+      expect(pose.fov).toBe(54);
     });
 
     it('distinguishes vertical drag gestures from simple taps using DRAG_THRESHOLD_PX', () => {

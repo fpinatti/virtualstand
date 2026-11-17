@@ -185,6 +185,11 @@ export function GameBoxMesh({
     }
   };
 
+  const edgesGeometry = useMemo(() => {
+    const geom = new THREE.BoxGeometry(w, h, d);
+    return new THREE.EdgesGeometry(geom);
+  }, [w, h, d]);
+
   return (
     <mesh
       ref={meshRef}
@@ -199,6 +204,13 @@ export function GameBoxMesh({
       receiveShadow
     >
       <boxGeometry args={[w, h, d]} />
+      <lineSegments geometry={edgesGeometry}>
+        <lineBasicMaterial
+          color={isSelected ? '#F59E0B' : 'rgba(255, 255, 255, 0.22)'}
+          transparent
+          opacity={isSelected ? 0.9 : 0.35}
+        />
+      </lineSegments>
     </mesh>
   );
 }

@@ -2,6 +2,8 @@ import {
   calculateContrastTextColor,
   getDeterministicColorFromTitle,
   formatSpineTitle,
+  resolveWebGlSafeImageUrl,
+  spineGeneratorService,
 } from '@/services/spine-generator.service';
 
 describe('SpineGeneratorService', () => {
@@ -32,5 +34,20 @@ describe('SpineGeneratorService', () => {
     const formatted = formatSpineTitle(longTitle);
     expect(formatted.length).toBeLessThanOrEqual(50);
   });
-});
 
+  it('safely returns null without throwing when creating spine texture in non-DOM environment', () => {
+    const tex = spineGeneratorService.createSpineTexture('Terraforming Mars');
+    expect(tex).toBeNull();
+  });
+
+  it('wraps remote image URLs with CORS proxy for WebGL compatibility', () => {
+    const original = 'https://cf.geekdo-images.com/item/pic12345.jpg';
+    const safe = resolveWebGlSafeImageUrl(original);
+    expect(safe).toContain('wsrv.nl');
+    expect(safe).toContain(encodeURIComponent(original));
+
+    // Keeps local file or existing wsrv.nl unchanged
+    expect(resolveWebGlSafeImageUrl('file:///path/to/img.jpg')).toBe('file:///path/to/img.jpg');
+    expect(resolveWebGlSafeImageUrl('https://wsrv.nl/?url=test')).toBe('https://wsrv.nl/?url=test');
+  });
+});

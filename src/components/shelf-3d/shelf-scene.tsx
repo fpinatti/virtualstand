@@ -54,6 +54,16 @@ function AisleCameraRig({ targetZ, focusSide, bounds }: AisleCameraRigProps) {
 
     camera.position.copy(currentPosRef.current);
 
+    // Smoothly interpolate FOV for wide lateral visibility vs default central perspective
+    if ('fov' in camera && typeof camera.fov === 'number') {
+      const targetFov = pose.fov ?? (focusSide === 'CENTER' ? 54 : 70);
+      const nextFov = THREE.MathUtils.lerp(camera.fov, targetFov, lerpFactor);
+      if (Math.abs(camera.fov - nextFov) > 0.05) {
+        camera.fov = nextFov;
+        camera.updateProjectionMatrix();
+      }
+    }
+
     // Compute look-at target 6 units ahead along the current yaw angle
     const lookDistance = 6;
     const lookX =

@@ -4,6 +4,7 @@ import {
   Text,
   ActivityIndicator,
   Platform,
+  TouchableOpacity,
   StyleSheet,
 } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
@@ -21,19 +22,23 @@ export default function RulebookReaderScreen() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
     const load = async () => {
       if (Platform.OS === 'web') {
-        setLoading(false);
+        if (isMounted) setLoading(false);
         return;
       }
       const numericId = Number(id);
       if (!Number.isFinite(numericId)) {
-        setErrorMsg('Identificador de manual inválido.');
-        setLoading(false);
+        if (isMounted) {
+          setErrorMsg('Identificador de manual inválido.');
+          setLoading(false);
+        }
         return;
       }
       try {
         const row = await rulebookRepository.findById(numericId);
+        if (!isMounted) return;
         if (!row) {
           setErrorMsg('Manual não encontrado no armazenamento local.');
         } else {
@@ -53,12 +58,19 @@ export default function RulebookReaderScreen() {
           });
         }
       } catch {
-        setErrorMsg('Erro ao carregar o manual.');
+        if (isMounted) {
+          setErrorMsg('Erro ao carregar o manual.');
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
     load();
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
   return (
@@ -66,7 +78,17 @@ export default function RulebookReaderScreen() {
       <Stack.Screen
         options={{
           title: rulebook?.label ?? 'Manual de Regras',
-          headerBackTitle: 'Voltar',
+          headerTitleAlign: 'center',
+          headerBackVisible: true,
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={styles.backButton}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            >
+              <Text style={styles.backButtonText}>‹ Voltar</Text>
+            </TouchableOpacity>
+          ),
         }}
       />
 
@@ -75,16 +97,22 @@ export default function RulebookReaderScreen() {
           <Text style={styles.webNotice}>
             Leitura de manuais disponível no app iOS/Android.
           </Text>
+          <View style={styles.actionWrap}>
+            <Button label="Voltar à Coleção" variant="secondary" onPress={() => router.back()} />
+          </View>
         </View>
       ) : loading ? (
         <View style={styles.center}>
           <ActivityIndicator size="large" color={tokens.colors.accent.primary} />
           <Text style={styles.loadingText}>Abrindo manual...</Text>
+          <View style={styles.actionWrap}>
+            <Button label="Cancelar / Voltar" variant="secondary" size="sm" onPress={() => router.back()} />
+          </View>
         </View>
       ) : errorMsg || !rulebook ? (
         <View style={styles.center}>
           <Text style={styles.errorText}>{errorMsg ?? 'Manual indisponível.'}</Text>
-          <Button label="Voltar" variant="secondary" onPress={() => router.back()} />
+          <Button label="Voltar à Coleção" variant="secondary" onPress={() => router.back()} />
         </View>
       ) : (
         <PdfReader
@@ -109,6 +137,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: tokens.spacing.lg,
+  },
+  backButton: {
+    paddingHorizontal: tokens.spacing.xs,
+    paddingVertical: tokens.spacing['2xs'],
+    justifyContent: 'center',
+  },
+  backButtonText: {
+    color: tokens.colors.accent.primary,
+    fontSize: tokens.typography.scale.body.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
+  },
+  actionWrap: {
+    marginTop: tokens.spacing.md,
   },
   loadingText: {
     color: tokens.colors.text.secondary,

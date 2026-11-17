@@ -7,8 +7,8 @@ import {
 
 export const WALK_SENSITIVITY_Z_PER_PX = 0.016;
 export const DRAG_THRESHOLD_PX = 8;
-export const SIDE_YAW_RADIANS = 1.15; // ~66 degrees toward selected shelf wall
-export const SIDE_LATERAL_STEP_X = 0.65; // Steps slightly back from focused wall for wider framing
+export const SIDE_YAW_RADIANS = 0.92; // ~52 degrees diagonal focus across shelf wall
+export const SIDE_LATERAL_STEP_X = 1.05; // Stepped back across aisle for broad field of view
 
 export class AisleCameraController implements IAisleCameraController {
   /**
@@ -36,8 +36,8 @@ export class AisleCameraController implements IAisleCameraController {
   }
 
   /**
-   * Computes the target camera position [x, y, z] and horizontal yaw angle (in radians)
-   * for a given Z coordinate and focus side ('CENTER' | 'LEFT' | 'RIGHT').
+   * Computes the target camera position [x, y, z], horizontal yaw angle (in radians),
+   * and dynamic FOV for a given Z coordinate and focus side ('CENTER' | 'LEFT' | 'RIGHT').
    */
   computeCameraPose(
     currentZ: number,
@@ -50,6 +50,7 @@ export class AisleCameraController implements IAisleCameraController {
       return {
         position: [SIDE_LATERAL_STEP_X, 0.15, clampedZ],
         yawRadians: SIDE_YAW_RADIANS,
+        fov: 70,
         focusSide: 'LEFT',
       };
     }
@@ -58,6 +59,7 @@ export class AisleCameraController implements IAisleCameraController {
       return {
         position: [-SIDE_LATERAL_STEP_X, 0.15, clampedZ],
         yawRadians: -SIDE_YAW_RADIANS,
+        fov: 70,
         focusSide: 'RIGHT',
       };
     }
@@ -65,6 +67,7 @@ export class AisleCameraController implements IAisleCameraController {
     return {
       position: [0, 0.15, clampedZ],
       yawRadians: 0,
+      fov: 54,
       focusSide: 'CENTER',
     };
   }

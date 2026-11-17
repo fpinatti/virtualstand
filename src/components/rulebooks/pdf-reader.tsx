@@ -6,7 +6,9 @@ import {
   StyleSheet,
   AppState,
   AppStateStatus,
+  Linking,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import Constants from 'expo-constants';
 import { Rulebook } from '@/services/rulebook-types';
 import { rulebookService } from '@/services/rulebook.service';
@@ -59,6 +61,7 @@ function resolveNativePdfComponent(): NativePdfComponentType | null {
 }
 
 export function PdfReader({ rulebook, onVerified, onUnreadable }: PdfReaderProps) {
+  const router = useRouter();
   const NativePdf = useRef<NativePdfComponentType | null>(resolveNativePdfComponent()).current;
 
   const [currentPage, setCurrentPage] = useState<number>(
@@ -236,8 +239,26 @@ export function PdfReader({ rulebook, onVerified, onUnreadable }: PdfReaderProps
         <View style={styles.expoGoFallback}>
           <Text style={styles.expoGoTitle}>{rulebook.label}</Text>
           <Text style={styles.expoGoSubtitle}>
-            No modo Expo Go você pode gerenciar marcadores e notas de regras por página usando a barra superior.
+            No ambiente Expo Go você pode gerenciar marcadores e anotações por página ou abrir o documento oficial no navegador.
           </Text>
+          <View style={styles.expoGoActions}>
+            {rulebook.sourceUrl ? (
+              <Button
+                label="🌐 Abrir PDF no Navegador"
+                variant="primary"
+                onPress={() => {
+                  if (rulebook.sourceUrl) {
+                    Linking.openURL(rulebook.sourceUrl);
+                  }
+                }}
+              />
+            ) : null}
+            <Button
+              label="‹ Voltar para a Coleção"
+              variant="secondary"
+              onPress={() => router.back()}
+            />
+          </View>
         </View>
       )}
 
@@ -330,6 +351,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     maxWidth: 420,
     lineHeight: tokens.typography.scale.bodySm.lineHeight,
+  },
+  expoGoActions: {
+    marginTop: tokens.spacing.lg,
+    gap: tokens.spacing.sm,
+    width: '100%',
+    maxWidth: 280,
   },
   errorContainer: {
     flex: 1,

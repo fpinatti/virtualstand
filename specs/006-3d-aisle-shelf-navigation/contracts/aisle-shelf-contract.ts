@@ -27,6 +27,7 @@ export interface AisleCameraBounds {
 export interface AisleCameraPose {
   position: [x: number, y: number, z: number];
   yawRadians: number;
+  fov?: number;
   focusSide: CameraFocusSide;
 }
 
