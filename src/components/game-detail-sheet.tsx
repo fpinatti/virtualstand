@@ -122,7 +122,7 @@ export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailS
             {/* Offline PDF Rulebooks Section with PT-BR download */}
             <View style={styles.section}>
               <SectionHeader title="Manuais de Regras (PDF Offline)" />
-              <RulebookList bggId={game.bggId} onBeforeOpenReader={onClose} />
+              <RulebookList bggId={game.bggId} gameTitle={game.title} onBeforeOpenReader={onClose} />
             </View>
 
             {/* Physical Box Dimensions (Read-Only) */}

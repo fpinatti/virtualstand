@@ -245,20 +245,20 @@ export default function SettingsScreen() {
 
           <View style={styles.devBlock}>
             <View style={styles.devBlockHeaderRow}>
-              <Text style={styles.devBlockTitle}>📖 Manuais de Regras em Lote</Text>
+              <Text style={styles.devBlockTitle}>📖 Manuais Oficiais em PDF</Text>
               {rulebookAudit ? (
                 <Badge
                   tone={rulebookAudit.pendingCount > 0 ? 'warning' : 'success'}
-                  label={`${rulebookAudit.pendingCount} sem manual • ~${rulebookAudit.estimatedTokensTotal} tokens`}
+                  label={`${rulebookAudit.pendingCount} sem manual em assets`}
                   tabularNums
                 />
               ) : null}
             </View>
             <Text style={styles.devBlockDesc}>
-              Registra manuais locais pré-instalados e gera guias completos de regras em português (PT-BR) via Gemini AI compilados em PDF offline para todos os jogos faltantes.
+              Registra e vincula os manuais em PDF existentes na pasta assets/rulebooks/ para todos os jogos da sua coleção. Para títulos pendentes, localize o PDF oficial no Ludopedia ou site da editora e anexe diretamente.
             </Text>
             <Button
-              label={isSyncingRulebooks ? 'Gerando/Baixando manuais...' : '📥 Verificar e Baixar Manuais (Catálogo + IA)'}
+              label={isSyncingRulebooks ? 'Verificando manuais...' : '📥 Verificar e Vincular Manuais de assets/rulebooks/'}
               variant="secondary"
               onPress={handleSyncRulebooks}
               disabled={isSyncingRulebooks || isSyncingSleeves}

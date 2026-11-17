@@ -9,8 +9,6 @@ import {
 } from '@/services/rulebook-types';
 import { rulebookService } from '@/services/rulebook.service';
 import { preloadedRulebookService } from '@/services/preloaded-rulebook.service';
-import { gameRepository } from '@/db/repositories/game.repository';
-import { rulebookAiGeneratorService } from '@/services/rulebook-ai-generator.service';
 
 export function useRulebooks(bggId: number | null) {
   const [rulebooks, setRulebooks] = useState<Rulebook[]>([]);
@@ -110,13 +108,7 @@ export function useRulebooks(bggId: number | null) {
     if (!bggId) return false;
     setIsDownloading(true);
     try {
-      let synced = await preloadedRulebookService.syncBundledRulebookForGame(bggId);
-      if (!synced) {
-        const game = await gameRepository.getGameById(bggId);
-        if (game) {
-          synced = await rulebookAiGeneratorService.generateAndSaveRulebook(game);
-        }
-      }
+      const synced = await preloadedRulebookService.syncBundledRulebookForGame(bggId);
       await refresh();
       return synced;
     } finally {

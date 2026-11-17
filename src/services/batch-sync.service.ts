@@ -5,10 +5,7 @@ import { preloadedRulebookService, PreloadedRulebookService } from '@/services/p
 import { sleeveManagerService, SleeveManagerService } from '@/services/sleeve-manager.service';
 import { findCommunitySleevesByBggId, isZeroCardGame } from '@/data/community-sleeves-catalog';
 import { geminiClient, GeminiClient } from '@/services/ai';
-import {
-  rulebookAiGeneratorService,
-  RulebookAiGeneratorService,
-} from './rulebook-ai-generator.service';
+import { catalogService } from '@/services/catalog.service';
 import {
   AiSleeveOutputPayload,
   BatchSyncProgress,
@@ -39,7 +36,6 @@ export class BatchSyncService implements IBatchSyncService {
   private readonly sleeveRepo: SleeveRepository;
   private readonly sleeveMgr: SleeveManagerService;
   private readonly ai: GeminiClient;
-  private readonly rulebookAi?: RulebookAiGeneratorService;
 
   constructor(
     collRepo?: CollectionRepository,
@@ -47,8 +43,7 @@ export class BatchSyncService implements IBatchSyncService {
     preloadedService?: PreloadedRulebookService,
     sleeveRepo?: SleeveRepository,
     sleeveMgr?: SleeveManagerService,
-    ai?: GeminiClient,
-    rulebookAi?: RulebookAiGeneratorService
+    ai?: GeminiClient
   ) {
     this.collRepo = collRepo ?? collectionRepository;
     this.rulebookRepo = rulebookRepo ?? new RulebookRepository();
@@ -56,11 +51,6 @@ export class BatchSyncService implements IBatchSyncService {
     this.sleeveRepo = sleeveRepo ?? new SleeveRepository();
     this.sleeveMgr = sleeveMgr ?? sleeveManagerService;
     this.ai = ai ?? geminiClient;
-    this.rulebookAi = rulebookAi;
-  }
-
-  private getRulebookAi(): RulebookAiGeneratorService {
-    return this.rulebookAi ?? rulebookAiGeneratorService;
   }
 
   public isDevMaintenanceAvailable(): boolean {
@@ -88,13 +78,12 @@ export class BatchSyncService implements IBatchSyncService {
     }
 
     const pendingCount = Math.max(0, totalGames - alreadyHadCount);
-    const estimatedTokensTotal = pendingCount * 1200;
 
     return {
       totalGames,
       alreadyHadCount,
       pendingCount,
-      estimatedTokensTotal,
+      estimatedTokensTotal: 0,
     };
   }
 
@@ -167,18 +156,7 @@ export class BatchSyncService implements IBatchSyncService {
       if (hasReady) {
         alreadyHadCount++;
       } else {
-        let synced = await this.preloadedService.syncBundledRulebookForGame(game.bggId);
-        if (!synced) {
-          onProgress?.({
-            stage: 'rulebooks',
-            current: i + 1,
-            total: totalGames,
-            currentGameTitle: game.title,
-            message: `Gerando guia oficial em português para ${game.title} (${i + 1}/${totalGames})...`,
-          });
-          synced = await this.getRulebookAi().generateAndSaveRulebook(game);
-        }
-
+        const synced = await this.preloadedService.syncBundledRulebookForGame(game.bggId);
         if (synced) {
           newlySyncedCount++;
         } else {
@@ -189,6 +167,8 @@ export class BatchSyncService implements IBatchSyncService {
       // Small tick delay to yield JS event loop
       await new Promise((resolve) => setTimeout(resolve, 10));
     }
+
+    catalogService.saveCatalogToDisk().catch(() => {});
 
     return {
       totalGames,
@@ -289,6 +269,8 @@ export class BatchSyncService implements IBatchSyncService {
 
       await new Promise((resolve) => setTimeout(resolve, 15));
     }
+
+    catalogService.saveCatalogToDisk().catch(() => {});
 
     return {
       totalGames,

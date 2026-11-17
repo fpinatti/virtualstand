@@ -19,7 +19,11 @@ export async function POST(request: Request) {
     }
 
     const targetPath = path.join(targetDir, cleanFileName);
-    fs.writeFileSync(targetPath, content, 'utf-8');
+    if (body.encoding === 'base64') {
+      fs.writeFileSync(targetPath, Buffer.from(content, 'base64'));
+    } else {
+      fs.writeFileSync(targetPath, content, 'utf-8');
+    }
 
     return new Response(
       JSON.stringify({ success: true, path: targetPath, fileName: cleanFileName }),

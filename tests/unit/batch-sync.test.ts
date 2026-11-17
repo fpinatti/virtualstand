@@ -48,21 +48,13 @@ describe('Batch Sync Service - Rulebooks & AI-Powered Sleeves (Feature 012)', ()
         }),
       } as any;
 
-      const mockRulebookAi = {
-        generateAndSaveRulebook: jest.fn().mockImplementation(async (game: any) => {
-          if (game.bggId === 999999) return true; // Generates rulebook for Unknown Indie Game
-          return false;
-        }),
-      } as any;
-
       const service = new BatchSyncService(
         mockCollRepo,
         mockRulebookRepo,
         mockPreloadedService,
         {} as any,
         {} as any,
-        {} as any,
-        mockRulebookAi
+        {} as any
       );
 
       const progressEvents: BatchSyncProgress[] = [];
@@ -70,14 +62,14 @@ describe('Batch Sync Service - Rulebooks & AI-Powered Sleeves (Feature 012)', ()
 
       expect(report.totalGames).toBe(3);
       expect(report.alreadyHadCount).toBe(1); // Catan
-      expect(report.newlySyncedCount).toBe(2); // Carcassonne (bundled) + Unknown (AI generated)
-      expect(report.unavailableCount).toBe(0);
+      expect(report.newlySyncedCount).toBe(1); // Carcassonne (bundled)
+      expect(report.unavailableCount).toBe(1); // Unknown Indie Game
       expect(report.durationMs).toBeGreaterThanOrEqual(0);
 
-      expect(progressEvents.length).toBeGreaterThanOrEqual(3);
+      expect(progressEvents.length).toBe(3);
       expect(progressEvents[0].currentGameTitle).toBe('Catan');
       expect(progressEvents[1].currentGameTitle).toBe('Carcassonne');
-      expect(progressEvents[progressEvents.length - 1].currentGameTitle).toBe('Unknown Indie Game');
+      expect(progressEvents[2].currentGameTitle).toBe('Unknown Indie Game');
     });
   });
 

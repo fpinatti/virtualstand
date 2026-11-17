@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Platform,
   StyleSheet,
+  Linking,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Rulebook, RulebookDocType } from '@/services/rulebook-types';
@@ -23,10 +24,11 @@ const DOC_TYPE_LABELS: Record<RulebookDocType, string> = {
 
 interface RulebookListProps {
   bggId: number;
+  gameTitle?: string;
   onBeforeOpenReader?: () => void;
 }
 
-export function RulebookList({ bggId, onBeforeOpenReader }: RulebookListProps) {
+export function RulebookList({ bggId, gameTitle, onBeforeOpenReader }: RulebookListProps) {
   const router = useRouter();
   const {
     rulebooks,
@@ -67,6 +69,11 @@ export function RulebookList({ bggId, onBeforeOpenReader }: RulebookListProps) {
       rb.label.includes('PT-BR')
   );
 
+  const handleOpenLudopedia = () => {
+    const q = gameTitle ? encodeURIComponent(gameTitle) : '';
+    Linking.openURL(`https://ludopedia.com.br/busca?q=${q}`);
+  };
+
   const handleDownloadPtBr = async () => {
     setDownloadFeedback(null);
     const success = await downloadPtBrRulebook();
@@ -99,15 +106,12 @@ export function RulebookList({ bggId, onBeforeOpenReader }: RulebookListProps) {
       <View style={styles.headerRow}>
         <Text style={styles.headerTitle}>Manuais ({rulebooks.length})</Text>
         <View style={styles.headerActions}>
-          {!hasPtBrManual ? (
-            <Button
-              label={isDownloading ? 'Baixando...' : '📥 Baixar PT-BR'}
-              variant="secondary"
-              size="sm"
-              onPress={handleDownloadPtBr}
-              disabled={isDownloading}
-            />
-          ) : null}
+          <Button
+            label="🔍 Ludopedia"
+            variant="ghost"
+            size="sm"
+            onPress={handleOpenLudopedia}
+          />
           <Button
             label="+ Anexar PDF"
             variant="primary"
@@ -124,14 +128,18 @@ export function RulebookList({ bggId, onBeforeOpenReader }: RulebookListProps) {
       {rulebooks.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>
-            Nenhum manual em PDF anexado para consulta offline.
+            Nenhum manual oficial em PDF anexado para este jogo.
           </Text>
           <View style={styles.downloadPromptWrap}>
             <Button
-              label={isDownloading ? 'Baixando manual...' : '📥 Baixar Manual em Português (PT-BR)'}
+              label="🔍 Buscar Manual na Ludopedia"
+              variant="secondary"
+              onPress={handleOpenLudopedia}
+            />
+            <Button
+              label="+ Anexar Arquivo PDF (PT-BR)"
               variant="primary"
-              onPress={handleDownloadPtBr}
-              disabled={isDownloading}
+              onPress={() => setShowImport(true)}
             />
           </View>
         </View>
@@ -279,6 +287,7 @@ const styles = StyleSheet.create({
   },
   downloadPromptWrap: {
     marginTop: tokens.spacing.sm,
+    gap: tokens.spacing.xs,
   },
   headerTitle: {
     color: tokens.colors.text.secondary,
