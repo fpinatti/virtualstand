@@ -73,7 +73,10 @@ export class GeminiClient implements IGeminiClient {
       const url = `${BASE_URL}/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
       const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey,
+        },
         body: JSON.stringify({
           contents: [{ parts: [{ text: 'ping' }] }],
           generationConfig: { maxOutputTokens: 1 },
@@ -191,7 +194,10 @@ export class GeminiClient implements IGeminiClient {
 
       const response = await fetch(url, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-goog-api-key': apiKey,
+        },
         body: JSON.stringify(body),
         signal: controller.signal,
       });

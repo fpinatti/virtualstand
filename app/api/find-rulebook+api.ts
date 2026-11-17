@@ -85,6 +85,55 @@ function findInPanda(title: string): string | null {
   return null;
 }
 
+async function searchRulebookWithGemini(title: string): Promise<string | null> {
+  const apiKey = process.env.EXPO_PUBLIC_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+  if (!apiKey) return null;
+  try {
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent';
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey,
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: `Você é um assistente que localiza links de download de manuais oficiais em português (PT-BR) de jogos de tabuleiro em formato PDF.
+Para o jogo: "${title}"
+Pesquise na internet e me forneça a URL direta para o arquivo PDF oficial em português (PT-BR), ou uma URL pública do Google Drive / Dropbox / PaperGames / Galápagos / editora onde o PDF pode ser baixado.
+Responda EXCLUSIVAMENTE em formato JSON puro:
+{
+  "found": true,
+  "downloadUrl": "https://..."
+}
+ou se não houver PDF oficial disponível:
+{
+  "found": false
+}`,
+              },
+            ],
+          },
+        ],
+        tools: [{ googleSearch: {} }],
+      }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    const parsed = JSON.parse(cleanJson);
+    if (parsed.found && parsed.downloadUrl && parsed.downloadUrl.startsWith('http')) {
+      return parsed.downloadUrl;
+    }
+  } catch {
+    // Ignore AI search errors
+  }
+  return null;
+}
+
 function jsonResponse(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
     status,
@@ -139,6 +188,10 @@ export async function POST(request: Request): Promise<Response> {
       if (pandaDriveId) {
         downloadUrl = `https://drive.google.com/uc?export=download&id=${pandaDriveId}`;
       }
+    }
+
+    if (!downloadUrl) {
+      downloadUrl = await searchRulebookWithGemini(title);
     }
 
     if (!downloadUrl) {

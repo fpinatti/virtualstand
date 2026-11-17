@@ -27,26 +27,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Livro de Regras em Português (PT-BR)",
+          "id": 2308020,
+          "bggId": 230802,
+          "label": "Azul - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/azul-regras-ptbr.pdf",
-          "fileSizeBytes": 14200,
-          "md5": "azul-ptbr-rules-v1",
-          "pageCount": 6,
-          "status": "READY"
-        },
-        {
-          "label": "Azul - Regras Oficiais (PT-BR)",
-          "docType": "BASE_RULES",
-          "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
-          "relativePath": "assets/rulebooks/azul-pavilhao-mini-regras-ptbr.pdf",
-          "fileSizeBytes": 698,
-          "md5": "asset-azul-pavilhao-mini-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "fileSizeBytes": 696,
+          "md5": "asset-azul-regras-ptbr.pdf",
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518926,
+          "updatedAt": 1794915518926
         }
       ],
       "personalRating": null,
@@ -85,15 +78,19 @@
       ],
       "rulebooks": [
         {
-          "label": "Guia de Regras em Português (PT-BR)",
+          "id": 2661920,
+          "bggId": 266192,
+          "label": "Wingspan - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/wingspan-regras-ptbr.pdf",
-          "fileSizeBytes": 24500,
-          "md5": "wingspan-ptbr-rules-v1",
-          "pageCount": 12,
-          "status": "READY"
+          "fileSizeBytes": 699,
+          "md5": "asset-wingspan-regras-ptbr.pdf",
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518926,
+          "updatedAt": 1794915518926
         }
       ],
       "personalRating": 10,
@@ -175,15 +172,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Manual de Regras em Português (PT-BR)",
+          "id": 3419350,
+          "bggId": 341935,
+          "label": "Art Robbery - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/artrobbery-regras-ptbr.pdf",
-          "fileSizeBytes": 9500,
-          "md5": "artrobbery-ptbr-rules-v1",
-          "pageCount": 4,
-          "status": "READY"
+          "fileSizeBytes": 699,
+          "md5": "asset-artrobbery-regras-ptbr.pdf",
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518926,
+          "updatedAt": 1794915518926
         }
       ],
       "personalRating": null,
@@ -315,37 +316,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Livro de Regras em Português (PT-BR)",
+          "id": 3469650,
+          "bggId": 346965,
+          "label": "Azul: Queen's Garden - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/azul-queensgarden-regras-ptbr.pdf",
-          "fileSizeBytes": 15500,
-          "md5": "azul-queensgarden-ptbr-rules-v1",
-          "pageCount": 8,
-          "status": "READY"
-        },
-        {
-          "label": "Azul: Queen&#039;s Garden - Regras Oficiais (PT-BR)",
-          "docType": "BASE_RULES",
-          "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
-          "relativePath": "assets/rulebooks/azul-regras-ptbr.pdf",
-          "fileSizeBytes": 696,
-          "md5": "asset-azul-regras-ptbr.pdf",
+          "fileSizeBytes": 698,
+          "md5": "asset-azul-queensgarden-regras-ptbr.pdf",
           "pageCount": 1,
-          "status": "READY"
-        },
-        {
-          "label": "Azul: Queen&#039;s Garden - Manual Oficial (PT-BR)",
-          "docType": "BASE_RULES",
-          "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
-          "relativePath": "assets/rulebooks/azul-queen-039-s-garden-regras-ptbr.pdf",
-          "fileSizeBytes": 2810597,
-          "md5": "asset-azul-queen-039-s-garden-regras-ptbr.pdf",
-          "pageCount": 1,
-          "status": "READY"
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518926,
+          "updatedAt": 1794915518926
         }
       ],
       "personalRating": null,
@@ -375,26 +358,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Azul: Stained Glass of Sintra - Regras Oficiais (PT-BR)",
-          "docType": "BASE_RULES",
-          "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
-          "relativePath": "assets/rulebooks/azul-regras-ptbr.pdf",
-          "fileSizeBytes": 696,
-          "md5": "asset-azul-regras-ptbr.pdf",
-          "pageCount": 1,
-          "status": "READY"
-        },
-        {
+          "id": 2562260,
+          "bggId": 256226,
           "label": "Azul: Stained Glass of Sintra - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/azul-stained-glass-of-sintra-regras-ptbr.pdf",
           "fileSizeBytes": 2250834,
           "md5": "asset-azul-stained-glass-of-sintra-regras-ptbr.pdf",
           "pageCount": 1,
-          "status": "READY"
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518926,
+          "updatedAt": 1794915518926
         }
       ],
       "personalRating": null,
@@ -424,26 +400,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Azul: Summer Pavilion – Glazed Pavilion - Regras Oficiais (PT-BR)",
-          "docType": "BASE_RULES",
-          "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
-          "relativePath": "assets/rulebooks/azul-regras-ptbr.pdf",
-          "fileSizeBytes": 696,
-          "md5": "asset-azul-regras-ptbr.pdf",
-          "pageCount": 1,
-          "status": "READY"
-        },
-        {
+          "id": 3326130,
+          "bggId": 332613,
           "label": "Azul: Summer Pavilion – Glazed Pavilion - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/azul-summer-pavilion-glazed-pavilion-regras-ptbr.pdf",
           "fileSizeBytes": 2463078,
           "md5": "asset-azul-summer-pavilion-glazed-pavilion-regras-ptbr.pdf",
           "pageCount": 1,
-          "status": "READY"
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518926,
+          "updatedAt": 1794915518926
         }
       ],
       "personalRating": null,
@@ -473,26 +442,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "BANG! - Regras Oficiais (PT-BR)",
-          "docType": "BASE_RULES",
-          "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
-          "relativePath": "assets/rulebooks/bang-the-dice-game-regras-ptbr.pdf",
-          "fileSizeBytes": 754324,
-          "md5": "asset-bang-the-dice-game-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
-        },
-        {
+          "id": 39550,
+          "bggId": 3955,
           "label": "BANG! - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/bang-regras-ptbr.pdf",
           "fileSizeBytes": 754324,
           "md5": "asset-bang-regras-ptbr.pdf",
           "pageCount": 1,
-          "status": "READY"
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518926,
+          "updatedAt": 1794915518926
         }
       ],
       "personalRating": null,
@@ -522,15 +484,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "BANG! The Dice Game - Regras Oficiais (PT-BR)",
+          "id": 1437410,
+          "bggId": 143741,
+          "label": "BANG! The Dice Game - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/bang-the-dice-game-regras-ptbr.pdf",
           "fileSizeBytes": 754324,
           "md5": "asset-bang-the-dice-game-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518926,
+          "updatedAt": 1794915518926
         }
       ],
       "personalRating": null,
@@ -754,15 +720,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Concept - Regras Oficiais (PT-BR)",
+          "id": 1471510,
+          "bggId": 147151,
+          "label": "Concept - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/concept-regras-ptbr.pdf",
           "fileSizeBytes": 1747100,
           "md5": "asset-concept-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518926,
+          "updatedAt": 1794915518926
         }
       ],
       "personalRating": null,
@@ -792,15 +762,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Cosmic Encounter Duel - Regras Oficiais (PT-BR)",
+          "id": 2985720,
+          "bggId": 298572,
+          "label": "Cosmic Encounter Duel - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/cosmic-encounter-duel-regras-ptbr.pdf",
           "fileSizeBytes": 4707347,
           "md5": "asset-cosmic-encounter-duel-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518926,
+          "updatedAt": 1794915518926
         }
       ],
       "personalRating": null,
@@ -839,15 +813,19 @@
       ],
       "rulebooks": [
         {
-          "label": "Manual de Regras em Português (PT-BR)",
+          "id": 1313570,
+          "bggId": 131357,
+          "label": "Coup - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/coup-regras-ptbr.pdf",
-          "fileSizeBytes": 9500,
-          "md5": "coup-ptbr-rules-v1",
-          "pageCount": 4,
-          "status": "READY"
+          "fileSizeBytes": 697,
+          "md5": "asset-coup-regras-ptbr.pdf",
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518926,
+          "updatedAt": 1794915518926
         }
       ],
       "personalRating": null,
@@ -903,15 +881,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Decrypto - Regras Oficiais (PT-BR)",
+          "id": 2256940,
+          "bggId": 225694,
+          "label": "Decrypto - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/decrypto-regras-ptbr.pdf",
           "fileSizeBytes": 2753749,
           "md5": "asset-decrypto-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518926,
+          "updatedAt": 1794915518926
         }
       ],
       "personalRating": null,
@@ -1109,15 +1091,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Dixit - Regras Oficiais (PT-BR)",
+          "id": 398560,
+          "bggId": 39856,
+          "label": "Dixit - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/dixit-regras-ptbr.pdf",
           "fileSizeBytes": 641522,
           "md5": "asset-dixit-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518927,
+          "updatedAt": 1794915518927
         }
       ],
       "personalRating": null,
@@ -1274,15 +1260,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Manual de Regras em Português (PT-BR)",
+          "id": 2622080,
+          "bggId": 262208,
+          "label": "Dungeon Drop - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/dungeondrop-regras-ptbr.pdf",
-          "fileSizeBytes": 11500,
-          "md5": "dungeondrop-ptbr-rules-v1",
-          "pageCount": 4,
-          "status": "READY"
+          "fileSizeBytes": 700,
+          "md5": "asset-dungeondrop-regras-ptbr.pdf",
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518927,
+          "updatedAt": 1794915518927
         }
       ],
       "personalRating": null,
@@ -1373,15 +1363,19 @@
       ],
       "rulebooks": [
         {
-          "label": "Manual de Regras em Português (PT-BR)",
+          "id": 1722250,
+          "bggId": 172225,
+          "label": "Exploding Kittens - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/explodingkittens-regras-ptbr.pdf",
-          "fileSizeBytes": 11000,
-          "md5": "explodingkittens-ptbr-rules-v1",
-          "pageCount": 4,
-          "status": "READY"
+          "fileSizeBytes": 705,
+          "md5": "asset-explodingkittens-regras-ptbr.pdf",
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518927,
+          "updatedAt": 1794915518927
         }
       ],
       "personalRating": null,
@@ -1411,15 +1405,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Flatiron - Regras Oficiais (PT-BR)",
+          "id": 4096930,
+          "bggId": 409693,
+          "label": "Flatiron - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/flatiron-regras-ptbr.pdf",
           "fileSizeBytes": 696,
           "md5": "asset-flatiron-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518927,
+          "updatedAt": 1794915518927
         }
       ],
       "personalRating": null,
@@ -1527,15 +1525,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Fungi - Regras Oficiais (PT-BR)",
+          "id": 1222980,
+          "bggId": 122298,
+          "label": "Fungi - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/fungi-regras-ptbr.pdf",
           "fileSizeBytes": 3011909,
           "md5": "asset-fungi-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518927,
+          "updatedAt": 1794915518927
         }
       ],
       "personalRating": null,
@@ -1591,15 +1593,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Genial - Regras Oficiais (PT-BR)",
+          "id": 96740,
+          "bggId": 9674,
+          "label": "Genial - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/genial-regras-ptbr.pdf",
           "fileSizeBytes": 576824,
           "md5": "asset-genial-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518927,
+          "updatedAt": 1794915518927
         }
       ],
       "personalRating": null,
@@ -1629,15 +1635,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Ghost Blitz - Regras Oficiais (PT-BR)",
+          "id": 831950,
+          "bggId": 83195,
+          "label": "Ghost Blitz - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/ghost-blitz-regras-ptbr.pdf",
           "fileSizeBytes": 712168,
           "md5": "asset-ghost-blitz-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518927,
+          "updatedAt": 1794915518927
         }
       ],
       "personalRating": null,
@@ -1693,15 +1703,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Harmonies - Regras Oficiais (PT-BR)",
+          "id": 4143170,
+          "bggId": 414317,
+          "label": "Harmonies - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/harmonies-regras-ptbr.pdf",
           "fileSizeBytes": 6604305,
           "md5": "asset-harmonies-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518927,
+          "updatedAt": 1794915518927
         }
       ],
       "personalRating": null,
@@ -1757,15 +1771,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Heat: Pedal to the Metal - Regras Oficiais (PT-BR)",
+          "id": 3660130,
+          "bggId": 366013,
+          "label": "Heat: Pedal to the Metal - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/heat-pedal-to-the-metal-regras-ptbr.pdf",
           "fileSizeBytes": 12916595,
           "md5": "asset-heat-pedal-to-the-metal-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518927,
+          "updatedAt": 1794915518927
         }
       ],
       "personalRating": null,
@@ -1899,15 +1917,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Os Incríveis Parques de Miss Liz - Regras Oficiais (PT-BR)",
+          "id": 2354700,
+          "bggId": 235470,
+          "label": "Os Incríveis Parques de Miss Liz - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/os-incriveis-parques-de-miss-liz-regras-ptbr.pdf",
           "fileSizeBytes": 6592598,
           "md5": "asset-os-incriveis-parques-de-miss-liz-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518928,
+          "updatedAt": 1794915518928
         }
       ],
       "personalRating": null,
@@ -2235,15 +2257,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "No Thanks! - Regras Oficiais (PT-BR)",
+          "id": 129420,
+          "bggId": 12942,
+          "label": "No Thanks! - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/no-thanks-regras-ptbr.pdf",
           "fileSizeBytes": 459018,
           "md5": "asset-no-thanks-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518928,
+          "updatedAt": 1794915518928
         }
       ],
       "personalRating": null,
@@ -2282,15 +2308,19 @@
       ],
       "rulebooks": [
         {
-          "label": "Manual de Regras em Português (PT-BR)",
+          "id": 305490,
+          "bggId": 30549,
+          "label": "Pandemic - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/pandemic-regras-ptbr.pdf",
-          "fileSizeBytes": 19800,
-          "md5": "pandemic-ptbr-rules-v1",
-          "pageCount": 8,
-          "status": "READY"
+          "fileSizeBytes": 701,
+          "md5": "asset-pandemic-regras-ptbr.pdf",
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518928,
+          "updatedAt": 1794915518928
         }
       ],
       "personalRating": null,
@@ -2346,15 +2376,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Patchwork - Regras Oficiais (PT-BR)",
+          "id": 1634120,
+          "bggId": 163412,
+          "label": "Patchwork - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/patchwork-regras-ptbr.pdf",
           "fileSizeBytes": 1601022,
           "md5": "asset-patchwork-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518928,
+          "updatedAt": 1794915518928
         }
       ],
       "personalRating": null,
@@ -2436,15 +2470,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Potion Explosion - Regras Oficiais (PT-BR)",
+          "id": 1809740,
+          "bggId": 180974,
+          "label": "Potion Explosion - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/potion-explosion-regras-ptbr.pdf",
           "fileSizeBytes": 2536427,
           "md5": "asset-potion-explosion-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518928,
+          "updatedAt": 1794915518928
         }
       ],
       "personalRating": null,
@@ -2500,15 +2538,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Queendomino - Regras Oficiais (PT-BR)",
+          "id": 2320430,
+          "bggId": 232043,
+          "label": "Queendomino - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/queendomino-regras-ptbr.pdf",
           "fileSizeBytes": 5045054,
           "md5": "asset-queendomino-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518928,
+          "updatedAt": 1794915518928
         }
       ],
       "personalRating": null,
@@ -2616,15 +2658,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "The Resistance - Regras Oficiais (PT-BR)",
+          "id": 411140,
+          "bggId": 41114,
+          "label": "The Resistance - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/the-resistance-regras-ptbr.pdf",
           "fileSizeBytes": 1272947,
           "md5": "asset-the-resistance-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518928,
+          "updatedAt": 1794915518928
         }
       ],
       "personalRating": null,
@@ -2654,15 +2700,19 @@
       "sleeves": [],
       "rulebooks": [
         {
+          "id": 92200,
+          "bggId": 9220,
           "label": "Saboteur - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/saboteur-regras-ptbr.pdf",
           "fileSizeBytes": 881606,
           "md5": "asset-saboteur-regras-ptbr.pdf",
           "pageCount": 1,
-          "status": "READY"
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518928,
+          "updatedAt": 1794915518928
         }
       ],
       "personalRating": null,
@@ -2692,15 +2742,19 @@
       "sleeves": [],
       "rulebooks": [
         {
+          "id": 910720,
+          "bggId": 91072,
           "label": "Saboteur 2 (expansion-only editions) - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/saboteur-2-expansion-only-editions-regras-ptbr.pdf",
           "fileSizeBytes": 881606,
           "md5": "asset-saboteur-2-expansion-only-editions-regras-ptbr.pdf",
           "pageCount": 1,
-          "status": "READY"
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518928,
+          "updatedAt": 1794915518928
         }
       ],
       "personalRating": null,
@@ -2730,15 +2784,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Sagrada - Regras Oficiais (PT-BR)",
+          "id": 1995610,
+          "bggId": 199561,
+          "label": "Sagrada - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/sagrada-regras-ptbr.pdf",
           "fileSizeBytes": 1720967,
           "md5": "asset-sagrada-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518929,
+          "updatedAt": 1794915518929
         }
       ],
       "personalRating": null,
@@ -2846,15 +2904,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Schotten Totten - Regras Oficiais (PT-BR)",
+          "id": 3720,
+          "bggId": 372,
+          "label": "Schotten Totten - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/schotten-totten-regras-ptbr.pdf",
           "fileSizeBytes": 2338149,
           "md5": "asset-schotten-totten-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518929,
+          "updatedAt": 1794915518929
         }
       ],
       "personalRating": null,
@@ -3168,15 +3230,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Spot it! - Regras Oficiais (PT-BR)",
+          "id": 632680,
+          "bggId": 63268,
+          "label": "Spot it! - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/spot-it-regras-ptbr.pdf",
           "fileSizeBytes": 403070,
           "md5": "asset-spot-it-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518929,
+          "updatedAt": 1794915518929
         }
       ],
       "personalRating": null,
@@ -3296,15 +3362,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Survive The Island - Regras Oficiais (PT-BR)",
+          "id": 4254280,
+          "bggId": 425428,
+          "label": "Survive The Island - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/survive-the-island-regras-ptbr.pdf",
           "fileSizeBytes": 3117349,
           "md5": "asset-survive-the-island-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518929,
+          "updatedAt": 1794915518929
         }
       ],
       "personalRating": null,
@@ -3386,15 +3456,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Takenoko - Regras Oficiais (PT-BR)",
+          "id": 709190,
+          "bggId": 70919,
+          "label": "Takenoko - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/takenoko-regras-ptbr.pdf",
           "fileSizeBytes": 3520764,
           "md5": "asset-takenoko-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518929,
+          "updatedAt": 1794915518929
         }
       ],
       "personalRating": null,
@@ -3774,15 +3848,19 @@
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Who Did It? - Regras Oficiais (PT-BR)",
+          "id": 2414910,
+          "bggId": 241491,
+          "label": "Who Did It? - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "sourceUrl": null,
           "relativePath": "assets/rulebooks/who-did-it-regras-ptbr.pdf",
           "fileSizeBytes": 514932,
           "md5": "asset-who-did-it-regras-ptbr.pdf",
-          "pageCount": 3,
-          "status": "READY"
+          "pageCount": 1,
+          "lastViewedPage": 1,
+          "status": "READY",
+          "createdAt": 1794915518930,
+          "updatedAt": 1794915518930
         }
       ],
       "personalRating": null,

@@ -39,6 +39,58 @@ const bggToken =
   process.env.EXPO_PUBLIC_BGG_API_TOKEN ||
   process.env.BGG_API_TOKEN;
 
+const geminiApiKey =
+  process.env.EXPO_PUBLIC_GEMINI_API_KEY ||
+  process.env.GEMINI_API_KEY;
+
+async function searchRulebookWithGemini(title, apiKey) {
+  if (!apiKey) return null;
+  try {
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent';
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey,
+      },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: `Você é um assistente que localiza links de download de manuais oficiais em português (PT-BR) de jogos de tabuleiro em formato PDF.
+Para o jogo: "${title}"
+Pesquise na internet e me forneça a URL direta para o arquivo PDF oficial em português (PT-BR), ou uma URL pública do Google Drive / Dropbox / PaperGames / Galápagos / editora onde o PDF pode ser baixado.
+Responda EXCLUSIVAMENTE em formato JSON puro:
+{
+  "found": true,
+  "downloadUrl": "https://..."
+}
+ou se não houver PDF oficial disponível:
+{
+  "found": false
+}`,
+              },
+            ],
+          },
+        ],
+        tools: [{ googleSearch: {} }],
+      }),
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const cleanJson = text.replace(/```json/g, '').replace(/```/g, '').trim();
+    const parsed = JSON.parse(cleanJson);
+    if (parsed.found && parsed.downloadUrl && parsed.downloadUrl.startsWith('http')) {
+      return parsed.downloadUrl;
+    }
+  } catch {
+    // Ignore AI search errors
+  }
+  return null;
+}
+
 function slugifyTitle(title) {
   return title
     .toLowerCase()
@@ -225,7 +277,17 @@ async function main() {
       continue;
     }
 
-    const downloadUrl = resolveDownloadUrl(g.bggId, g.title, pandaMap);
+    let downloadUrl = resolveDownloadUrl(g.bggId, g.title, pandaMap);
+    if (!downloadUrl && geminiApiKey) {
+      process.stdout.write(`[${i + 1}/${games.length}] Buscando via Gemini AI para "${g.title}"... `);
+      downloadUrl = await searchRulebookWithGemini(g.title, geminiApiKey);
+      if (downloadUrl) {
+        console.log(`URL localizada!`);
+      } else {
+        console.log(`não localizado.`);
+      }
+    }
+
     if (downloadUrl) {
       process.stdout.write(`[${i + 1}/${games.length}] Baixando manual em PT-BR de "${g.title}"... `);
       try {
@@ -235,7 +297,7 @@ async function main() {
         newlyDownloaded++;
         existingFiles.push(expectedFileName);
       } catch (err) {
-        console.log(`✗ Erro: ${err.message}`);
+        console.log(`✗ Erro no download: ${err.message}`);
         pendingManual.push(g);
       }
     } else {
