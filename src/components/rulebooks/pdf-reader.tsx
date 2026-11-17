@@ -7,9 +7,12 @@ import {
   AppState,
   AppStateStatus,
   Linking,
+  NativeModules,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import Constants from 'expo-constants';
+import * as FileSystem from 'expo-file-system/legacy';
+import * as Sharing from 'expo-sharing';
 import { Rulebook } from '@/services/rulebook-types';
 import { rulebookService } from '@/services/rulebook.service';
 import { useAnnotations } from '@/hooks/use-annotations';
@@ -46,6 +49,13 @@ type NativePdfComponentType = React.ComponentType<{
  */
 function resolveNativePdfComponent(): NativePdfComponentType | null {
   try {
+    // Custom native modules (ReactNativeBlobUtil, RNPDFPdfView) are not in standard Expo Go
+    if (
+      !NativeModules?.ReactNativeBlobUtil ||
+      !NativeModules?.PdfViewManager
+    ) {
+      return null;
+    }
     const isExpoGo =
       Constants.executionEnvironment === 'storeClient' ||
       Constants.appOwnership === 'expo';
@@ -60,9 +70,93 @@ function resolveNativePdfComponent(): NativePdfComponentType | null {
   }
 }
 
+function resolveServerBaseUrl(): string {
+  const hostUri =
+    Constants.expoConfig?.hostUri ||
+    (Constants as any).manifest2?.extra?.expoGo?.debuggerHost ||
+    (Constants as any).manifest?.debuggerHost;
+
+  if (hostUri) {
+    const host = hostUri.split('/')[0];
+    return `http://${host}`;
+  }
+  return 'http://192.168.5.206:8083';
+}
+
 export function PdfReader({ rulebook, onVerified, onUnreadable }: PdfReaderProps) {
   const router = useRouter();
   const NativePdf = useRef<NativePdfComponentType | null>(resolveNativePdfComponent()).current;
+  const [isOpening, setIsOpening] = useState(false);
+  const [openFeedback, setOpenFeedback] = useState<string | null>(null);
+
+  const handleOpenSystemPdf = async () => {
+    setIsOpening(true);
+    setOpenFeedback(null);
+    try {
+      const targetUri = rulebook.fileUri;
+      const fileName = targetUri.split('/').pop() || 'manual.pdf';
+
+      // Check if file already exists in local device storage
+      let fileExists = false;
+      try {
+        const info = await FileSystem.getInfoAsync(targetUri);
+        fileExists = info.exists && (info.size ?? 0) > 0;
+      } catch {
+        fileExists = false;
+      }
+
+      // If file does not exist locally on device, download it from our dev server
+      if (!fileExists) {
+        setOpenFeedback('Baixando manual para o dispositivo...');
+        const baseUrl = resolveServerBaseUrl();
+        const serverDownloadUrl = `${baseUrl}/api/rulebook-download?file=${encodeURIComponent(fileName)}`;
+
+        const parentDir = targetUri.substring(0, targetUri.lastIndexOf('/'));
+        try {
+          const dirInfo = await FileSystem.getInfoAsync(parentDir);
+          if (!dirInfo.exists) {
+            await FileSystem.makeDirectoryAsync(parentDir, { intermediates: true });
+          }
+        } catch {
+          // Ignore directory creation errors if already present
+        }
+
+        const downloadResult = await FileSystem.downloadAsync(serverDownloadUrl, targetUri);
+        if (downloadResult.status !== 200) {
+          throw new Error(`Falha no download (HTTP ${downloadResult.status})`);
+        }
+      }
+
+      setOpenFeedback('Abrindo leitor...');
+      const available = await Sharing.isAvailableAsync();
+      if (available) {
+        await Sharing.shareAsync(targetUri, {
+          mimeType: 'application/pdf',
+          dialogTitle: `Manual: ${rulebook.label}`,
+          UTI: 'com.adobe.pdf',
+        });
+        setOpenFeedback(null);
+      } else {
+        const baseUrl = resolveServerBaseUrl();
+        await Linking.openURL(`${baseUrl}/api/rulebook-download?file=${encodeURIComponent(fileName)}`);
+        setOpenFeedback(null);
+      }
+    } catch (err: unknown) {
+      console.warn('Failed to open PDF:', err);
+      // Fallback: try opening directly via browser or source URL
+      const fileName = rulebook.fileUri.split('/').pop() || 'manual.pdf';
+      const baseUrl = resolveServerBaseUrl();
+      const fallbackUrl = rulebook.sourceUrl || `${baseUrl}/api/rulebook-download?file=${encodeURIComponent(fileName)}`;
+      try {
+        await Linking.openURL(fallbackUrl);
+        setOpenFeedback(null);
+      } catch {
+        setOpenFeedback('Não foi possível abrir o manual no dispositivo.');
+      }
+    } finally {
+      setIsOpening(false);
+    }
+  };
 
   const [currentPage, setCurrentPage] = useState<number>(
     Math.max(1, rulebook.lastViewedPage || 1)
@@ -239,13 +333,22 @@ export function PdfReader({ rulebook, onVerified, onUnreadable }: PdfReaderProps
         <View style={styles.expoGoFallback}>
           <Text style={styles.expoGoTitle}>{rulebook.label}</Text>
           <Text style={styles.expoGoSubtitle}>
-            No ambiente Expo Go você pode gerenciar marcadores e anotações por página ou abrir o documento oficial no navegador.
+            Abra o manual no leitor de PDF do seu celular ou gerencie marcadores e anotações de regras pela barra superior.
           </Text>
+          {openFeedback ? (
+            <Text style={styles.feedbackText}>{openFeedback}</Text>
+          ) : null}
           <View style={styles.expoGoActions}>
+            <Button
+              label={isOpening ? 'Carregando Manual...' : '📄 Abrir Manual no Leitor PDF'}
+              variant="primary"
+              onPress={handleOpenSystemPdf}
+              disabled={isOpening}
+            />
             {rulebook.sourceUrl ? (
               <Button
-                label="🌐 Abrir PDF no Navegador"
-                variant="primary"
+                label="🌐 Abrir Link Oficial na Web"
+                variant="secondary"
                 onPress={() => {
                   if (rulebook.sourceUrl) {
                     Linking.openURL(rulebook.sourceUrl);
@@ -255,7 +358,7 @@ export function PdfReader({ rulebook, onVerified, onUnreadable }: PdfReaderProps
             ) : null}
             <Button
               label="‹ Voltar para a Coleção"
-              variant="secondary"
+              variant="ghost"
               onPress={() => router.back()}
             />
           </View>
@@ -357,6 +460,13 @@ const styles = StyleSheet.create({
     gap: tokens.spacing.sm,
     width: '100%',
     maxWidth: 280,
+  },
+  feedbackText: {
+    marginTop: tokens.spacing.sm,
+    color: tokens.colors.accent.primary,
+    fontSize: tokens.typography.scale.caption.fontSize,
+    fontStyle: 'italic',
+    textAlign: 'center',
   },
   errorContainer: {
     flex: 1,
