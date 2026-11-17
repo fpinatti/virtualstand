@@ -140,6 +140,20 @@ export class BatchSyncService implements IBatchSyncService {
     let newlySyncedCount = 0;
     let unavailableCount = 0;
 
+    // Scan physical files in assets/rulebooks/ when in localhost/dev
+    let scannedFiles: { fileName: string; relativePath: string; fileSizeBytes: number }[] = [];
+    if (isLocalhostOrDev()) {
+      try {
+        const res = await fetch('/api/scan-rulebooks');
+        if (res.ok) {
+          const data = await res.json();
+          scannedFiles = data.files || [];
+        }
+      } catch {
+        // API not available, continues with bundled catalog
+      }
+    }
+
     for (let i = 0; i < items.length; i++) {
       const game = items[i].game;
       onProgress?.({
@@ -156,7 +170,40 @@ export class BatchSyncService implements IBatchSyncService {
       if (hasReady) {
         alreadyHadCount++;
       } else {
-        const synced = await this.preloadedService.syncBundledRulebookForGame(game.bggId);
+        let synced = await this.preloadedService.syncBundledRulebookForGame(game.bggId);
+
+        if (!synced && scannedFiles.length > 0) {
+          const cleanGame = game.title.toLowerCase().replace(/[^a-z0-9]/g, '');
+          const match = scannedFiles.find((f) => {
+            const cleanFile = f.fileName
+              .toLowerCase()
+              .replace(/[^a-z0-9]/g, '')
+              .replace('regrasptbrpdf', '')
+              .replace('pdf', '');
+            return (
+              cleanFile.length > 3 &&
+              (cleanFile.includes(cleanGame) || cleanGame.includes(cleanFile))
+            );
+          });
+
+          if (match) {
+            await this.rulebookRepo.insert({
+              bggId: game.bggId,
+              label: `${game.title} - Manual Oficial (PT-BR)`,
+              docType: 'BASE_RULES',
+              sourceKind: 'BUNDLED_ASSET',
+              relativePath: match.relativePath,
+              fileSizeBytes: match.fileSizeBytes,
+              md5: `asset-${match.fileName}`,
+              pageCount: 1,
+              status: 'READY',
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+            });
+            synced = true;
+          }
+        }
+
         if (synced) {
           newlySyncedCount++;
         } else {
