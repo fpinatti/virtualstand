@@ -63,6 +63,7 @@ const TITLE_ALIASES: Record<string, string[]> = {
   ],
   'Infinity Gauntlet: A Love Letter Game': ['love letter manopla', 'manopla do infinito'],
   'Piratas! (3ª Edição)': ['piratas 3 edic', 'piratas 3'],
+  'Sanctuary': ['santuario'],
   'Flip 7: With A Vengeance': ['flip 7 with a vengea', 'flip 7 vengea'],
   'Flip 7': ['flip 7 regras oficias grok', 'flip 7'],
 };
