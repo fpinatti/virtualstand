@@ -181,6 +181,146 @@ function slugifyTitle(title) {
     .replace(/^-+|-+$/g, '');
 }
 
+function cleanStr(s) {
+  return s
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]/g, '');
+}
+
+// Words to ignore when matching titles and filenames
+const STOP_WORDS = new Set([
+  'the', 'a', 'an', 'o', 'a', 'os', 'as', 'de', 'do', 'da', 'dos', 'das',
+  'expansion', 'expansao', 'edition', 'edicao', 'game', 'jogo',
+]);
+
+const DOC_WORDS = new Set([
+  'manual', 'regras', 'regra', 'rulebook', 'livro', 'oficial', 'ptbr', 'pt', 'br',
+  'traduzidas', 'site', 'grok', 'galapagos', 'galap', 'asmodee', 'copag', 'mandala', 'editora',
+]);
+
+const TITLE_ALIASES = {
+  'Who Did It?': ['quem foi', 'who did it'],
+  'Tiny Epic Crimes: Kingpins': ['tiny epic crimes chef', 'tiny epic crimes kingpins', 'tiny epic crimes ch'],
+  'Tiny Epic Crimes': ['tiny epic crimes tiny epic crimes'],
+  'Disney Coup: Truques Traiçoeiros': ['disney coup truques', 'disney coup'],
+  'Gwent: The Legendary Card Game': ['gwent', 'gwent o jogo de cartas'],
+  'Azul Pavilhão de Verão: Mini': ['azul mini pavilhao', 'azul pavilhao mini'],
+  'Azul: Summer Pavilion – Glazed Pavilion': ['glazed pavilion', 'summer pavilion glazed', 'azul summer pavilion glazed'],
+  'Saboteur 2 (expansion-only editions)': ['saboteur 2', 'saboteur2'],
+  'Heat: Pedal to the Metal': ['heat pedal to the metal', 'heat pedal'],
+  'Heat: Heavy Rain': ['heat heavy rain', 'heavy rain'],
+  'That\'s Not a Hat: Incognito': ['that s not a hat in', 'that not a hat incognito'],
+  'Sky Team: Turbulence': ['sky team turbulenc', 'sky team turbulence'],
+  'The Lord of the Rings: Duel for Middle-earth': ['duel for middle earth', 'senhor dos aneis duelo', 'lotr duel'],
+  'The Lord of the Rings: The Two Towers – Trick-Taking Game': ['two towers trick', 'duas torres vazas', 'lotr two towers'],
+  'Scooby-Doo!: Hotel Mal-Assombrado': ['scooby doo hotel', 'scooby doo'],
+  'Kelp: Shark vs Octopus': ['kelp shark vs octopus', 'kelp'],
+  'Os Desejos do Sultão: Expansão Viajantes': [
+    'miniexpansoes',
+    'expansao viaj',
+    'os desejos do sulta miniexpansoes',
+  ],
+  'Os Desejos do Sultão': [
+    'os desejos do sulta os desejos do sultao',
+    'os desejos do sultao livro',
+  ],
+  'Infinity Gauntlet: A Love Letter Game': ['love letter manopla', 'manopla do infinito'],
+  'Piratas! (3ª Edição)': ['piratas 3 edic', 'piratas 3'],
+  'Flip 7: With A Vengeance': ['flip 7 with a vengea', 'flip 7 vengea'],
+  'Flip 7': ['flip 7 regras oficias grok', 'flip 7'],
+};
+
+function getSignificantTokens(str) {
+  return str
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .split(' ')
+    .filter((w) => w.length > 0 && !STOP_WORDS.has(w));
+}
+
+function findExistingRulebook(gameTitle, files) {
+  const cleanTitle = cleanStr(gameTitle);
+
+  // 1. Exact canonical matches ({title}-regras-ptbr.pdf, {title}.pdf)
+  for (const f of files) {
+    const fBase = f.replace(/\.pdf$/i, '');
+    const fClean = cleanStr(fBase);
+    if (fClean === cleanTitle + 'regrasptbr' || fClean === cleanTitle) {
+      return f;
+    }
+  }
+
+  // 2. Exact slug matches with hyphens (e.g. wingspan-regras-ptbr.pdf)
+  const slugJoined = getSignificantTokens(gameTitle).join('-');
+  for (const f of files) {
+    if (f.startsWith(slugJoined) || f.startsWith(slugJoined.replace(/-/g, ''))) {
+      return f;
+    }
+  }
+
+  // 3. Known aliases check
+  const aliases = TITLE_ALIASES[gameTitle] || [];
+  for (const alias of aliases) {
+    const cleanAlias = cleanStr(alias);
+    for (const f of files) {
+      if (cleanStr(f).includes(cleanAlias)) {
+        return f;
+      }
+    }
+  }
+
+  // 4. Token-based matching on Ludopedia style filenames (e.g. wingspan_oceania_manual.pdf)
+  const titleTokens = getSignificantTokens(gameTitle);
+  let bestCandidate = null;
+  let bestScore = -1;
+
+  for (const f of files) {
+    const fLower = f.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const fParts = fLower.replace(/\.pdf$/i, '').split(/[^a-z0-9]+/).filter(Boolean);
+
+    // Extract game-identifying tokens before doc descriptor like "manual", "regras", etc.
+    const gameParts = [];
+    for (const p of fParts) {
+      if (DOC_WORDS.has(p)) break;
+      if (!STOP_WORDS.has(p) && !/^\d+$/.test(p)) {
+        gameParts.push(p);
+      }
+    }
+
+    // Compare gameParts with titleTokens from the beginning
+    let matchCount = 0;
+    for (let i = 0; i < titleTokens.length; i++) {
+      if (i < gameParts.length) {
+        const tt = titleTokens[i];
+        const gp = gameParts[i];
+        if (tt === gp || (tt.startsWith(gp) && gp.length >= 2) || (gp.startsWith(tt) && tt.length >= 2)) {
+          matchCount++;
+        } else {
+          break;
+        }
+      }
+    }
+
+    if (
+      matchCount > 0 &&
+      (matchCount === titleTokens.length || (gameParts.length > 0 && matchCount === gameParts.length))
+    ) {
+      const score = matchCount * 10 - Math.abs(gameParts.length - titleTokens.length);
+      if (score > bestScore) {
+        bestScore = score;
+        bestCandidate = f;
+      }
+    }
+  }
+
+  return bestCandidate;
+}
+
 function norm(s) {
   return s
     .toLowerCase()
@@ -364,14 +504,11 @@ async function main() {
     const expectedFileName = `${slug}-regras-ptbr.pdf`;
     const expectedFilePath = path.join(targetDir, expectedFileName);
 
-    // Check if file exists
-    const matchedFile = existingFiles.find((f) => {
-      const lower = f.toLowerCase().replace(/[^a-z0-9]/g, '');
-      const cleanSlug = slug.replace(/[^a-z0-9]/g, '');
-      return lower === cleanSlug || lower === `${cleanSlug}regrasptbrpdf`;
-    }) || (fs.existsSync(expectedFilePath) ? expectedFileName : null);
+    // 1. Verificar se o PDF já existe na pasta assets/rulebooks/
+    const matchedFile = findExistingRulebook(g.title, existingFiles);
 
     if (matchedFile) {
+      console.log(`[${i + 1}/${games.length}] [JÁ EXISTENTE] "${g.title}" -> ${matchedFile}`);
       alreadyHad++;
       continue;
     }
@@ -379,7 +516,7 @@ async function main() {
     let downloadUrl = resolveDownloadUrl(g.bggId, g.title, pandaMap);
     let source = 'Registro Curado / Panda DB';
 
-    // 1. Tentar Ludopedia caso configurado
+    // 2. Tentar Ludopedia caso configurado
     if (!downloadUrl && ludopediaCookie) {
       process.stdout.write(`[${i + 1}/${games.length}] Buscando na Ludopedia para "${g.title}"... `);
       const ludoResult = await findRulebookOnLudopedia(g.title, ludopediaCookie);
@@ -396,7 +533,7 @@ async function main() {
       }
     }
 
-    // 2. Tentar Gemini AI com Google Search grounding
+    // 3. Tentar Gemini AI com Google Search grounding
     if (!downloadUrl && geminiApiKey) {
       process.stdout.write(`[${i + 1}/${games.length}] Buscando via Gemini AI para "${g.title}"... `);
       downloadUrl = await searchRulebookWithGemini(g.title, geminiApiKey);
@@ -421,6 +558,7 @@ async function main() {
         pendingManual.push(g);
       }
     } else {
+      console.log(`[${i + 1}/${games.length}] [PENDENTE] "${g.title}" - sem manual oficial para download automático.`);
       pendingManual.push(g);
     }
   }
@@ -429,12 +567,7 @@ async function main() {
   if (fs.existsSync(catalogFilePath) && catalog.games) {
     const updatedFiles = fs.readdirSync(targetDir).filter((f) => f.endsWith('.pdf'));
     for (const g of catalog.games) {
-      const slug = slugifyTitle(g.title);
-      const matched = updatedFiles.find((f) => {
-        const lower = f.toLowerCase().replace(/[^a-z0-9]/g, '');
-        const cleanSlug = slug.replace(/[^a-z0-9]/g, '');
-        return lower === cleanSlug || lower === `${cleanSlug}regrasptbrpdf`;
-      });
+      const matched = findExistingRulebook(g.title, updatedFiles);
       if (matched) {
         const stats = fs.statSync(path.join(targetDir, matched));
         g.rulebooks = [
@@ -454,6 +587,8 @@ async function main() {
             updatedAt: Date.now(),
           },
         ];
+      } else {
+        g.rulebooks = [];
       }
     }
     fs.writeFileSync(catalogFilePath, JSON.stringify(catalog, null, 2), 'utf-8');
