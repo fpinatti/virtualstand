@@ -76,11 +76,11 @@ export function RulebookList({ bggId, gameTitle, onBeforeOpenReader }: RulebookL
 
   const handleDownloadPtBr = async () => {
     setDownloadFeedback(null);
-    const success = await downloadPtBrRulebook();
+    const success = await downloadPtBrRulebook(gameTitle);
     if (success) {
       setDownloadFeedback('Manual em Português obtido com sucesso!');
     } else {
-      setDownloadFeedback('Manual em PT-BR não localizado no repositório para este jogo.');
+      setDownloadFeedback('Manual em PT-BR não localizado para download.');
     }
   };
 
@@ -106,6 +106,15 @@ export function RulebookList({ bggId, gameTitle, onBeforeOpenReader }: RulebookL
       <View style={styles.headerRow}>
         <Text style={styles.headerTitle}>Manuais ({rulebooks.length})</Text>
         <View style={styles.headerActions}>
+          {!hasPtBrManual && (
+            <Button
+              label={isDownloading ? 'Baixando...' : '📥 Baixar PT-BR'}
+              variant="secondary"
+              size="sm"
+              onPress={handleDownloadPtBr}
+              disabled={isDownloading}
+            />
+          )}
           <Button
             label="🔍 Ludopedia"
             variant="ghost"
@@ -132,13 +141,19 @@ export function RulebookList({ bggId, gameTitle, onBeforeOpenReader }: RulebookL
           </Text>
           <View style={styles.downloadPromptWrap}>
             <Button
+              label={isDownloading ? 'Baixando Manual...' : '📥 Baixar Manual Oficial (PT-BR)'}
+              variant="primary"
+              onPress={handleDownloadPtBr}
+              disabled={isDownloading}
+            />
+            <Button
               label="🔍 Buscar Manual na Ludopedia"
               variant="secondary"
               onPress={handleOpenLudopedia}
             />
             <Button
               label="+ Anexar Arquivo PDF (PT-BR)"
-              variant="primary"
+              variant="ghost"
               onPress={() => setShowImport(true)}
             />
           </View>

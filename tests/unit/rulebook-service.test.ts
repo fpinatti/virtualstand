@@ -195,5 +195,34 @@ describe('RulebookService (US1)', () => {
     expect(rows).toHaveLength(0);
     expect(mockFileService.remove).toHaveBeenCalledWith('rulebooks/13/uuid-1.pdf');
   });
+
+  it('downloadAndAttachRulebookForGame calls /api/find-rulebook and attaches as READY rulebook', async () => {
+    const originalFetch = global.fetch;
+    global.fetch = jest.fn().mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        success: true,
+        relativePath: 'assets/rulebooks/catan-regras-ptbr.pdf',
+        fileName: 'catan-regras-ptbr.pdf',
+        fileSizeBytes: 4500000,
+      }),
+    } as any);
+
+    try {
+      const res = await service.downloadAndAttachRulebookForGame(13, 'Catan');
+      expect(res.success).toBe(true);
+      expect(res.rulebook).toBeDefined();
+      expect(res.rulebook?.bggId).toBe(13);
+      expect(res.rulebook?.status).toBe('READY');
+      expect(res.rulebook?.fileUri).toBe('file:///app/docs/assets/rulebooks/catan-regras-ptbr.pdf');
+      expect(res.rulebook?.sourceKind).toBe('BUNDLED_ASSET');
+
+      const listed = await service.listByGame(13);
+      expect(listed).toHaveLength(1);
+      expect(listed[0].status).toBe('READY');
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
 });
 

@@ -100,6 +100,11 @@ export interface IRulebookService {
 
   saveLastViewedPage(rulebookId: number, page: number): Promise<void>;
 
+  downloadAndAttachRulebookForGame?(
+    bggId: number,
+    title?: string
+  ): Promise<{ success: boolean; rulebook?: Rulebook; error?: string }>;
+
   /** Startup housekeeping: removes PENDING_VERIFICATION leftovers and orphan temp files. */
   cleanupPending(): Promise<number>;
 }

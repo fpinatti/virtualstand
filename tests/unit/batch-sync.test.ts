@@ -71,6 +71,75 @@ describe('Batch Sync Service - Rulebooks & AI-Powered Sleeves (Feature 012)', ()
       expect(progressEvents[1].currentGameTitle).toBe('Carcassonne');
       expect(progressEvents[2].currentGameTitle).toBe('Unknown Indie Game');
     });
+
+    it('calls /api/find-rulebook for uncataloged games and registers downloaded manual as READY', async () => {
+      const mockCollection: CollectionWithGame[] = [
+        {
+          game: { id: 1, bggId: 366013, title: 'Heat: Pedal to the Metal' } as any,
+          collection: { collId: 101 } as any,
+        },
+      ];
+
+      const mockCollRepo = {
+        getCollectionWithGames: jest.fn().mockResolvedValue(mockCollection),
+      } as any;
+
+      const mockRulebookRepo = {
+        listByBggId: jest.fn().mockResolvedValue([]),
+        insert: jest.fn().mockResolvedValue(1),
+      } as any;
+
+      const mockPreloadedService = {
+        syncBundledRulebookForGame: jest.fn().mockResolvedValue(false),
+      } as any;
+
+      // Mock global fetch for find-rulebook
+      const originalFetch = global.fetch;
+      global.fetch = jest.fn().mockImplementation(async (url: string) => {
+        if (url.includes('/api/scan-rulebooks')) {
+          return { ok: true, json: async () => ({ files: [] }) };
+        }
+        if (url.includes('/api/find-rulebook')) {
+          return {
+            ok: true,
+            json: async () => ({
+              success: true,
+              fileName: 'heat-pedal-to-the-metal-regras-ptbr.pdf',
+              relativePath: 'assets/rulebooks/heat-pedal-to-the-metal-regras-ptbr.pdf',
+              fileSizeBytes: 12916595,
+            }),
+          };
+        }
+        return { ok: false };
+      }) as any;
+
+      try {
+        const service = new BatchSyncService(
+          mockCollRepo,
+          mockRulebookRepo,
+          mockPreloadedService,
+          {} as any,
+          {} as any,
+          {} as any
+        );
+
+        const report = await service.syncMissingRulebooks();
+
+        expect(report.totalGames).toBe(1);
+        expect(report.newlySyncedCount).toBe(1);
+        expect(report.unavailableCount).toBe(0);
+        expect(mockRulebookRepo.insert).toHaveBeenCalledWith(
+          expect.objectContaining({
+            bggId: 366013,
+            label: 'Heat: Pedal to the Metal - Manual Oficial (PT-BR)',
+            relativePath: 'assets/rulebooks/heat-pedal-to-the-metal-regras-ptbr.pdf',
+            status: 'READY',
+          })
+        );
+      } finally {
+        global.fetch = originalFetch;
+      }
+    });
   });
 
   describe('User Story 2: 4-Tier Sleeve Hierarchy & AI Fallback', () => {

@@ -285,6 +285,51 @@ export class RulebookService implements IRulebookService {
     await this.repo.updateLastViewedPage(rulebookId, page);
   }
 
+  /**
+   * Discovers and downloads an authentic Brazilian Portuguese rulebook for an individual game
+   * via the local backend API route, registering it in SQLite as READY.
+   */
+  async downloadAndAttachRulebookForGame(
+    bggId: number,
+    title = `Game ${bggId}`
+  ): Promise<{ success: boolean; rulebook?: Rulebook; error?: string }> {
+    try {
+      const res = await fetch('/api/find-rulebook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bggId, title }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        return { success: false, error: err.error || `HTTP ${res.status}` };
+      }
+
+      const data = await res.json();
+      if (!data.success || !data.relativePath) {
+        return { success: false, error: data.error || 'Failed to download rulebook' };
+      }
+
+      const row = await this.repo.insert({
+        bggId,
+        label: `${title} - Manual Oficial (PT-BR)`,
+        docType: 'BASE_RULES',
+        sourceKind: 'BUNDLED_ASSET',
+        relativePath: data.relativePath,
+        fileSizeBytes: data.fileSizeBytes || 0,
+        md5: `asset-${data.fileName}`,
+        pageCount: 1,
+        status: 'READY',
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+
+      return { success: true, rulebook: row ? this.toModel(row) : undefined };
+    } catch (err: any) {
+      return { success: false, error: err.message || 'Network error' };
+    }
+  }
+
   async cleanupPending(): Promise<number> {
     const pendingRows = await this.repo.listPending();
     for (const row of pendingRows) {
