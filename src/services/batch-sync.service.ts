@@ -6,6 +6,10 @@ import { sleeveManagerService, SleeveManagerService } from '@/services/sleeve-ma
 import { findCommunitySleevesByBggId, isZeroCardGame } from '@/data/community-sleeves-catalog';
 import { geminiClient, GeminiClient } from '@/services/ai';
 import {
+  rulebookAiGeneratorService,
+  RulebookAiGeneratorService,
+} from './rulebook-ai-generator.service';
+import {
   AiSleeveOutputPayload,
   BatchSyncProgress,
   IBatchSyncService,
@@ -29,17 +33,69 @@ export function isLocalhostOrDev(): boolean {
 }
 
 export class BatchSyncService implements IBatchSyncService {
+  private readonly collRepo: CollectionRepository;
+  private readonly rulebookRepo: RulebookRepository;
+  private readonly preloadedService: PreloadedRulebookService;
+  private readonly sleeveRepo: SleeveRepository;
+  private readonly sleeveMgr: SleeveManagerService;
+  private readonly ai: GeminiClient;
+  private readonly rulebookAi?: RulebookAiGeneratorService;
+
   constructor(
-    private readonly collRepo: CollectionRepository = collectionRepository,
-    private readonly rulebookRepo: RulebookRepository = new RulebookRepository(),
-    private readonly preloadedService: PreloadedRulebookService = preloadedRulebookService,
-    private readonly sleeveRepo: SleeveRepository = new SleeveRepository(),
-    private readonly sleeveMgr: SleeveManagerService = sleeveManagerService,
-    private readonly ai: GeminiClient = geminiClient
-  ) {}
+    collRepo?: CollectionRepository,
+    rulebookRepo?: RulebookRepository,
+    preloadedService?: PreloadedRulebookService,
+    sleeveRepo?: SleeveRepository,
+    sleeveMgr?: SleeveManagerService,
+    ai?: GeminiClient,
+    rulebookAi?: RulebookAiGeneratorService
+  ) {
+    this.collRepo = collRepo ?? collectionRepository;
+    this.rulebookRepo = rulebookRepo ?? new RulebookRepository();
+    this.preloadedService = preloadedService ?? preloadedRulebookService;
+    this.sleeveRepo = sleeveRepo ?? new SleeveRepository();
+    this.sleeveMgr = sleeveMgr ?? sleeveManagerService;
+    this.ai = ai ?? geminiClient;
+    this.rulebookAi = rulebookAi;
+  }
+
+  private getRulebookAi(): RulebookAiGeneratorService {
+    return this.rulebookAi ?? rulebookAiGeneratorService;
+  }
 
   public isDevMaintenanceAvailable(): boolean {
     return isLocalhostOrDev();
+  }
+
+  /**
+   * Pre-execution audit to count pending rulebooks and estimate AI tokens.
+   */
+  public async auditCollectionRulebooks(): Promise<{
+    totalGames: number;
+    alreadyHadCount: number;
+    pendingCount: number;
+    estimatedTokensTotal: number;
+  }> {
+    const items = await this.collRepo.getCollectionWithGames(false);
+    const totalGames = items.length;
+    let alreadyHadCount = 0;
+
+    for (const item of items) {
+      const existing = await this.rulebookRepo.listByBggId(item.game.bggId);
+      if (existing.some((r) => r.status === 'READY')) {
+        alreadyHadCount++;
+      }
+    }
+
+    const pendingCount = Math.max(0, totalGames - alreadyHadCount);
+    const estimatedTokensTotal = pendingCount * 1200;
+
+    return {
+      totalGames,
+      alreadyHadCount,
+      pendingCount,
+      estimatedTokensTotal,
+    };
   }
 
   /**
@@ -111,7 +167,18 @@ export class BatchSyncService implements IBatchSyncService {
       if (hasReady) {
         alreadyHadCount++;
       } else {
-        const synced = await this.preloadedService.syncBundledRulebookForGame(game.bggId);
+        let synced = await this.preloadedService.syncBundledRulebookForGame(game.bggId);
+        if (!synced) {
+          onProgress?.({
+            stage: 'rulebooks',
+            current: i + 1,
+            total: totalGames,
+            currentGameTitle: game.title,
+            message: `Gerando guia oficial em português para ${game.title} (${i + 1}/${totalGames})...`,
+          });
+          synced = await this.getRulebookAi().generateAndSaveRulebook(game);
+        }
+
         if (synced) {
           newlySyncedCount++;
         } else {

@@ -8,6 +8,7 @@ import { useSync } from '@/hooks/use-sync';
 import { collectionSyncService } from '@/services/collection-sync.service';
 import { SyncProgressModal } from '@/components/sync-progress-modal';
 import { batchSyncService, isLocalhostOrDev } from '@/services/batch-sync.service';
+import { catalogService } from '@/services/catalog.service';
 import {
   RulebookBatchReport,
   SleeveBatchAuditStatus,
@@ -50,26 +51,39 @@ export default function SettingsScreen() {
 
   const isDev = isLocalhostOrDev();
   const [sleeveAudit, setSleeveAudit] = useState<SleeveBatchAuditStatus | null>(null);
+  const [rulebookAudit, setRulebookAudit] = useState<{
+    totalGames: number;
+    alreadyHadCount: number;
+    pendingCount: number;
+    estimatedTokensTotal: number;
+  } | null>(null);
   const [isSyncingRulebooks, setIsSyncingRulebooks] = useState(false);
   const [rulebookReport, setRulebookReport] = useState<RulebookBatchReport | null>(null);
   const [rulebookProgress, setRulebookProgress] = useState<string | null>(null);
   const [isSyncingSleeves, setIsSyncingSleeves] = useState(false);
   const [sleeveReport, setSleeveReport] = useState<SleeveBatchReport | null>(null);
   const [sleeveProgress, setSleeveProgress] = useState<string | null>(null);
+  const [isExportingCatalog, setIsExportingCatalog] = useState(false);
+  const [isSeedingCatalog, setIsSeedingCatalog] = useState(false);
+  const [catalogMessage, setCatalogMessage] = useState<string | null>(null);
 
-  const loadSleeveAudit = useCallback(async () => {
+  const loadAudits = useCallback(async () => {
     if (!isDev) return;
     try {
-      const res = await batchSyncService.auditCollectionSleeves();
-      setSleeveAudit(res);
+      const [sAudit, rAudit] = await Promise.all([
+        batchSyncService.auditCollectionSleeves(),
+        batchSyncService.auditCollectionRulebooks(),
+      ]);
+      setSleeveAudit(sAudit);
+      setRulebookAudit(rAudit);
     } catch {
       // Ignore in case DB empty
     }
   }, [isDev]);
 
   useEffect(() => {
-    loadSleeveAudit();
-  }, [loadSleeveAudit]);
+    loadAudits();
+  }, [loadAudits]);
 
   const handleSyncRulebooks = async () => {
     setIsSyncingRulebooks(true);
@@ -81,6 +95,7 @@ export default function SettingsScreen() {
       });
       setRulebookReport(report);
       setRulebookProgress(null);
+      await loadAudits();
     } finally {
       setIsSyncingRulebooks(false);
     }
@@ -96,9 +111,43 @@ export default function SettingsScreen() {
       });
       setSleeveReport(report);
       setSleeveProgress(null);
-      await loadSleeveAudit();
+      await loadAudits();
     } finally {
       setIsSyncingSleeves(false);
+    }
+  };
+
+  const handleExportCatalog = async () => {
+    setIsExportingCatalog(true);
+    setCatalogMessage(null);
+    try {
+      const exported = await catalogService.exportCatalogToJson();
+      const saved = await catalogService.saveCatalogToDisk(exported);
+      if (saved) {
+        setCatalogMessage(`✓ Catálogo físico exportado com sucesso! (${exported.totalGames} jogos em assets/data/virtualstand-catalog.json)`);
+      } else {
+        setCatalogMessage(`✓ Snapshot gerado com ${exported.totalGames} jogos.`);
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setCatalogMessage(`✗ Erro ao exportar catálogo: ${msg}`);
+    } finally {
+      setIsExportingCatalog(false);
+    }
+  };
+
+  const handleSeedCatalog = async () => {
+    setIsSeedingCatalog(true);
+    setCatalogMessage(null);
+    try {
+      const count = await catalogService.seedFromBundledCatalog();
+      await loadAudits();
+      setCatalogMessage(`✓ SQLite restaurado do catálogo físico com sucesso (${count} jogos novos/atualizados).`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setCatalogMessage(`✗ Erro ao restaurar catálogo: ${msg}`);
+    } finally {
+      setIsSeedingCatalog(false);
     }
   };
 
@@ -195,12 +244,21 @@ export default function SettingsScreen() {
           </Text>
 
           <View style={styles.devBlock}>
-            <Text style={styles.devBlockTitle}>📖 Manuais de Regras em Lote</Text>
+            <View style={styles.devBlockHeaderRow}>
+              <Text style={styles.devBlockTitle}>📖 Manuais de Regras em Lote</Text>
+              {rulebookAudit ? (
+                <Badge
+                  tone={rulebookAudit.pendingCount > 0 ? 'warning' : 'success'}
+                  label={`${rulebookAudit.pendingCount} sem manual • ~${rulebookAudit.estimatedTokensTotal} tokens`}
+                  tabularNums
+                />
+              ) : null}
+            </View>
             <Text style={styles.devBlockDesc}>
-              Verifica todos os jogos importados e registra/baixa os manuais em português (PT-BR) que ainda não estiverem offline.
+              Registra manuais locais pré-instalados e gera guias completos de regras em português (PT-BR) via Gemini AI compilados em PDF offline para todos os jogos faltantes.
             </Text>
             <Button
-              label={isSyncingRulebooks ? 'Verificando manuais...' : '📥 Verificar e Baixar Manuais (PT-BR)'}
+              label={isSyncingRulebooks ? 'Gerando/Baixando manuais...' : '📥 Verificar e Baixar Manuais (Catálogo + IA)'}
               variant="secondary"
               onPress={handleSyncRulebooks}
               disabled={isSyncingRulebooks || isSyncingSleeves}
@@ -244,6 +302,35 @@ export default function SettingsScreen() {
               <Text style={styles.devResultText}>
                 ✓ {sleeveReport.totalGames} jogos: {sleeveReport.catalogMatchedCount} do catálogo, {sleeveReport.zeroCardCount} sem cartas, {sleeveReport.aiDiscoveredCount} via IA (~{sleeveReport.tokensUsedEstimate} tokens).
               </Text>
+            ) : null}
+          </View>
+
+          <View style={styles.devBlock}>
+            <View style={styles.devBlockHeaderRow}>
+              <Text style={styles.devBlockTitle}>📦 Catálogo Físico Versionável</Text>
+              <Badge tone="accent" label="assets/data" />
+            </View>
+            <Text style={styles.devBlockDesc}>
+              Exporta todos os jogos cadastrados, sleeves, manuais e notas para o arquivo físico versionável em git (assets/data/virtualstand-catalog.json), que é carregado automaticamente pelo app mobile.
+            </Text>
+            <View style={styles.catalogButtonsRow}>
+              <Button
+                label={isExportingCatalog ? 'Exportando catálogo...' : '💾 Exportar Banco para assets/data/'}
+                variant="secondary"
+                onPress={handleExportCatalog}
+                disabled={isExportingCatalog || isSyncing}
+                loading={isExportingCatalog}
+              />
+              <Button
+                label={isSeedingCatalog ? 'Restaurando catálogo...' : '📥 Restaurar do Catálogo Físico'}
+                variant="ghost"
+                onPress={handleSeedCatalog}
+                disabled={isSeedingCatalog || isSyncing}
+                loading={isSeedingCatalog}
+              />
+            </View>
+            {catalogMessage ? (
+              <Text style={styles.devResultText}>{catalogMessage}</Text>
             ) : null}
           </View>
         </Card>
@@ -346,6 +433,9 @@ const styles = StyleSheet.create({
     fontSize: tokens.typography.scale.caption.fontSize,
     color: tokens.colors.text.muted,
     marginBottom: tokens.spacing.sm,
+  },
+  catalogButtonsRow: {
+    gap: tokens.spacing.xs,
   },
   devProgressText: {
     fontSize: tokens.typography.scale.caption.fontSize,

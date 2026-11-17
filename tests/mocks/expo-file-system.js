@@ -14,6 +14,7 @@ module.exports = {
   moveAsync: jest.fn().mockResolvedValue(undefined),
   copyAsync: jest.fn().mockResolvedValue(undefined),
   deleteAsync: jest.fn().mockResolvedValue(undefined),
+  writeAsStringAsync: jest.fn().mockResolvedValue(undefined),
   readAsStringAsync: jest.fn().mockResolvedValue('JVBERi0='),
   getFreeDiskStorageAsync: jest.fn().mockResolvedValue(1024 * 1024 * 500),
   downloadAsync: jest.fn().mockResolvedValue({

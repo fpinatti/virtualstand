@@ -5,6 +5,7 @@ import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { initializeTables } from '@/db/client';
 import { rulebookService } from '@/services/rulebook.service';
 import { preloadedRulebookService } from '@/services/preloaded-rulebook.service';
+import { catalogService } from '@/services/catalog.service';
 import { tokens } from '@/ui';
 
 export default function RootLayout() {
@@ -14,6 +15,9 @@ export default function RootLayout() {
   useEffect(() => {
     try {
       initializeTables();
+      catalogService.seedFromBundledCatalog().catch(() => {
+        // Non-blocking startup seed of bundled physical catalog
+      });
       rulebookService.cleanupPending().catch(() => {
         // Non-blocking startup cleanup
       });

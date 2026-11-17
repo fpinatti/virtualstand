@@ -8,7 +8,10 @@ import {
   IGeminiClient,
 } from './gemini-types';
 
-const DEFAULT_MODEL: GeminiModel = 'gemini-2.0-flash';
+const DEFAULT_MODEL: GeminiModel =
+  process.env.EXPO_PUBLIC_GEMINI_MODEL ||
+  process.env.GEMINI_MODEL ||
+  'gemini-3.8-flash';
 const DEFAULT_TIMEOUT_MS = 15000;
 const DEFAULT_PING_TIMEOUT_MS = 5000;
 const BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models';
@@ -203,6 +206,22 @@ export class GeminiClient implements IGeminiClient {
           // ignore parsing error
         }
 
+        // Self-healing: if model is deprecated or not found (404), check if Google suggested a newer model
+        if (response.status === 404 && !(request as any)._isRetry) {
+          const suggestedModel =
+            this.extractSuggestedModel(errorData?.error?.message) ||
+            (model !== 'gemini-3.8-flash' ? 'gemini-3.8-flash' : 'gemini-1.5-flash');
+
+          if (suggestedModel && suggestedModel !== model) {
+            this.defaultModel = suggestedModel;
+            return this.generateContent({
+              ...request,
+              model: suggestedModel,
+              _isRetry: true,
+            } as any);
+          }
+        }
+
         const aiError = this.mapHttpStatusToAiError(response.status, errorData);
         return {
           ok: false,
@@ -370,5 +389,14 @@ export class GeminiClient implements IGeminiClient {
       statusCode: status,
       rawDetails: errorData,
     };
+  }
+
+  /**
+   * Parses potential newer model recommendations from Google error messages.
+   */
+  private extractSuggestedModel(message?: string): string | null {
+    if (!message) return null;
+    const match = message.match(/models\/([a-zA-Z0-9.\-_]+)/);
+    return match ? match[1] : null;
   }
 }

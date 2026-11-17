@@ -13,6 +13,8 @@
     "test": "jest",
     "ui:audit": "jest tests/unit/impeccable-ui-system.test.ts",
     "typecheck": "tsc --noEmit",
+    "sync:rulebooks": "node scripts/sync-rulebooks.mjs",
+    "catalog:export": "node scripts/export-catalog.mjs",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push"
   },

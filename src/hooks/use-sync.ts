@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { collectionSyncService } from '@/services/collection-sync.service';
+import { catalogService } from '@/services/catalog.service';
 import { SyncProgressUpdate, SyncResult } from '@/api/contracts';
 
 export function useSync() {
@@ -29,6 +30,7 @@ export function useSync() {
           }
         );
         setLastResult(result);
+        catalogService.saveCatalogToDisk().catch(() => {});
         return result;
       } finally {
         setIsSyncing(false);

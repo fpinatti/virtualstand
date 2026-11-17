@@ -69,7 +69,7 @@ describe('GeminiClient - AI Integration Architecture (Feature 010)', () => {
 
       expect(status.configured).toBe(true);
       expect(status.connected).toBe(true);
-      expect(status.model).toBe('gemini-2.0-flash');
+      expect(status.model).toBe('gemini-3.8-flash');
       expect(typeof status.latencyMs).toBe('number');
       expect(status.error).toBeUndefined();
       expect(mockFetch).toHaveBeenCalledTimes(1);
@@ -121,12 +121,12 @@ describe('GeminiClient - AI Integration Architecture (Feature 010)', () => {
 
       expect(response.ok).toBe(true);
       expect(response.text).toBe('Scythe foi criado por Jamey Stegmaier.');
-      expect(response.model).toBe('gemini-2.0-flash');
+      expect(response.model).toBe('gemini-3.8-flash');
       expect(response.durationMs).toBeGreaterThanOrEqual(0);
 
       // Verify request payload
       const [url, options] = mockFetch.mock.calls[0];
-      expect(url).toContain('gemini-2.0-flash:generateContent');
+      expect(url).toContain('gemini-3.8-flash:generateContent');
       const body = JSON.parse(options.body);
       expect(body.contents[0].parts[0].text).toBe('Quem criou o jogo Scythe?');
       expect(body.systemInstruction.parts[0].text).toBe('Você é um especialista em jogos de tabuleiro.');

@@ -2,7 +2,7 @@
  * Types & Contracts: Gemini API Foundation & AI Integration Architecture (Feature 010)
  */
 
-export type GeminiModel = 'gemini-2.0-flash' | 'gemini-1.5-flash' | string;
+export type GeminiModel = 'gemini-3.8-flash' | 'gemini-2.0-flash' | 'gemini-1.5-flash' | string;
 
 export type AiErrorCode =
   | 'MISSING_API_KEY'
