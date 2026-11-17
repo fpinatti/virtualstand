@@ -104,6 +104,18 @@ export function useRulebooks(bggId: number | null) {
     [refresh]
   );
 
+  const downloadPtBrRulebook = useCallback(async (): Promise<boolean> => {
+    if (!bggId) return false;
+    setIsDownloading(true);
+    try {
+      const synced = await preloadedRulebookService.syncBundledRulebookForGame(bggId);
+      await refresh();
+      return synced;
+    } finally {
+      setIsDownloading(false);
+    }
+  }, [bggId, refresh]);
+
   const hasReadyRulebook = rulebooks.some((r) => r.status === 'READY');
 
   return {
@@ -114,6 +126,7 @@ export function useRulebooks(bggId: number | null) {
     downloadProgress,
     importFromDevice,
     importFromUrl,
+    downloadPtBrRulebook,
     cancelDownload,
     renameRulebook,
     countAnnotations,

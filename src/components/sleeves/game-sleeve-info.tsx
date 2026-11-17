@@ -1,25 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { GameSleeveInfoProps, GameSleeveItem } from '@/services/sleeve-types';
 import { sleeveManagerService } from '@/services/sleeve-manager.service';
 import { isZeroCardGame } from '@/data/community-sleeves-catalog';
-import { Badge, Button, Card, Input, SectionHeader, tokens } from '@/ui';
+import { Badge, Card, SectionHeader, tokens } from '@/ui';
 
 export function GameSleeveInfoSection({ bggId }: GameSleeveInfoProps) {
   const [sleeves, setSleeves] = useState<GameSleeveItem[]>([]);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
-  const [newSetName, setNewSetName] = useState('');
-  const [newFormatName, setNewFormatName] = useState('Standard Card Game');
-  const [newWidth, setNewWidth] = useState('63.5');
-  const [newHeight, setNewHeight] = useState('88');
-  const [newCount, setNewCount] = useState('54');
 
   const loadSleeves = useCallback(async () => {
     try {
@@ -31,69 +18,19 @@ export function GameSleeveInfoSection({ bggId }: GameSleeveInfoProps) {
   }, [bggId]);
 
   useEffect(() => {
-    setShowAddForm(false);
-    setErrorMsg(null);
     loadSleeves();
   }, [loadSleeves]);
-
-  const handleAddSleeve = async () => {
-    setErrorMsg(null);
-    const w = parseFloat(newWidth);
-    const h = parseFloat(newHeight);
-    const count = parseInt(newCount, 10);
-
-    if (isNaN(w) || isNaN(h) || isNaN(count) || w <= 0 || h <= 0 || count <= 0) {
-      setErrorMsg('Informe medidas em milímetros e quantidade de cartas válidas.');
-      return;
-    }
-
-    try {
-      await sleeveManagerService.saveGameSleeve({
-        bggId,
-        cardSetName: newSetName.trim() || 'Baralho Principal',
-        formatName: newFormatName.trim() || 'Custom',
-        widthMm: w,
-        heightMm: h,
-        cardCount: count,
-        isSleeved: false,
-      });
-
-      setShowAddForm(false);
-      setNewSetName('');
-      await loadSleeves();
-    } catch {
-      setErrorMsg('Não foi possível salvar a especificação de sleeve.');
-    }
-  };
-
-  const handleDeleteSleeve = async (id?: number) => {
-    if (!id) return;
-    setErrorMsg(null);
-    try {
-      await sleeveManagerService.deleteGameSleeve(id);
-      await loadSleeves();
-    } catch {
-      setErrorMsg('Não foi possível remover o formato de sleeve.');
-    }
-  };
 
   const totalCards = sleeves.reduce((sum, s) => sum + s.cardCount, 0);
 
   return (
     <View style={styles.container}>
       <SectionHeader
-        title="Sleeves Necessários"
+        title="Sleeves"
         badgeText={totalCards > 0 ? `${totalCards} cartas` : undefined}
-        actionLabel={showAddForm ? 'Fechar' : '+ Formato'}
-        onAction={() => {
-          setErrorMsg(null);
-          setShowAddForm((prev) => !prev);
-        }}
       />
 
-      {errorMsg ? <Text style={styles.errorText}>{errorMsg}</Text> : null}
-
-      {sleeves.length === 0 && !showAddForm ? (
+      {sleeves.length === 0 ? (
         isZeroCardGame(bggId) ? (
           <View style={styles.zeroCardBox}>
             <Text style={styles.zeroCardText}>
@@ -114,90 +51,17 @@ export function GameSleeveInfoSection({ bggId }: GameSleeveInfoProps) {
             style={styles.sleeveRow}
           >
             <View style={styles.sleeveInfo}>
-              <Text style={styles.setName}>{s.cardSetName}</Text>
+              {s.cardSetName && s.cardSetName !== s.formatName ? (
+                <Text style={styles.setName}>{s.cardSetName}</Text>
+              ) : null}
               <Text style={styles.formatText}>
                 {s.formatName} • {s.widthMm} x {s.heightMm} mm
               </Text>
             </View>
 
             <Badge tone="accent" label={`${s.cardCount} un.`} tabularNums />
-
-            {s.id ? (
-              <TouchableOpacity
-                style={styles.deleteBtn}
-                onPress={() => handleDeleteSleeve(s.id)}
-              >
-                <Text style={styles.deleteBtnText}>✕</Text>
-              </TouchableOpacity>
-            ) : null}
           </Card>
         ))
-      )}
-
-      {showAddForm && (
-        <Card variant="sunken" padding="md" style={styles.formCard}>
-          <Input
-            label="Conjunto de cartas"
-            placeholder="Ex: Baralho Principal, Cartas de Objetivo"
-            value={newSetName}
-            onChangeText={setNewSetName}
-          />
-
-          <Input
-            label="Formato do sleeve"
-            placeholder="Ex: Standard (Padrão), Chimera, Mini Euro"
-            value={newFormatName}
-            onChangeText={setNewFormatName}
-          />
-
-          <View style={styles.row}>
-            <View style={styles.col}>
-              <Input
-                label="Largura (mm)"
-                placeholder="63.5"
-                keyboardType="numeric"
-                value={newWidth}
-                onChangeText={setNewWidth}
-                tabularNums
-              />
-            </View>
-            <View style={styles.col}>
-              <Input
-                label="Altura (mm)"
-                placeholder="88"
-                keyboardType="numeric"
-                value={newHeight}
-                onChangeText={setNewHeight}
-                tabularNums
-              />
-            </View>
-            <View style={styles.col}>
-              <Input
-                label="Qtd. Cartas"
-                placeholder="54"
-                keyboardType="numeric"
-                value={newCount}
-                onChangeText={setNewCount}
-                tabularNums
-              />
-            </View>
-          </View>
-
-          <View style={styles.formButtonsRow}>
-            <Button
-              label="Cancelar"
-              variant="secondary"
-              size="sm"
-              onPress={() => setShowAddForm(false)}
-            />
-            <Button
-              label="Salvar Formato"
-              variant="primary"
-              size="sm"
-              onPress={handleAddSleeve}
-            />
-          </View>
-        </Card>
       )}
     </View>
   );
@@ -205,26 +69,19 @@ export function GameSleeveInfoSection({ bggId }: GameSleeveInfoProps) {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: tokens.spacing['2xs'],
-  },
-  errorText: {
-    color: tokens.colors.semantic.danger,
-    fontSize: tokens.typography.scale.caption.fontSize,
-    marginBottom: tokens.spacing.xs,
+    marginVertical: tokens.spacing.xs,
   },
   emptyText: {
     color: tokens.colors.text.muted,
-    fontSize: tokens.typography.scale.caption.fontSize,
     fontStyle: 'italic',
+    fontSize: tokens.typography.scale.bodySm.fontSize,
   },
   zeroCardBox: {
-    paddingVertical: tokens.spacing.xs,
-    paddingHorizontal: tokens.spacing.sm,
     backgroundColor: tokens.colors.surface.card,
-    borderRadius: tokens.radii.sm,
-    borderWidth: 1,
-    borderColor: tokens.colors.border.subtle,
-    marginVertical: tokens.spacing['2xs'],
+    padding: tokens.spacing.sm,
+    borderRadius: tokens.radius.sm,
+    borderLeftWidth: 3,
+    borderLeftColor: tokens.colors.semantic.success,
   },
   zeroCardText: {
     color: tokens.colors.text.secondary,
@@ -233,45 +90,22 @@ const styles = StyleSheet.create({
   sleeveRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: tokens.spacing.sm,
+    justifyContent: 'space-between',
     marginBottom: tokens.spacing.xs,
   },
   sleeveInfo: {
     flex: 1,
+    marginRight: tokens.spacing.sm,
   },
   setName: {
-    fontSize: tokens.typography.scale.bodySm.fontSize,
-    fontWeight: tokens.typography.weights.semibold,
     color: tokens.colors.text.primary,
+    fontWeight: tokens.typography.weights.semibold,
+    fontSize: tokens.typography.scale.bodySm.fontSize,
     marginBottom: 2,
   },
   formatText: {
-    fontSize: tokens.typography.scale.caption.fontSize,
     color: tokens.colors.text.secondary,
-    fontVariant: ['tabular-nums'],
-  },
-  deleteBtn: {
-    paddingHorizontal: tokens.spacing.xs,
-    paddingVertical: tokens.spacing['2xs'],
-  },
-  deleteBtnText: {
-    color: tokens.colors.text.muted,
     fontSize: tokens.typography.scale.caption.fontSize,
-  },
-  formCard: {
-    marginTop: tokens.spacing.xs,
-    borderColor: tokens.colors.border.strong,
-  },
-  row: {
-    flexDirection: 'row',
-    gap: tokens.spacing.xs,
-  },
-  col: {
-    flex: 1,
-  },
-  formButtonsRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    gap: tokens.spacing.xs,
+    fontVariant: ['tabular-nums'],
   },
 });

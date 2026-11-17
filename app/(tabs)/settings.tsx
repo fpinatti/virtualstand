@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,12 @@ import {
 import { useSync } from '@/hooks/use-sync';
 import { collectionSyncService } from '@/services/collection-sync.service';
 import { SyncProgressModal } from '@/components/sync-progress-modal';
+import { batchSyncService, isLocalhostOrDev } from '@/services/batch-sync.service';
+import {
+  RulebookBatchReport,
+  SleeveBatchAuditStatus,
+  SleeveBatchReport,
+} from '@/services/batch-sync-types';
 import { Badge, Button, Card, Input, ScreenContainer, SectionHeader, tokens } from '@/ui';
 
 const TOKEN_STORAGE_KEY = 'virtualstand_bgg_api_token';
@@ -41,6 +47,60 @@ export default function SettingsScreen() {
   const [modalVisible, setModalVisible] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const { isSyncing, progress, startSync, cancelSync } = useSync();
+
+  const isDev = isLocalhostOrDev();
+  const [sleeveAudit, setSleeveAudit] = useState<SleeveBatchAuditStatus | null>(null);
+  const [isSyncingRulebooks, setIsSyncingRulebooks] = useState(false);
+  const [rulebookReport, setRulebookReport] = useState<RulebookBatchReport | null>(null);
+  const [rulebookProgress, setRulebookProgress] = useState<string | null>(null);
+  const [isSyncingSleeves, setIsSyncingSleeves] = useState(false);
+  const [sleeveReport, setSleeveReport] = useState<SleeveBatchReport | null>(null);
+  const [sleeveProgress, setSleeveProgress] = useState<string | null>(null);
+
+  const loadSleeveAudit = useCallback(async () => {
+    if (!isDev) return;
+    try {
+      const res = await batchSyncService.auditCollectionSleeves();
+      setSleeveAudit(res);
+    } catch {
+      // Ignore in case DB empty
+    }
+  }, [isDev]);
+
+  useEffect(() => {
+    loadSleeveAudit();
+  }, [loadSleeveAudit]);
+
+  const handleSyncRulebooks = async () => {
+    setIsSyncingRulebooks(true);
+    setRulebookReport(null);
+    setRulebookProgress('Iniciando auditoria de manuais...');
+    try {
+      const report = await batchSyncService.syncMissingRulebooks((p) => {
+        setRulebookProgress(p.message);
+      });
+      setRulebookReport(report);
+      setRulebookProgress(null);
+    } finally {
+      setIsSyncingRulebooks(false);
+    }
+  };
+
+  const handleSyncSleeves = async () => {
+    setIsSyncingSleeves(true);
+    setSleeveReport(null);
+    setSleeveProgress('Iniciando auditoria de sleeves...');
+    try {
+      const report = await batchSyncService.syncMissingSleeves((p) => {
+        setSleeveProgress(p.message);
+      });
+      setSleeveReport(report);
+      setSleeveProgress(null);
+      await loadSleeveAudit();
+    } finally {
+      setIsSyncingSleeves(false);
+    }
+  };
 
   useEffect(() => {
     if (username.trim()) {
@@ -124,6 +184,71 @@ export default function SettingsScreen() {
         />
       </View>
 
+      {isDev ? (
+        <Card variant="elevated" padding="md" style={styles.devCard}>
+          <View style={styles.devHeaderRow}>
+            <Text style={styles.devTitle}>Manutenção Local de Dados</Text>
+            <Badge tone="accent" label="Localhost / Dev" />
+          </View>
+          <Text style={styles.devSubtitle}>
+            Utilitários para auditar toda a sua coleção, baixar manuais em lote e obter especificações de sleeves via catálogo ou IA.
+          </Text>
+
+          <View style={styles.devBlock}>
+            <Text style={styles.devBlockTitle}>📖 Manuais de Regras em Lote</Text>
+            <Text style={styles.devBlockDesc}>
+              Verifica todos os jogos importados e registra/baixa os manuais em português (PT-BR) que ainda não estiverem offline.
+            </Text>
+            <Button
+              label={isSyncingRulebooks ? 'Verificando manuais...' : '📥 Verificar e Baixar Manuais (PT-BR)'}
+              variant="secondary"
+              onPress={handleSyncRulebooks}
+              disabled={isSyncingRulebooks || isSyncingSleeves}
+              loading={isSyncingRulebooks}
+            />
+            {rulebookProgress && isSyncingRulebooks ? (
+              <Text style={styles.devProgressText}>{rulebookProgress}</Text>
+            ) : null}
+            {rulebookReport ? (
+              <Text style={styles.devResultText}>
+                ✓ {rulebookReport.totalGames} jogos: {rulebookReport.newlySyncedCount} novos manuais sincronizados, {rulebookReport.alreadyHadCount} já possuíam manual.
+              </Text>
+            ) : null}
+          </View>
+
+          <View style={styles.devBlock}>
+            <View style={styles.devBlockHeaderRow}>
+              <Text style={styles.devBlockTitle}>🃏 Sleeves & Descoberta por IA</Text>
+              {sleeveAudit ? (
+                <Badge
+                  tone={sleeveAudit.pendingAiCount > 0 ? 'warning' : 'success'}
+                  label={`${sleeveAudit.pendingAiCount} sem sleeve • ~${sleeveAudit.estimatedTokensTotal} tokens`}
+                  tabularNums
+                />
+              ) : null}
+            </View>
+            <Text style={styles.devBlockDesc}>
+              Aplica primeiro o catálogo comunitário offline (0 tokens) e jogos sem cartas. Para títulos não catalogados, consulta o Gemini AI em JSON com orçamento controlado.
+            </Text>
+            <Button
+              label={isSyncingSleeves ? 'Buscando sleeves...' : '✨ Verificar e Obter Sleeves (Catálogo + IA)'}
+              variant="secondary"
+              onPress={handleSyncSleeves}
+              disabled={isSyncingSleeves || isSyncingRulebooks}
+              loading={isSyncingSleeves}
+            />
+            {sleeveProgress && isSyncingSleeves ? (
+              <Text style={styles.devProgressText}>{sleeveProgress}</Text>
+            ) : null}
+            {sleeveReport ? (
+              <Text style={styles.devResultText}>
+                ✓ {sleeveReport.totalGames} jogos: {sleeveReport.catalogMatchedCount} do catálogo, {sleeveReport.zeroCardCount} sem cartas, {sleeveReport.aiDiscoveredCount} via IA (~{sleeveReport.tokensUsedEstimate} tokens).
+              </Text>
+            ) : null}
+          </View>
+        </Card>
+      ) : null}
+
       <Card variant="elevated" padding="md" style={styles.authCard}>
         <View style={styles.authHeaderRow}>
           <Text style={styles.infoTitle}>Autenticação Bearer Token (BGG XMLAPI2)</Text>
@@ -177,6 +302,62 @@ const styles = StyleSheet.create({
   buttonWrap: {
     gap: tokens.spacing.sm,
     marginBottom: tokens.spacing.xl,
+  },
+  devCard: {
+    marginBottom: tokens.spacing.lg,
+    borderWidth: 1,
+    borderColor: tokens.colors.accent.primary,
+  },
+  devHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: tokens.spacing.xs,
+  },
+  devTitle: {
+    fontSize: tokens.typography.scale.h3.fontSize,
+    fontWeight: tokens.typography.weights.bold,
+    color: tokens.colors.text.primary,
+  },
+  devSubtitle: {
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    color: tokens.colors.text.secondary,
+    marginBottom: tokens.spacing.md,
+  },
+  devBlock: {
+    backgroundColor: tokens.colors.surface.card,
+    borderRadius: tokens.radius.md,
+    padding: tokens.spacing.sm,
+    marginBottom: tokens.spacing.sm,
+  },
+  devBlockHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: tokens.spacing['2xs'],
+  },
+  devBlockTitle: {
+    fontSize: tokens.typography.scale.bodySm.fontSize,
+    fontWeight: tokens.typography.weights.semibold,
+    color: tokens.colors.text.primary,
+    marginBottom: tokens.spacing['2xs'],
+  },
+  devBlockDesc: {
+    fontSize: tokens.typography.scale.caption.fontSize,
+    color: tokens.colors.text.muted,
+    marginBottom: tokens.spacing.sm,
+  },
+  devProgressText: {
+    fontSize: tokens.typography.scale.caption.fontSize,
+    color: tokens.colors.accent.primary,
+    fontStyle: 'italic',
+    marginTop: tokens.spacing.xs,
+  },
+  devResultText: {
+    fontSize: tokens.typography.scale.caption.fontSize,
+    color: tokens.colors.semantic.success,
+    fontWeight: tokens.typography.weights.semibold,
+    marginTop: tokens.spacing.xs,
   },
   authCard: {
     marginBottom: tokens.spacing.md,

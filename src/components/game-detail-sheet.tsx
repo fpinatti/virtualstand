@@ -7,8 +7,9 @@ import {
   ScrollView,
   StyleSheet,
 } from 'react-native';
-import { CollectionWithGame, collectionRepository } from '@/db/repositories/collection.repository';
-import { BoxDimensionEditor } from './box-dimension-editor';
+import { CollectionWithGame } from '@/db/repositories/collection.repository';
+import { gameRepository } from '@/db/repositories/game.repository';
+import { BoxDimension } from '@/db/schema';
 import { GameSleeveInfoSection } from './sleeves/game-sleeve-info';
 import { RulebookList } from './rulebooks/rulebook-list';
 import { PersonalRatingInput } from './personal-rating-input';
@@ -18,13 +19,13 @@ import { PlaySessionForm } from './playlog/play-session-form';
 import { useRulebooks } from '@/hooks/use-rulebooks';
 import { usePlayLog } from '@/hooks/use-play-log';
 import { PlaySession, PlaySessionInput } from '@/services/playlog-types';
-import { Badge, Button, Card, Input, SectionHeader, tokens } from '@/ui';
+import { Badge, Card, SectionHeader, tokens } from '@/ui';
 
 interface GameDetailSheetProps {
   item: CollectionWithGame | null;
   visible: boolean;
   onClose: () => void;
-  onSaved: () => void;
+  onSaved?: () => void;
 }
 
 export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailSheetProps) {
@@ -45,56 +46,21 @@ export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailS
     setRating,
   } = usePlayLog(bggId);
 
-  const [notes, setNotes] = useState('');
-  const [tagInput, setTagInput] = useState('');
-  const [tags, setTags] = useState<string[]>([]);
-  const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
-  const [showDimensionEditor, setShowDimensionEditor] = useState(false);
+  const [dimensions, setDimensions] = useState<BoxDimension | null>(null);
   const [showPlayForm, setShowPlayForm] = useState(false);
   const [editingSession, setEditingSession] = useState<PlaySession | null>(null);
 
   useEffect(() => {
-    if (item) {
-      setNotes(item.collection.localNotes ?? '');
-      setTags(item.collection.customTags ? JSON.parse(item.collection.customTags) : []);
-      setSaveError(null);
+    if (bggId && visible) {
+      gameRepository.getDimensionsByBggId(bggId).then((dim) => {
+        setDimensions(dim ?? null);
+      });
     }
-  }, [item]);
+  }, [bggId, visible]);
 
   if (!item) return null;
 
   const { game, collection } = item;
-
-  const handleAddTag = () => {
-    const trimmed = tagInput.trim().toLowerCase();
-    if (trimmed && !tags.includes(trimmed)) {
-      setTags([...tags, trimmed]);
-      setTagInput('');
-    }
-  };
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    setTags(tags.filter((t) => t !== tagToRemove));
-  };
-
-  const handleSave = async () => {
-    setSaving(true);
-    setSaveError(null);
-    try {
-      await collectionRepository.updateLocalEnrichments(
-        collection.collId,
-        notes.trim() === '' ? null : notes.trim(),
-        tags.length > 0 ? tags : undefined
-      );
-      onSaved();
-      onClose();
-    } catch {
-      setSaveError('Não foi possível salvar as anotações.');
-    } finally {
-      setSaving(false);
-    }
-  };
 
   const handleSessionSubmit = async (input: PlaySessionInput, sessionId?: number) => {
     if (sessionId) {
@@ -148,18 +114,39 @@ export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailS
               </Card>
             ) : null}
 
-            {/* Direct Per-Game Sleeve Information (Feature 007) */}
+            {/* Direct Per-Game Sleeve Information (Clean, Read-Only) */}
             <View style={styles.section}>
               <GameSleeveInfoSection bggId={game.bggId} />
             </View>
 
-            {/* Offline PDF Rulebooks Section (US1) */}
+            {/* Offline PDF Rulebooks Section with PT-BR download */}
             <View style={styles.section}>
               <SectionHeader title="Manuais de Regras (PDF Offline)" />
               <RulebookList bggId={game.bggId} onBeforeOpenReader={onClose} />
             </View>
 
-            {/* Play Sessions & Statistics Section (US3) */}
+            {/* Physical Box Dimensions (Read-Only) */}
+            <View style={styles.section}>
+              <SectionHeader title="Dimensões Físicas da Caixa (Estante 3D)" />
+              <Card variant="sunken" padding="sm" style={styles.dimensionCard}>
+                <View style={styles.dimensionRow}>
+                  <Text style={styles.dimensionValues}>
+                    {dimensions
+                      ? `${dimensions.widthCm.toFixed(1)} × ${dimensions.heightCm.toFixed(1)} × ${dimensions.depthCm.toFixed(1)} cm`
+                      : '29.7 × 29.7 × 7.1 cm (Padrão Euro)'}
+                  </Text>
+                  <Badge
+                    tone={dimensions?.isEstimated ? 'warning' : 'accent'}
+                    label={dimensions?.isEstimated ? 'Estimada' : 'Verificada'}
+                  />
+                </View>
+                <Text style={styles.dimensionHint}>
+                  Largura × Altura × Profundidade da caixa física
+                </Text>
+              </Card>
+            </View>
+
+            {/* Play Sessions & Statistics Section */}
             <View style={styles.section}>
               <SectionHeader
                 title="Partidas e Estatísticas"
@@ -179,73 +166,8 @@ export function GameDetailSheet({ item, visible, onClose, onSaved }: GameDetailS
                 onDelete={deleteSession}
               />
             </View>
-
-            <View style={styles.section}>
-              <Input
-                label="Anotações Pessoais (Salvas apenas no app)"
-                multiline
-                numberOfLines={4}
-                placeholder="ex: Componentes guardados em ziplocks; jogado na ludoteca dia 10..."
-                value={notes}
-                onChangeText={setNotes}
-                style={styles.textArea}
-              />
-            </View>
-
-            <View style={styles.section}>
-              <SectionHeader title="Tags Personalizadas" />
-              <View style={styles.tagInputRow}>
-                <View style={styles.tagInputFlex}>
-                  <Input
-                    placeholder="Nova tag (ex: favoritos, cooperativo)..."
-                    value={tagInput}
-                    onChangeText={setTagInput}
-                    onSubmitEditing={handleAddTag}
-                  />
-                </View>
-                <Button label="Adicionar" variant="secondary" size="sm" onPress={handleAddTag} />
-              </View>
-
-              <View style={styles.tagsContainer}>
-                {tags.map((tag) => (
-                  <TouchableOpacity key={tag} onPress={() => handleRemoveTag(tag)}>
-                    <Badge tone="neutral" label={`#${tag} ✕`} />
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-
-            <View style={styles.section}>
-              <SectionHeader title="Dimensões Físicas da Caixa (Estante 3D)" />
-              <Button
-                label="📐 Visualizar / Calibrar Medidas da Caixa"
-                variant="secondary"
-                onPress={() => setShowDimensionEditor(true)}
-              />
-            </View>
-
-            {saveError ? <Text style={styles.errorText}>{saveError}</Text> : null}
-
-            <View style={styles.saveBtnWrap}>
-              <Button
-                label={saving ? 'Salvando...' : 'Salvar Anotações'}
-                variant="primary"
-                size="lg"
-                onPress={handleSave}
-                disabled={saving}
-                loading={saving}
-              />
-            </View>
           </ScrollView>
         </View>
-
-        <BoxDimensionEditor
-          bggId={game.bggId}
-          gameTitle={game.title}
-          visible={showDimensionEditor}
-          onClose={() => setShowDimensionEditor(false)}
-          onSaved={onSaved}
-        />
 
         <PlaySessionForm
           visible={showPlayForm}
@@ -283,6 +205,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: tokens.spacing.lg,
+    paddingBottom: tokens.spacing.xxl,
   },
   header: {
     flexDirection: 'row',
@@ -344,30 +267,23 @@ const styles = StyleSheet.create({
   section: {
     marginBottom: tokens.spacing.md,
   },
-  textArea: {
-    minHeight: 80,
-    textAlignVertical: 'top',
+  dimensionCard: {
+    marginTop: tokens.spacing.xs,
   },
-  tagInputRow: {
+  dimensionRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: tokens.spacing.xs,
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  tagInputFlex: {
-    flex: 1,
+  dimensionValues: {
+    color: tokens.colors.text.primary,
+    fontWeight: tokens.typography.weights.bold,
+    fontSize: tokens.typography.scale.body.fontSize,
+    fontVariant: ['tabular-nums'],
   },
-  tagsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: tokens.spacing.xs,
-  },
-  errorText: {
-    color: tokens.colors.semantic.danger,
+  dimensionHint: {
+    color: tokens.colors.text.muted,
     fontSize: tokens.typography.scale.caption.fontSize,
-    marginBottom: tokens.spacing.xs,
-  },
-  saveBtnWrap: {
-    marginTop: tokens.spacing.sm,
-    marginBottom: tokens.spacing.lg,
+    marginTop: tokens.spacing['2xs'],
   },
 });
