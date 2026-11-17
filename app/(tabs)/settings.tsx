@@ -269,7 +269,7 @@ export default function SettingsScreen() {
             ) : null}
             {rulebookReport ? (
               <Text style={styles.devResultText}>
-                ✓ {rulebookReport.totalGames} jogos: {rulebookReport.newlySyncedCount} novos manuais sincronizados, {rulebookReport.alreadyHadCount} já possuíam manual.
+                ✓ {rulebookReport.totalGames} jogos: {rulebookReport.newlySyncedCount} novos manuais sincronizados, {rulebookReport.alreadyHadCount} já possuíam manual{rulebookReport.unavailableCount > 0 ? ` (${rulebookReport.unavailableCount} sem manual oficial disponível para download automático)` : ''}.
               </Text>
             ) : null}
           </View>

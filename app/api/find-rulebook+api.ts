@@ -51,7 +51,39 @@ const CURATED_REGISTRY: Record<number, { title: string; driveId?: string; direct
   241491: { title: 'Who Did It?', driveId: '1Bg5EQHveha492hZtGVv3O2vf2jbqeriw' },
   425428: { title: 'Survive The Island', driveId: '1aey1JxdDmrJsWXdCqGtZVM3-6O6t6N9g' },
   147151: { title: 'Concept', driveId: '1e9fD9RiMSO8tIyPA3XGWMCWtl3SXs3U6' },
+  9220: { title: 'Saboteur', driveId: '1NT85VaOk8NbQlFu0PuGoJQTixv6m7YZO' },
+  91072: { title: 'Saboteur 2', driveId: '1NT85VaOk8NbQlFu0PuGoJQTixv6m7YZO' },
+  256226: { title: 'Azul: Stained Glass of Sintra', driveId: '13eit6HOwpFZr6ILsVHbxFffWD5_FM7PG' },
+  332613: { title: 'Azul: Summer Pavilion', driveId: '184aLCkRpJsfFL-Dn2It4gbxE-kl55XG2' },
+  3955: { title: 'BANG!', driveId: '1P3z0smx65BZ2Q-wLPQZ5KXZKUZFEU6Hs' },
 };
+
+function findInPanda(title: string): string | null {
+  try {
+    const pandaPath = path.join(process.cwd(), 'assets', 'data', 'panda-rulebooks.json');
+    if (!fs.existsSync(pandaPath)) return null;
+    const panda = JSON.parse(fs.readFileSync(pandaPath, 'utf8'));
+    const norm = (s: string) =>
+      s
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+    const cleanTitle = norm(title);
+
+    for (const [slug, item] of Object.entries(panda as Record<string, { title: string; driveId: string }>)) {
+      const parts = item.title.split('/').map((p) => norm(p));
+      if (parts.includes(cleanTitle) || norm(slug) === cleanTitle) {
+        return item.driveId;
+      }
+    }
+  } catch {
+    // Ignore read errors
+  }
+  return null;
+}
 
 function jsonResponse(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
@@ -99,6 +131,13 @@ export async function POST(request: Request): Promise<Response> {
         downloadUrl = curated.directUrl;
       } else if (curated.driveId) {
         downloadUrl = `https://drive.google.com/uc?export=download&id=${curated.driveId}`;
+      }
+    }
+
+    if (!downloadUrl) {
+      const pandaDriveId = findInPanda(title);
+      if (pandaDriveId) {
+        downloadUrl = `https://drive.google.com/uc?export=download&id=${pandaDriveId}`;
       }
     }
 

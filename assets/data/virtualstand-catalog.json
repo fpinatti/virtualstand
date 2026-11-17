@@ -1,8 +1,104 @@
 {
   "version": 1,
-  "exportedAt": "2026-11-17T10:43:28.480Z",
+  "exportedAt": "2026-11-17T11:32:49.903Z",
   "totalGames": 126,
   "games": [
+    {
+      "bggId": 230802,
+      "title": "Azul",
+      "yearPublished": 2017,
+      "minPlayers": 2,
+      "maxPlayers": 4,
+      "minPlaytime": 30,
+      "maxPlaytime": 45,
+      "thumbnailUrl": null,
+      "imageUrl": null,
+      "localThumbnailUri": null,
+      "localImageUri": null,
+      "dimensions": {
+        "widthCm": 26,
+        "heightCm": 26,
+        "depthCm": 7,
+        "weightKg": 1.1,
+        "versionId": 4,
+        "versionName": "Edição Padrão",
+        "isEstimated": 0
+      },
+      "sleeves": [],
+      "rulebooks": [
+        {
+          "label": "Livro de Regras em Português (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/azul-regras-ptbr.pdf",
+          "fileSizeBytes": 14200,
+          "md5": "azul-ptbr-rules-v1",
+          "pageCount": 6,
+          "status": "READY"
+        },
+        {
+          "label": "Azul - Regras Oficiais (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/azul-pavilhao-mini-regras-ptbr.pdf",
+          "fileSizeBytes": 698,
+          "md5": "asset-azul-pavilhao-mini-regras-ptbr.pdf",
+          "pageCount": 3,
+          "status": "READY"
+        }
+      ],
+      "personalRating": null,
+      "statusOwn": 1
+    },
+    {
+      "bggId": 266192,
+      "title": "Wingspan",
+      "yearPublished": 2019,
+      "minPlayers": 1,
+      "maxPlayers": 5,
+      "minPlaytime": 40,
+      "maxPlaytime": 70,
+      "thumbnailUrl": null,
+      "imageUrl": null,
+      "localThumbnailUri": null,
+      "localImageUri": null,
+      "dimensions": {
+        "widthCm": 29.6,
+        "heightCm": 29.6,
+        "depthCm": 7.5,
+        "weightKg": 1.5,
+        "versionId": 5,
+        "versionName": "Edição Padrão",
+        "isEstimated": 0
+      },
+      "sleeves": [
+        {
+          "cardSetName": "Cartas de Pássaros e Bônus",
+          "formatName": "Chimera (57.5x89mm)",
+          "widthMm": 57.5,
+          "heightMm": 89,
+          "cardCount": 196,
+          "isSleeved": 0
+        }
+      ],
+      "rulebooks": [
+        {
+          "label": "Guia de Regras em Português (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/wingspan-regras-ptbr.pdf",
+          "fileSizeBytes": 24500,
+          "md5": "wingspan-ptbr-rules-v1",
+          "pageCount": 12,
+          "status": "READY"
+        }
+      ],
+      "personalRating": 10,
+      "statusOwn": 1
+    },
     {
       "bggId": 8815,
       "title": "Academia",
@@ -16,17 +112,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
+        "widthCm": 29.7,
+        "heightCm": 29.7,
+        "depthCm": 7.1,
+        "weightKg": 1,
+        "versionId": null,
+        "versionName": "Standard Euro Box (Estimated)",
         "isEstimated": 1
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 442617,
@@ -41,17 +138,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
+        "widthCm": 29.7,
+        "heightCm": 29.7,
+        "depthCm": 7.1,
+        "weightKg": 1,
+        "versionId": null,
+        "versionName": "Standard Euro Box (Estimated)",
         "isEstimated": 1
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 341935,
@@ -66,28 +164,30 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 8,
+        "heightCm": 14,
+        "depthCm": 5.2,
+        "weightKg": 0.24,
+        "versionId": 722219,
+        "versionName": "Chinese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Art Robbery - Regras Oficiais (PT-BR)",
+          "label": "Manual de Regras em Português (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/artrobbery-regras-ptbr.pdf",
-          "fileSizeBytes": 699,
-          "md5": "asset-artrobbery-regras-ptbr.pdf",
-          "pageCount": 1,
+          "fileSizeBytes": 9500,
+          "md5": "artrobbery-ptbr-rules-v1",
+          "pageCount": 4,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 383459,
@@ -102,53 +202,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 10.9,
+        "heightCm": 16,
+        "depthCm": 3,
+        "weightKg": null,
+        "versionId": 655254,
+        "versionName": "English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
-    },
-    {
-      "bggId": 230802,
-      "title": "Azul",
-      "yearPublished": 2017,
-      "minPlayers": 2,
-      "maxPlayers": 4,
-      "minPlaytime": 30,
-      "maxPlaytime": 45,
-      "thumbnailUrl": "https://cf.geekdo-images.com/aPSHJO0d0XOpQR5X-wJonw__small/img/ccsXKrdGJw-YSClWwzVUwk5Nh9Y=/fit-in/200x150/filters:strip_icc()/pic6973671.png",
-      "imageUrl": "https://cf.geekdo-images.com/aPSHJO0d0XOpQR5X-wJonw__original/img/AkbtYVc6xXJF3c9EUrakklcclKw=/0x0/filters:format(png)/pic6973671.png",
-      "localThumbnailUri": null,
-      "localImageUri": null,
-      "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
-      },
-      "sleeves": [],
-      "rulebooks": [
-        {
-          "label": "Azul - Regras Oficiais (PT-BR)",
-          "docType": "BASE_RULES",
-          "sourceKind": "BUNDLED_ASSET",
-          "relativePath": "assets/rulebooks/azul-regras-ptbr.pdf",
-          "fileSizeBytes": 696,
-          "md5": "asset-azul-regras-ptbr.pdf",
-          "pageCount": 1,
-          "status": "READY"
-        }
-      ],
-      "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 431038,
@@ -163,17 +228,30 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 20.5,
+        "heightCm": 20.5,
+        "depthCm": 5.5,
+        "weightKg": null,
+        "versionId": 748789,
+        "versionName": "Dutch/French edition",
+        "isEstimated": 0
       },
       "sleeves": [],
-      "rulebooks": [],
+      "rulebooks": [
+        {
+          "label": "Azul Duel - Regras Oficiais (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/azul-regras-ptbr.pdf",
+          "fileSizeBytes": 696,
+          "md5": "asset-azul-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
+        }
+      ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 287954,
@@ -188,32 +266,34 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
+        "widthCm": 26.1,
+        "heightCm": 26.1,
         "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "weightKg": 1.29,
+        "versionId": 710157,
+        "versionName": "Czech edition, second printing",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Azul Pavilhão de Verão: Mini - Regras Oficiais (PT-BR)",
+          "label": "Livro de Regras em Português (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/azul-pavilhao-regras-ptbr.pdf",
-          "fileSizeBytes": 702,
-          "md5": "asset-azul-pavilhao-regras-ptbr.pdf",
-          "pageCount": 1,
+          "fileSizeBytes": 14500,
+          "md5": "azul-pavilhao-ptbr-rules-v1",
+          "pageCount": 6,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 346965,
-      "title": "Azul: Queen&#039;s Garden",
+      "title": "Azul: Queen's Garden",
       "yearPublished": 2021,
       "minPlayers": 2,
       "maxPlayers": 4,
@@ -224,17 +304,52 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
+        "widthCm": 26,
+        "heightCm": 26,
         "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "weightKg": 1.49,
+        "versionId": 605371,
+        "versionName": "Czech edition",
+        "isEstimated": 0
       },
       "sleeves": [],
-      "rulebooks": [],
+      "rulebooks": [
+        {
+          "label": "Livro de Regras em Português (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/azul-queensgarden-regras-ptbr.pdf",
+          "fileSizeBytes": 15500,
+          "md5": "azul-queensgarden-ptbr-rules-v1",
+          "pageCount": 8,
+          "status": "READY"
+        },
+        {
+          "label": "Azul: Queen&#039;s Garden - Regras Oficiais (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/azul-regras-ptbr.pdf",
+          "fileSizeBytes": 696,
+          "md5": "asset-azul-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
+        },
+        {
+          "label": "Azul: Queen&#039;s Garden - Manual Oficial (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/azul-queen-039-s-garden-regras-ptbr.pdf",
+          "fileSizeBytes": 2810597,
+          "md5": "asset-azul-queen-039-s-garden-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
+        }
+      ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 256226,
@@ -249,17 +364,41 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 26,
+        "heightCm": 26,
+        "depthCm": 7,
+        "weightKg": 1.39,
+        "versionId": 448114,
+        "versionName": "Chinese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
-      "rulebooks": [],
+      "rulebooks": [
+        {
+          "label": "Azul: Stained Glass of Sintra - Regras Oficiais (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/azul-regras-ptbr.pdf",
+          "fileSizeBytes": 696,
+          "md5": "asset-azul-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
+        },
+        {
+          "label": "Azul: Stained Glass of Sintra - Manual Oficial (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/azul-stained-glass-of-sintra-regras-ptbr.pdf",
+          "fileSizeBytes": 2250834,
+          "md5": "asset-azul-stained-glass-of-sintra-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
+        }
+      ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 332613,
@@ -274,17 +413,41 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 26,
+        "heightCm": 26,
+        "depthCm": 3,
+        "weightKg": 0.73,
+        "versionId": 553397,
+        "versionName": "English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
-      "rulebooks": [],
+      "rulebooks": [
+        {
+          "label": "Azul: Summer Pavilion – Glazed Pavilion - Regras Oficiais (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/azul-regras-ptbr.pdf",
+          "fileSizeBytes": 696,
+          "md5": "asset-azul-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
+        },
+        {
+          "label": "Azul: Summer Pavilion – Glazed Pavilion - Manual Oficial (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/azul-summer-pavilion-glazed-pavilion-regras-ptbr.pdf",
+          "fileSizeBytes": 2463078,
+          "md5": "asset-azul-summer-pavilion-glazed-pavilion-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
+        }
+      ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 3955,
@@ -299,17 +462,41 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 9.4,
+        "heightCm": 11.9,
+        "depthCm": 2,
+        "weightKg": 0.37,
+        "versionId": 24071,
+        "versionName": "ABACUSSPIELE German edition 2005",
+        "isEstimated": 0
       },
       "sleeves": [],
-      "rulebooks": [],
+      "rulebooks": [
+        {
+          "label": "BANG! - Regras Oficiais (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/bang-the-dice-game-regras-ptbr.pdf",
+          "fileSizeBytes": 754324,
+          "md5": "asset-bang-the-dice-game-regras-ptbr.pdf",
+          "pageCount": 3,
+          "status": "READY"
+        },
+        {
+          "label": "BANG! - Manual Oficial (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/bang-regras-ptbr.pdf",
+          "fileSizeBytes": 754324,
+          "md5": "asset-bang-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
+        }
+      ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 143741,
@@ -324,11 +511,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 13.5,
+        "heightCm": 19,
+        "depthCm": 3,
+        "weightKg": 0.3,
+        "versionId": 562910,
+        "versionName": "Bulgarian/Romanian edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -336,16 +525,16 @@
           "label": "BANG! The Dice Game - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/bang-the-dice-game-regras-ptbr.pdf",
           "fileSizeBytes": 754324,
           "md5": "asset-bang-the-dice-game-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 414174,
@@ -360,17 +549,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
+        "widthCm": 29.7,
+        "heightCm": 29.7,
+        "depthCm": 7.1,
+        "weightKg": 1,
+        "versionId": null,
+        "versionName": "Standard Euro Box (Estimated)",
         "isEstimated": 1
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 2453,
@@ -385,17 +575,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 35,
+        "heightCm": 35,
+        "depthCm": 5.5,
+        "weightKg": 1.16,
+        "versionId": 27581,
+        "versionName": "Alary Canadian edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 624,
@@ -410,17 +601,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 27.9,
+        "heightCm": 27.9,
+        "depthCm": 6.1,
+        "weightKg": null,
+        "versionId": 66490,
+        "versionName": "Fundex edition 2007",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 283155,
@@ -435,17 +627,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 25.9,
+        "heightCm": 25.9,
+        "depthCm": 7.1,
+        "weightKg": null,
+        "versionId": 524297,
+        "versionName": "Dutch edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 416851,
@@ -460,17 +653,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 18,
+        "heightCm": 13,
+        "depthCm": 4.6,
+        "weightKg": 0.5,
+        "versionId": 719980,
+        "versionName": "Catch Up Games English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 424751,
@@ -485,17 +679,30 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 23,
+        "heightCm": 16,
+        "depthCm": 5.2,
+        "weightKg": 0.57,
+        "versionId": 761371,
+        "versionName": "English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
-      "rulebooks": [],
+      "rulebooks": [
+        {
+          "label": "Cat and the Tower - Regras Oficiais (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/catan-regras-ptbr.pdf",
+          "fileSizeBytes": 693,
+          "md5": "asset-catan-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
+        }
+      ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 343028,
@@ -510,17 +717,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 18,
+        "heightCm": 13,
+        "depthCm": 4,
+        "weightKg": 0.37,
+        "versionId": 702730,
+        "versionName": "English/French edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 147151,
@@ -535,11 +743,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 28,
+        "heightCm": 28,
+        "depthCm": 6,
+        "weightKg": null,
+        "versionId": 335471,
+        "versionName": "Bulgarian edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -547,16 +757,16 @@
           "label": "Concept - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/concept-regras-ptbr.pdf",
           "fileSizeBytes": 1747100,
           "md5": "asset-concept-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 298572,
@@ -571,11 +781,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 25.4,
+        "heightCm": 25.4,
+        "depthCm": 5.1,
+        "weightKg": 0.84,
+        "versionId": 488694,
+        "versionName": "English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -583,16 +795,16 @@
           "label": "Cosmic Encounter Duel - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/cosmic-encounter-duel-regras-ptbr.pdf",
           "fileSizeBytes": 4707347,
           "md5": "asset-cosmic-encounter-duel-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 131357,
@@ -607,28 +819,39 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 17.5,
+        "heightCm": 22.5,
+        "depthCm": 7.3,
+        "weightKg": null,
+        "versionId": 337945,
+        "versionName": "English \"FunBox Jogos art\" edition",
+        "isEstimated": 0
       },
-      "sleeves": [],
+      "sleeves": [
+        {
+          "cardSetName": "Personagens e Ações",
+          "formatName": "7 Wonders / Magnum",
+          "widthMm": 65,
+          "heightMm": 100,
+          "cardCount": 15,
+          "isSleeved": 0
+        }
+      ],
       "rulebooks": [
         {
-          "label": "Coup - Regras Oficiais (PT-BR)",
+          "label": "Manual de Regras em Português (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/coup-regras-ptbr.pdf",
-          "fileSizeBytes": 697,
-          "md5": "asset-coup-regras-ptbr.pdf",
-          "pageCount": 1,
+          "fileSizeBytes": 9500,
+          "md5": "coup-ptbr-rules-v1",
+          "pageCount": 4,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 453004,
@@ -643,17 +866,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 11,
+        "heightCm": 15,
+        "depthCm": 5,
+        "weightKg": null,
+        "versionId": 770980,
+        "versionName": "Portuguese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 225694,
@@ -668,11 +892,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 23,
+        "heightCm": 16,
+        "depthCm": 5,
+        "weightKg": 0.5,
+        "versionId": 459120,
+        "versionName": "Bulgarian edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -680,16 +906,16 @@
           "label": "Decrypto - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/decrypto-regras-ptbr.pdf",
           "fileSizeBytes": 2753749,
           "md5": "asset-decrypto-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 397931,
@@ -704,17 +930,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 19,
+        "heightCm": 27.3,
+        "depthCm": 7.1,
+        "weightKg": 1.4,
+        "versionId": 760457,
+        "versionName": "Dutch edtion",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 169654,
@@ -729,17 +956,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 6,
+        "heightCm": 11,
+        "depthCm": 3.5,
+        "weightKg": null,
+        "versionId": 634292,
+        "versionName": "English/French/Spanish edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 317093,
@@ -754,17 +982,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
+        "widthCm": 29.7,
+        "heightCm": 29.7,
+        "depthCm": 7.1,
+        "weightKg": 1,
+        "versionId": null,
+        "versionName": "Standard Euro Box (Estimated)",
         "isEstimated": 1
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 392704,
@@ -779,21 +1008,22 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 16,
+        "heightCm": 16,
+        "depthCm": 4.5,
+        "weightKg": 0.45,
+        "versionId": 668137,
+        "versionName": "Portuguese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 432715,
-      "title": "Dirt &amp; Dust",
+      "title": "Dirt & Dust",
       "yearPublished": 2025,
       "minPlayers": 1,
       "maxPlayers": 4,
@@ -804,17 +1034,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
+        "widthCm": 30.2,
+        "heightCm": 30.2,
         "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "weightKg": null,
+        "versionId": 734873,
+        "versionName": "English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 422854,
@@ -829,17 +1060,30 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 18,
+        "heightCm": 13,
+        "depthCm": 4,
+        "weightKg": 0.3,
+        "versionId": 717336,
+        "versionName": "Portuguese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
-      "rulebooks": [],
+      "rulebooks": [
+        {
+          "label": "Disney Coup: Truques Traiçoeiros - Regras Oficiais (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/coup-regras-ptbr.pdf",
+          "fileSizeBytes": 697,
+          "md5": "asset-coup-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
+        }
+      ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 39856,
@@ -854,11 +1098,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 29.7,
+        "heightCm": 29.7,
+        "depthCm": 7.1,
+        "weightKg": null,
+        "versionId": 482308,
+        "versionName": "Afrikaans/English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -866,16 +1112,16 @@
           "label": "Dixit - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/dixit-regras-ptbr.pdf",
           "fileSizeBytes": 641522,
           "md5": "asset-dixit-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 457275,
@@ -890,11 +1136,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 27.5,
+        "heightCm": 27.5,
+        "depthCm": 55,
+        "weightKg": 0.96,
+        "versionId": 788526,
+        "versionName": "Dutch/French edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -902,16 +1150,27 @@
           "label": "Dixit: Kids - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/dixit-regras-ptbr.pdf",
           "fileSizeBytes": 641522,
           "md5": "asset-dixit-regras-ptbr.pdf",
           "pageCount": 1,
           "status": "READY"
+        },
+        {
+          "label": "Dixit: Kids - Manual Oficial (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/dixit-kids-regras-ptbr.pdf",
+          "fileSizeBytes": 641522,
+          "md5": "asset-dixit-kids-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 357991,
@@ -926,17 +1185,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 7,
+        "heightCm": 11,
+        "depthCm": 3,
+        "weightKg": null,
+        "versionId": 756562,
+        "versionName": "Chinese/Japanese/Thai edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 422860,
@@ -951,21 +1211,22 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 10,
+        "heightCm": 15,
+        "depthCm": 3.5,
+        "weightKg": null,
+        "versionId": 717348,
+        "versionName": "Portuguese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 324932,
-      "title": "Dogs&#039; Day",
+      "title": "Dogs' Day",
       "yearPublished": 2021,
       "minPlayers": 3,
       "maxPlayers": 6,
@@ -976,17 +1237,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 16.5,
+        "heightCm": 22.5,
+        "depthCm": 5,
+        "weightKg": 1,
+        "versionId": 537214,
+        "versionName": "Portuguese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 262208,
@@ -1001,28 +1263,30 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 10.2,
+        "heightCm": 10.2,
+        "depthCm": 10.2,
+        "weightKg": 0.41,
+        "versionId": 520195,
+        "versionName": "English deluxe edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
         {
-          "label": "Dungeon Drop - Regras Oficiais (PT-BR)",
+          "label": "Manual de Regras em Português (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/dungeondrop-regras-ptbr.pdf",
-          "fileSizeBytes": 700,
-          "md5": "asset-dungeondrop-regras-ptbr.pdf",
-          "pageCount": 1,
+          "fileSizeBytes": 11500,
+          "md5": "dungeondrop-ptbr-rules-v1",
+          "pageCount": 4,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 307963,
@@ -1037,17 +1301,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 3.8,
+        "heightCm": 10.9,
+        "depthCm": 6.6,
+        "weightKg": 0.15,
+        "versionId": 591819,
+        "versionName": "EN/FR/DE/ES edition with German back",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 419403,
@@ -1062,17 +1327,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 14.5,
+        "heightCm": 14.5,
+        "depthCm": 4.5,
+        "weightKg": null,
+        "versionId": 710883,
+        "versionName": "Portuguese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 172225,
@@ -1087,28 +1353,39 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 11.2,
+        "heightCm": 16.2,
+        "depthCm": 3.8,
+        "weightKg": 0.22,
+        "versionId": 774546,
+        "versionName": "AdMagic English 1.1 edition",
+        "isEstimated": 0
       },
-      "sleeves": [],
+      "sleeves": [
+        {
+          "cardSetName": "Baralho Completo",
+          "formatName": "Standard Card Game",
+          "widthMm": 63.5,
+          "heightMm": 88,
+          "cardCount": 56,
+          "isSleeved": 0
+        }
+      ],
       "rulebooks": [
         {
-          "label": "Exploding Kittens - Regras Oficiais (PT-BR)",
+          "label": "Manual de Regras em Português (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/explodingkittens-regras-ptbr.pdf",
-          "fileSizeBytes": 705,
-          "md5": "asset-explodingkittens-regras-ptbr.pdf",
-          "pageCount": 1,
+          "fileSizeBytes": 11000,
+          "md5": "explodingkittens-ptbr-rules-v1",
+          "pageCount": 4,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 409693,
@@ -1123,11 +1400,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 19.4,
+        "heightCm": 27.3,
+        "depthCm": 6.8,
+        "weightKg": 1.05,
+        "versionId": 762261,
+        "versionName": "Dutch edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -1135,16 +1414,16 @@
           "label": "Flatiron - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/flatiron-regras-ptbr.pdf",
           "fileSizeBytes": 696,
           "md5": "asset-flatiron-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 420087,
@@ -1159,17 +1438,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 10.5,
+        "heightCm": 15,
+        "depthCm": 3.8,
+        "weightKg": null,
+        "versionId": 779146,
+        "versionName": "Baltic edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 463441,
@@ -1184,17 +1464,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 9.5,
+        "heightCm": 14.5,
+        "depthCm": 2.2,
+        "weightKg": 0.24,
+        "versionId": 810995,
+        "versionName": "Dutch edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 449185,
@@ -1209,17 +1490,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 9.4,
+        "heightCm": 12.4,
+        "depthCm": 2.3,
+        "weightKg": null,
+        "versionId": 816371,
+        "versionName": "Devir Spanish pocket edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 122298,
@@ -1234,11 +1516,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 15,
+        "heightCm": 10.5,
+        "depthCm": 3.5,
+        "weightKg": 0.34,
+        "versionId": 459116,
+        "versionName": "Bulgarian edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -1246,16 +1530,16 @@
           "label": "Fungi - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/fungi-regras-ptbr.pdf",
           "fileSizeBytes": 3011909,
           "md5": "asset-fungi-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 94346,
@@ -1270,17 +1554,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 20.3,
+        "heightCm": 20.3,
+        "depthCm": 7.6,
+        "weightKg": null,
+        "versionId": 357313,
+        "versionName": "English-only edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 9674,
@@ -1295,11 +1580,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 29.7,
+        "heightCm": 29.7,
+        "depthCm": 7.1,
+        "weightKg": 1.57,
+        "versionId": 24887,
+        "versionName": "999 Games Dutch first edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -1307,16 +1594,16 @@
           "label": "Genial - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/genial-regras-ptbr.pdf",
           "fileSizeBytes": 576824,
           "md5": "asset-genial-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 83195,
@@ -1331,11 +1618,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 20.3,
+        "heightCm": 20.3,
+        "depthCm": 5.3,
+        "weightKg": null,
+        "versionId": 545309,
+        "versionName": "Bulgarian/Hungarian/Romanian edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -1343,16 +1632,16 @@
           "label": "Ghost Blitz - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/ghost-blitz-regras-ptbr.pdf",
           "fileSizeBytes": 712168,
           "md5": "asset-ghost-blitz-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 434222,
@@ -1367,17 +1656,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 39,
+        "heightCm": 39,
+        "depthCm": 19,
+        "weightKg": null,
+        "versionId": 763276,
+        "versionName": "English deluxe edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 414317,
@@ -1392,11 +1682,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 21.3,
+        "heightCm": 21.3,
+        "depthCm": 6.7,
+        "weightKg": 0.9,
+        "versionId": 741127,
+        "versionName": "Bulgarian edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -1404,16 +1696,16 @@
           "label": "Harmonies - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/harmonies-regras-ptbr.pdf",
           "fileSizeBytes": 6604305,
           "md5": "asset-harmonies-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 410291,
@@ -1428,17 +1720,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 29.7,
+        "heightCm": 29.7,
+        "depthCm": 7.1,
+        "weightKg": null,
+        "versionId": 698173,
+        "versionName": "Czech edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 366013,
@@ -1453,11 +1746,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 29.8,
+        "heightCm": 29.8,
+        "depthCm": 10.4,
+        "weightKg": 2.6,
+        "versionId": 621854,
+        "versionName": "Czech edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -1465,16 +1760,16 @@
           "label": "Heat: Pedal to the Metal - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/heat-pedal-to-the-metal-regras-ptbr.pdf",
           "fileSizeBytes": 12916595,
           "md5": "asset-heat-pedal-to-the-metal-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 318243,
@@ -1489,17 +1784,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 12,
+        "heightCm": 21,
+        "depthCm": 7.5,
+        "weightKg": null,
+        "versionId": 645229,
+        "versionName": "Dutch edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 397736,
@@ -1514,17 +1810,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 12,
+        "heightCm": 21,
+        "depthCm": 7.5,
+        "weightKg": null,
+        "versionId": 675675,
+        "versionName": "Dutch edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 295957,
@@ -1539,17 +1836,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 29.7,
+        "heightCm": 29.7,
+        "depthCm": 7.1,
+        "weightKg": 1.62,
+        "versionId": 599461,
+        "versionName": "English deluxe edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 446497,
@@ -1564,17 +1862,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 30,
+        "heightCm": 13.5,
+        "depthCm": 14,
+        "weightKg": null,
+        "versionId": 822331,
+        "versionName": "Buró Spanish edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 235470,
@@ -1589,11 +1888,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 30,
+        "heightCm": 30,
+        "depthCm": 8,
+        "weightKg": null,
+        "versionId": 369541,
+        "versionName": "Portuguese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -1601,16 +1902,16 @@
           "label": "Os Incríveis Parques de Miss Liz - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/os-incriveis-parques-de-miss-liz-regras-ptbr.pdf",
           "fileSizeBytes": 6592598,
           "md5": "asset-os-incriveis-parques-de-miss-liz-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 304285,
@@ -1625,17 +1926,30 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 9.5,
+        "heightCm": 14.6,
+        "depthCm": 3.2,
+        "weightKg": null,
+        "versionId": 547666,
+        "versionName": "Chinese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
-      "rulebooks": [],
+      "rulebooks": [
+        {
+          "label": "Infinity Gauntlet: A Love Letter Game - Regras Oficiais (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/loveletter-regras-ptbr.pdf",
+          "fileSizeBytes": 699,
+          "md5": "asset-loveletter-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
+        }
+      ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 422126,
@@ -1652,15 +1966,16 @@
       "dimensions": {
         "widthCm": 29.5,
         "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "depthCm": 6.8,
+        "weightKg": null,
+        "versionId": 721984,
+        "versionName": "Dutch edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 466805,
@@ -1675,17 +1990,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
+        "widthCm": 29.7,
+        "heightCm": 29.7,
+        "depthCm": 7.1,
+        "weightKg": 1,
+        "versionId": null,
+        "versionName": "Standard Euro Box (Estimated)",
         "isEstimated": 1
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 374595,
@@ -1700,17 +2016,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 26,
+        "heightCm": 26,
+        "depthCm": 6,
+        "weightKg": null,
+        "versionId": 767292,
+        "versionName": "Chinese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 165722,
@@ -1725,17 +2042,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 45.5,
+        "heightCm": 36.5,
+        "depthCm": 15,
+        "weightKg": 2.3,
+        "versionId": 691672,
+        "versionName": "Baltic edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 421006,
@@ -1750,17 +2068,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 20.5,
+        "heightCm": 27,
+        "depthCm": 4.8,
+        "weightKg": null,
+        "versionId": 743083,
+        "versionName": "Chinese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 448271,
@@ -1775,17 +2094,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 10.4,
+        "heightCm": 22,
+        "depthCm": 4.5,
+        "weightKg": null,
+        "versionId": 805321,
+        "versionName": "Bulgarian edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 454103,
@@ -1800,17 +2120,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 19.3,
+        "heightCm": 30.5,
+        "depthCm": 5.5,
+        "weightKg": 1.02,
+        "versionId": 815233,
+        "versionName": "Danish/Norwegian edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 395846,
@@ -1825,17 +2146,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 10.5,
+        "heightCm": 15,
+        "depthCm": 3.5,
+        "weightKg": 0.17,
+        "versionId": 673016,
+        "versionName": "French edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 357063,
@@ -1850,17 +2172,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 20,
+        "heightCm": 20,
+        "depthCm": 5,
+        "weightKg": 1,
+        "versionId": 600315,
+        "versionName": "Portuguese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 359029,
@@ -1875,17 +2198,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 25,
+        "heightCm": 25,
+        "depthCm": 8,
+        "weightKg": 1.4,
+        "versionId": 724254,
+        "versionName": "Chinese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 12942,
@@ -1900,11 +2224,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 11,
+        "heightCm": 15,
+        "depthCm": 2,
+        "weightKg": null,
+        "versionId": 31969,
+        "versionName": "AMIGO Dutch/French edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -1912,16 +2238,16 @@
           "label": "No Thanks! - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/no-thanks-regras-ptbr.pdf",
           "fileSizeBytes": 459018,
           "md5": "asset-no-thanks-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 30549,
@@ -1936,28 +2262,39 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 22,
+        "heightCm": 30,
+        "depthCm": 4,
+        "weightKg": 1.09,
+        "versionId": 30851,
+        "versionName": "Albi Polish edition",
+        "isEstimated": 0
       },
-      "sleeves": [],
+      "sleeves": [
+        {
+          "cardSetName": "Cartas de Jogador, Infecção e Funções",
+          "formatName": "Standard Card Game",
+          "widthMm": 63.5,
+          "heightMm": 88,
+          "cardCount": 118,
+          "isSleeved": 0
+        }
+      ],
       "rulebooks": [
         {
-          "label": "Pandemic - Regras Oficiais (PT-BR)",
+          "label": "Manual de Regras em Português (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/pandemic-regras-ptbr.pdf",
-          "fileSizeBytes": 701,
-          "md5": "asset-pandemic-regras-ptbr.pdf",
-          "pageCount": 1,
+          "fileSizeBytes": 19800,
+          "md5": "pandemic-ptbr-rules-v1",
+          "pageCount": 8,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 378616,
@@ -1972,17 +2309,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 9.5,
+        "heightCm": 12.3,
+        "depthCm": 2.5,
+        "weightKg": 0.16,
+        "versionId": 701504,
+        "versionName": "German edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 163412,
@@ -1997,11 +2335,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 20.2,
+        "heightCm": 20.2,
+        "depthCm": 4.6,
+        "weightKg": 0.45,
+        "versionId": 502020,
+        "versionName": "Baltic edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -2009,16 +2349,16 @@
           "label": "Patchwork - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/patchwork-regras-ptbr.pdf",
           "fileSizeBytes": 1601022,
           "md5": "asset-patchwork-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 311702,
@@ -2033,17 +2373,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 16.5,
+        "heightCm": 22.5,
+        "depthCm": 5,
+        "weightKg": 0.75,
+        "versionId": 512104,
+        "versionName": "Portuguese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 439556,
@@ -2058,17 +2399,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 7,
+        "heightCm": 9,
+        "depthCm": 5,
+        "weightKg": 0.1,
+        "versionId": 747082,
+        "versionName": "Portuguese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 180974,
@@ -2083,11 +2425,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 30,
+        "heightCm": 30,
+        "depthCm": 7.5,
+        "weightKg": 1.89,
+        "versionId": 286597,
+        "versionName": "CMON English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -2095,16 +2439,16 @@
           "label": "Potion Explosion - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/potion-explosion-regras-ptbr.pdf",
           "fileSizeBytes": 2536427,
           "md5": "asset-potion-explosion-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 411404,
@@ -2119,17 +2463,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 11.1,
+        "heightCm": 16.6,
+        "depthCm": 3.9,
+        "weightKg": 0.17,
+        "versionId": 706804,
+        "versionName": "Dutch edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 232043,
@@ -2144,11 +2489,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 26,
+        "heightCm": 26,
+        "depthCm": 6,
+        "weightKg": null,
+        "versionId": 449460,
+        "versionName": "Chinese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -2156,16 +2503,16 @@
           "label": "Queendomino - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/queendomino-regras-ptbr.pdf",
           "fileSizeBytes": 5045054,
           "md5": "asset-queendomino-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 429851,
@@ -2180,17 +2527,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 18,
+        "heightCm": 23,
+        "depthCm": 5,
+        "weightKg": 0.44,
+        "versionId": 762050,
+        "versionName": "Dutch edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 256589,
@@ -2205,17 +2553,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
+        "widthCm": 29.7,
+        "heightCm": 29.7,
         "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "weightKg": 1.98,
+        "versionId": 635271,
+        "versionName": "Czech edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 265524,
@@ -2230,17 +2579,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 9,
+        "heightCm": 13.2,
+        "depthCm": 2.3,
+        "weightKg": 0.21,
+        "versionId": 431314,
+        "versionName": "English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 41114,
@@ -2255,11 +2605,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 15,
+        "heightCm": 20,
+        "depthCm": 4.5,
+        "weightKg": 0.36,
+        "versionId": 595579,
+        "versionName": "Bulgarian edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -2267,16 +2619,16 @@
           "label": "The Resistance - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/the-resistance-regras-ptbr.pdf",
           "fileSizeBytes": 1272947,
           "md5": "asset-the-resistance-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 9220,
@@ -2291,17 +2643,30 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 9.4,
+        "heightCm": 11.9,
+        "depthCm": 2,
+        "weightKg": 0.21,
+        "versionId": 24845,
+        "versionName": "999 Games Dutch edition 2007",
+        "isEstimated": 0
       },
       "sleeves": [],
-      "rulebooks": [],
+      "rulebooks": [
+        {
+          "label": "Saboteur - Manual Oficial (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/saboteur-regras-ptbr.pdf",
+          "fileSizeBytes": 881606,
+          "md5": "asset-saboteur-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
+        }
+      ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 91072,
@@ -2316,17 +2681,30 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 9.6,
+        "heightCm": 12.3,
+        "depthCm": 2.2,
+        "weightKg": 0.16,
+        "versionId": 646056,
+        "versionName": "Albi Czech/Slovak edition, third printing",
+        "isEstimated": 0
       },
       "sleeves": [],
-      "rulebooks": [],
+      "rulebooks": [
+        {
+          "label": "Saboteur 2 (expansion-only editions) - Manual Oficial (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/saboteur-2-expansion-only-editions-regras-ptbr.pdf",
+          "fileSizeBytes": 881606,
+          "md5": "asset-saboteur-2-expansion-only-editions-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
+        }
+      ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 199561,
@@ -2341,11 +2719,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
+        "widthCm": 22.5,
         "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "depthCm": 7.7,
+        "weightKg": null,
+        "versionId": 407988,
+        "versionName": "Chinese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -2353,16 +2733,16 @@
           "label": "Sagrada - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/sagrada-regras-ptbr.pdf",
           "fileSizeBytes": 1720967,
           "md5": "asset-sagrada-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 445478,
@@ -2377,17 +2757,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 19,
+        "heightCm": 19,
+        "depthCm": 6,
+        "weightKg": null,
+        "versionId": 757421,
+        "versionName": "Portuguese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 441696,
@@ -2402,17 +2783,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 31.5,
+        "heightCm": 31.5,
+        "depthCm": 7,
+        "weightKg": 3.29,
+        "versionId": 773236,
+        "versionName": "Czech edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 146816,
@@ -2427,17 +2809,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 29.7,
+        "heightCm": 29.7,
+        "depthCm": 7.1,
+        "weightKg": null,
+        "versionId": 622572,
+        "versionName": "English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 372,
@@ -2452,11 +2835,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 14.1,
+        "heightCm": 11,
+        "depthCm": 2.5,
+        "weightKg": 0.16,
+        "versionId": 33659,
+        "versionName": "ASS German first edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -2464,16 +2849,16 @@
           "label": "Schotten Totten - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/schotten-totten-regras-ptbr.pdf",
           "fileSizeBytes": 2338149,
           "md5": "asset-schotten-totten-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 422079,
@@ -2488,17 +2873,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 23,
+        "heightCm": 17,
+        "depthCm": 5,
+        "weightKg": null,
+        "versionId": 716004,
+        "versionName": "Portuguese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 403136,
@@ -2513,17 +2899,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 8.1,
+        "heightCm": 12.1,
+        "depthCm": 3.8,
+        "weightKg": 0.18,
+        "versionId": 684178,
+        "versionName": "French edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 291453,
@@ -2538,21 +2925,22 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 6.6,
+        "heightCm": 11.1,
+        "depthCm": 3.7,
+        "weightKg": 0.2,
+        "versionId": 636020,
+        "versionName": "CS/EN/FR/DE edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 367220,
-      "title": "Sea Salt &amp; Paper",
+      "title": "Sea Salt & Paper",
       "yearPublished": 2022,
       "minPlayers": 2,
       "maxPlayers": 4,
@@ -2563,17 +2951,30 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 7.2,
+        "heightCm": 10,
+        "depthCm": 3.2,
+        "weightKg": null,
+        "versionId": 728452,
+        "versionName": "Chinese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
-      "rulebooks": [],
+      "rulebooks": [
+        {
+          "label": "Livro de Regras em Português (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/azul-pavilhao-mini-regras-ptbr.pdf",
+          "fileSizeBytes": 12000,
+          "md5": "azul-pavilhao-mini-ptbr-rules-v1",
+          "pageCount": 4,
+          "status": "READY"
+        }
+      ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 379110,
@@ -2588,17 +2989,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 26.5,
+        "heightCm": 26.5,
+        "depthCm": 4,
+        "weightKg": 0.8,
+        "versionId": 647693,
+        "versionName": "Chinese Traditional/Chinese Simplified/English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 373106,
@@ -2613,17 +3015,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 18.5,
+        "heightCm": 25.5,
+        "depthCm": 5,
+        "weightKg": null,
+        "versionId": 708573,
+        "versionName": "Czech edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 423177,
@@ -2638,17 +3041,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 10,
+        "heightCm": 28,
+        "depthCm": 0.5,
+        "weightKg": null,
+        "versionId": 748452,
+        "versionName": "Czech edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 298231,
@@ -2663,17 +3067,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 31.8,
+        "heightCm": 31.8,
+        "depthCm": 10.9,
+        "weightKg": null,
+        "versionId": 620138,
+        "versionName": "English Collector&#039;s Edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 17053,
@@ -2688,17 +3093,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 10,
+        "heightCm": 14,
+        "depthCm": 3.5,
+        "weightKg": null,
+        "versionId": 414827,
+        "versionName": "Chinese-only edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 293296,
@@ -2713,11 +3119,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 21.5,
+        "heightCm": 27.5,
+        "depthCm": 6.7,
+        "weightKg": null,
+        "versionId": 479540,
+        "versionName": "English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -2725,6 +3133,7 @@
           "label": "Splendor: Marvel - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/splendor-regras-ptbr.pdf",
           "fileSizeBytes": 695,
           "md5": "asset-splendor-regras-ptbr.pdf",
@@ -2733,8 +3142,7 @@
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 63268,
@@ -2749,11 +3157,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 8.5,
+        "heightCm": 11,
+        "depthCm": 4.8,
+        "weightKg": null,
+        "versionId": 454882,
+        "versionName": "Asmodee Easter edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -2761,16 +3171,16 @@
           "label": "Spot it! - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/spot-it-regras-ptbr.pdf",
           "fileSizeBytes": 403070,
           "md5": "asset-spot-it-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 372559,
@@ -2785,17 +3195,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 17.8,
+        "heightCm": 12.7,
+        "depthCm": 5.1,
+        "weightKg": 0.4,
+        "versionId": 779624,
+        "versionName": "Bulgarian edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 329845,
@@ -2810,17 +3221,30 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 29.7,
+        "heightCm": 29.7,
+        "depthCm": 7.1,
+        "weightKg": null,
+        "versionId": 602959,
+        "versionName": "Dutch/French edition",
+        "isEstimated": 0
       },
       "sleeves": [],
-      "rulebooks": [],
+      "rulebooks": [
+        {
+          "label": "Stella: Dixit Universe - Regras Oficiais (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/dixit-regras-ptbr.pdf",
+          "fileSizeBytes": 641522,
+          "md5": "asset-dixit-regras-ptbr.pdf",
+          "pageCount": 1,
+          "status": "READY"
+        }
+      ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 427084,
@@ -2835,17 +3259,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 21.5,
+        "heightCm": 27.5,
+        "depthCm": 6.5,
+        "weightKg": null,
+        "versionId": 810402,
+        "versionName": "Czech edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 425428,
@@ -2860,11 +3285,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 26,
+        "heightCm": 26,
+        "depthCm": 7,
+        "weightKg": null,
+        "versionId": 753878,
+        "versionName": "Baltic edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -2872,16 +3299,16 @@
           "label": "Survive The Island - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/survive-the-island-regras-ptbr.pdf",
           "fileSizeBytes": 3117349,
           "md5": "asset-survive-the-island-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 401636,
@@ -2896,17 +3323,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 9.2,
+        "heightCm": 11.7,
+        "depthCm": 2.2,
+        "weightKg": 0.19,
+        "versionId": 792594,
+        "versionName": "English \"Peg\" edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 434906,
@@ -2921,17 +3349,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 16,
+        "heightCm": 23,
+        "depthCm": 5,
+        "weightKg": null,
+        "versionId": 759663,
+        "versionName": "German edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 70919,
@@ -2946,11 +3375,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 30,
+        "heightCm": 30,
+        "depthCm": 10,
+        "weightKg": 1.25,
+        "versionId": 604252,
+        "versionName": "Bureau de Juegos Spanish edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -2958,16 +3389,16 @@
           "label": "Takenoko - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/takenoko-regras-ptbr.pdf",
           "fileSizeBytes": 3520764,
           "md5": "asset-takenoko-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 46213,
@@ -2982,17 +3413,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 25.5,
+        "heightCm": 25.5,
+        "depthCm": 7.5,
+        "weightKg": 1.14,
+        "versionId": 259588,
+        "versionName": "Competo Finnish Edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 335609,
@@ -3007,21 +3439,34 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 13.5,
+        "heightCm": 18.7,
+        "depthCm": 4,
+        "weightKg": 0.37,
+        "versionId": 569242,
+        "versionName": "Dutch edition",
+        "isEstimated": 0
       },
       "sleeves": [],
-      "rulebooks": [],
+      "rulebooks": [
+        {
+          "label": "TEN - Regras Oficiais (PT-BR)",
+          "docType": "BASE_RULES",
+          "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/explodingkittens-regras-ptbr.pdf",
+          "fileSizeBytes": 705,
+          "md5": "asset-explodingkittens-regras-ptbr.pdf",
+          "pageCount": 3,
+          "status": "READY"
+        }
+      ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 375651,
-      "title": "That&#039;s Not a Hat",
+      "title": "That's Not a Hat",
       "yearPublished": 2023,
       "minPlayers": 3,
       "maxPlayers": 8,
@@ -3032,21 +3477,22 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 10.2,
+        "heightCm": 12.9,
+        "depthCm": 3.4,
+        "weightKg": 0.27,
+        "versionId": 652137,
+        "versionName": "EN/FR/PT/ES edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 435930,
-      "title": "That&#039;s Not a Hat: Incognito",
+      "title": "That's Not a Hat: Incognito",
       "yearPublished": 2025,
       "minPlayers": 3,
       "maxPlayers": 8,
@@ -3057,17 +3503,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 10.2,
+        "heightCm": 12.9,
+        "depthCm": 3.4,
+        "weightKg": 0.29,
+        "versionId": 739947,
+        "versionName": "Multilingual edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 342070,
@@ -3083,16 +3530,17 @@
       "localImageUri": null,
       "dimensions": {
         "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "heightCm": 36,
+        "depthCm": 6,
+        "weightKg": 1.96,
+        "versionId": 735605,
+        "versionName": "Czech edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 415878,
@@ -3107,17 +3555,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
+        "widthCm": 38,
         "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "depthCm": 5,
+        "weightKg": 1.43,
+        "versionId": 704353,
+        "versionName": "English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 374039,
@@ -3132,17 +3581,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 11.8,
+        "heightCm": 17.8,
+        "depthCm": 4.2,
+        "weightKg": 0.41,
+        "versionId": 638112,
+        "versionName": "English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 375517,
@@ -3157,17 +3607,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 12,
+        "heightCm": 18,
+        "depthCm": 2,
+        "weightKg": 0.23,
+        "versionId": 641206,
+        "versionName": "English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 4040,
@@ -3182,17 +3633,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 6.4,
+        "heightCm": 34.3,
+        "depthCm": 5.6,
+        "weightKg": null,
+        "versionId": 148268,
+        "versionName": "Ahorn Holz und Spiel edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 356123,
@@ -3207,17 +3659,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 25.1,
+        "heightCm": 25.1,
+        "depthCm": 6.2,
+        "weightKg": 0.95,
+        "versionId": 702196,
+        "versionName": "Czech edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 234190,
@@ -3232,17 +3685,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 10.2,
+        "heightCm": 14.6,
+        "depthCm": 5.1,
+        "weightKg": 0.35,
+        "versionId": 599896,
+        "versionName": "Breaking Games English edition, second printing",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 447488,
@@ -3257,17 +3711,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 18,
+        "heightCm": 13,
+        "depthCm": 4,
+        "weightKg": null,
+        "versionId": 760798,
+        "versionName": "Portuguese edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 323262,
@@ -3282,17 +3737,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 10,
+        "heightCm": 16,
+        "depthCm": 4,
+        "weightKg": null,
+        "versionId": 754826,
+        "versionName": "Dutch/French edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 241491,
@@ -3307,11 +3763,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 15,
+        "heightCm": 15,
+        "depthCm": 3,
+        "weightKg": 0.4,
+        "versionId": 567805,
+        "versionName": "Aquí Hay Dragones Spanish edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -3319,52 +3777,16 @@
           "label": "Who Did It? - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/who-did-it-regras-ptbr.pdf",
           "fileSizeBytes": 514932,
           "md5": "asset-who-did-it-regras-ptbr.pdf",
-          "pageCount": 1,
+          "pageCount": 3,
           "status": "READY"
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
-    },
-    {
-      "bggId": 266192,
-      "title": "Wingspan",
-      "yearPublished": 2019,
-      "minPlayers": 1,
-      "maxPlayers": 5,
-      "minPlaytime": 40,
-      "maxPlaytime": 70,
-      "thumbnailUrl": "https://cf.geekdo-images.com/yLZJCVLlIx4c7eJEWUNJ7w__small/img/VNToqgS2-pOGU6MuvIkMPKn_y-s=/fit-in/200x150/filters:strip_icc()/pic4458123.jpg",
-      "imageUrl": "https://cf.geekdo-images.com/yLZJCVLlIx4c7eJEWUNJ7w__original/img/cI782Zis9cT66j2MjSHKJGnFPNw=/0x0/filters:format(jpeg)/pic4458123.jpg",
-      "localThumbnailUri": null,
-      "localImageUri": null,
-      "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
-      },
-      "sleeves": [],
-      "rulebooks": [
-        {
-          "label": "Wingspan - Regras Oficiais (PT-BR)",
-          "docType": "BASE_RULES",
-          "sourceKind": "BUNDLED_ASSET",
-          "relativePath": "assets/rulebooks/wingspan-regras-ptbr.pdf",
-          "fileSizeBytes": 699,
-          "md5": "asset-wingspan-regras-ptbr.pdf",
-          "pageCount": 1,
-          "status": "READY"
-        }
-      ],
-      "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 366161,
@@ -3379,11 +3801,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
+        "widthCm": 21.5,
         "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "depthCm": 4.2,
+        "weightKg": 1.3,
+        "versionId": 739112,
+        "versionName": "Bulgarian edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -3391,6 +3815,7 @@
           "label": "Wingspan Asia - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/wingspan-regras-ptbr.pdf",
           "fileSizeBytes": 699,
           "md5": "asset-wingspan-regras-ptbr.pdf",
@@ -3399,8 +3824,7 @@
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 461932,
@@ -3415,11 +3839,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 14,
+        "heightCm": 28,
+        "depthCm": 5,
+        "weightKg": 0.8,
+        "versionId": 786276,
+        "versionName": "English edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -3427,6 +3853,7 @@
           "label": "Wingspan: Americas Expansion - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/wingspan-regras-ptbr.pdf",
           "fileSizeBytes": 699,
           "md5": "asset-wingspan-regras-ptbr.pdf",
@@ -3435,8 +3862,7 @@
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 300580,
@@ -3451,11 +3877,13 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
+        "widthCm": 21.5,
         "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "depthCm": 4.2,
+        "weightKg": 1.4,
+        "versionId": 739803,
+        "versionName": "Bulgarian edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [
@@ -3463,6 +3891,7 @@
           "label": "Wingspan: Oceania Expansion - Regras Oficiais (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
+          "sourceUrl": null,
           "relativePath": "assets/rulebooks/wingspan-regras-ptbr.pdf",
           "fileSizeBytes": 699,
           "md5": "asset-wingspan-regras-ptbr.pdf",
@@ -3471,8 +3900,7 @@
         }
       ],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 400508,
@@ -3487,17 +3915,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
+        "widthCm": 29.7,
+        "heightCm": 29.7,
+        "depthCm": 7.1,
+        "weightKg": 1,
+        "versionId": null,
+        "versionName": "Standard Euro Box (Estimated)",
         "isEstimated": 1
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 410201,
@@ -3512,17 +3941,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 29.6,
+        "heightCm": 29.6,
+        "depthCm": 7.3,
+        "weightKg": 2.49,
+        "versionId": 696497,
+        "versionName": "Czech edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     },
     {
       "bggId": 362202,
@@ -3537,17 +3967,18 @@
       "localThumbnailUri": null,
       "localImageUri": null,
       "dimensions": {
-        "widthCm": 29.5,
-        "heightCm": 29.5,
-        "depthCm": 7.2,
-        "weightKg": 1.2,
-        "isEstimated": 1
+        "widthCm": 16.1,
+        "heightCm": 11.2,
+        "depthCm": 4,
+        "weightKg": null,
+        "versionId": 667823,
+        "versionName": "Czech edition",
+        "isEstimated": 0
       },
       "sleeves": [],
       "rulebooks": [],
       "personalRating": null,
-      "statusOwn": 1,
-      "bggRating": null
+      "statusOwn": 1
     }
   ]
 }

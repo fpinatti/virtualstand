@@ -212,7 +212,8 @@ export class BatchSyncService implements IBatchSyncService {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ bggId: game.bggId, title: game.title }),
             });
-            if (res.ok) {
+            const cType = res.headers?.get ? res.headers.get('content-type') || 'application/json' : 'application/json';
+            if (res.ok && cType.includes('application/json')) {
               const data = await res.json();
               if (data.success && data.relativePath) {
                 await this.rulebookRepo.insert({
@@ -230,9 +231,13 @@ export class BatchSyncService implements IBatchSyncService {
                 });
                 synced = true;
               }
+            } else if (!cType.includes('application/json')) {
+              console.warn(
+                `[BatchSync] /api/find-rulebook returned non-JSON (${res.status} ${cType}). Dev server may need restart or use "npm run sync:rulebooks".`
+              );
             }
-          } catch {
-            // Finder API unavailable or network timeout
+          } catch (err) {
+            console.warn(`[BatchSync] Failed to query /api/find-rulebook for ${game.title}:`, err);
           }
         }
 

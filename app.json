@@ -15,7 +15,8 @@
       "package": "com.virtualstand.app"
     },
     "web": {
-      "bundler": "metro"
+      "bundler": "metro",
+      "output": "server"
     },
     "plugins": [
       "expo-router",
