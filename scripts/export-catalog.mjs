@@ -143,15 +143,22 @@ async function main() {
     const prev = existingMap.get(raw.bggId);
     const slug = slugifyTitle(raw.title);
 
-    // Find any matching rulebook in assets/rulebooks
-    const matchingRulebook = rulebookFiles.find(
-      (f) =>
-        f.toLowerCase().includes(slug) ||
-        f.toLowerCase().replace(/[^a-z0-9]/g, '').includes(slug.replace(/[^a-z0-9]/g, ''))
-    );
+    // Find any matching rulebook in assets/rulebooks with exact slug or prefix matching
+    const cleanSlug = slug.replace(/[^a-z0-9]/g, '');
+    let matchingRulebook = rulebookFiles.find((f) => {
+      const baseName = f.replace(/(-regras-ptbr)?\.pdf$/i, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      return baseName === cleanSlug;
+    });
 
-    const rulebooks = prev?.rulebooks && prev.rulebooks.length > 0 ? prev.rulebooks : [];
-    if (matchingRulebook && !rulebooks.some((r) => r.relativePath.includes(matchingRulebook))) {
+    if (!matchingRulebook) {
+      matchingRulebook = rulebookFiles.find((f) => {
+        const fileBase = f.replace(/(-regras-ptbr)?\.pdf$/i, '').toLowerCase();
+        return fileBase.length >= 5 && (slug === fileBase || slug.startsWith(fileBase + '-'));
+      });
+    }
+
+    let rulebooks = [];
+    if (matchingRulebook) {
       rulebooks.push({
         label: `${raw.title} - Regras Oficiais (PT-BR)`,
         docType: 'BASE_RULES',
@@ -159,7 +166,7 @@ async function main() {
         relativePath: `assets/rulebooks/${matchingRulebook}`,
         fileSizeBytes: fs.statSync(path.join(rulebooksDir, matchingRulebook)).size,
         md5: `asset-${matchingRulebook}`,
-        pageCount: 3,
+        pageCount: 1,
         status: 'READY',
       });
     }

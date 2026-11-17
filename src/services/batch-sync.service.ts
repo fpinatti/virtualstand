@@ -204,6 +204,38 @@ export class BatchSyncService implements IBatchSyncService {
           }
         }
 
+        // If not found locally, use AI/finder service to search and download authentic PT-BR PDF
+        if (!synced && isLocalhostOrDev()) {
+          try {
+            const res = await fetch('/api/find-rulebook', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ bggId: game.bggId, title: game.title }),
+            });
+            if (res.ok) {
+              const data = await res.json();
+              if (data.success && data.relativePath) {
+                await this.rulebookRepo.insert({
+                  bggId: game.bggId,
+                  label: `${game.title} - Manual Oficial (PT-BR)`,
+                  docType: 'BASE_RULES',
+                  sourceKind: 'BUNDLED_ASSET',
+                  relativePath: data.relativePath,
+                  fileSizeBytes: data.fileSizeBytes || 0,
+                  md5: `asset-${data.fileName}`,
+                  pageCount: 1,
+                  status: 'READY',
+                  createdAt: Date.now(),
+                  updatedAt: Date.now(),
+                });
+                synced = true;
+              }
+            }
+          } catch {
+            // Finder API unavailable or network timeout
+          }
+        }
+
         if (synced) {
           newlySyncedCount++;
         } else {
