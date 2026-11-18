@@ -19,6 +19,11 @@ export class PreloadedRulebookService {
     const item = findBundledRulebookByBggId(bggId);
     if (!item) return false;
 
+    if (typeof this.repo.listByBggId === 'function') {
+      const existingForGame = await this.repo.listByBggId(bggId);
+      if (existingForGame && existingForGame.length > 0) return false;
+    }
+
     const existing = await this.repo.findByBggIdAndMd5(bggId, item.md5);
     if (existing) return false;
 

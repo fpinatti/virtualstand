@@ -24,10 +24,6 @@ export default function RulebookReaderScreen() {
   useEffect(() => {
     let isMounted = true;
     const load = async () => {
-      if (Platform.OS === 'web') {
-        if (isMounted) setLoading(false);
-        return;
-      }
       const numericId = Number(id);
       if (!Number.isFinite(numericId)) {
         if (isMounted) {
@@ -92,16 +88,7 @@ export default function RulebookReaderScreen() {
         }}
       />
 
-      {Platform.OS === 'web' ? (
-        <View style={styles.center}>
-          <Text style={styles.webNotice}>
-            Leitura de manuais disponível no app iOS/Android.
-          </Text>
-          <View style={styles.actionWrap}>
-            <Button label="Voltar à Coleção" variant="secondary" onPress={() => router.back()} />
-          </View>
-        </View>
-      ) : loading ? (
+      {loading ? (
         <View style={styles.center}>
           <ActivityIndicator size="large" color={tokens.colors.accent.primary} />
           <Text style={styles.loadingText}>Abrindo manual...</Text>

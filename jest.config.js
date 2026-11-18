@@ -10,6 +10,7 @@ module.exports = {
     '^expo-sqlite$': '<rootDir>/tests/mocks/expo-sqlite.js',
     '^expo-document-picker$': '<rootDir>/tests/mocks/expo-document-picker.js',
     '^expo-sharing$': '<rootDir>/tests/mocks/expo-sharing.js',
+    '^react-native-webview$': '<rootDir>/tests/mocks/react-native-webview.js',
     '^@expo/vector-icons(/.*)?$': '<rootDir>/tests/mocks/expo-vector-icons.js',
     '\\.(png|jpg|jpeg|gif|webp|svg)$': '<rootDir>/tests/mocks/file-mock.js',
   },

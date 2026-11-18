@@ -78,19 +78,15 @@
       ],
       "rulebooks": [
         {
-          "id": 2661920,
-          "bggId": 266192,
           "label": "Wingspan - Manual Oficial (PT-BR)",
           "docType": "BASE_RULES",
           "sourceKind": "BUNDLED_ASSET",
-          "relativePath": "assets/rulebooks/wingspan-regras-ptbr.pdf",
-          "fileSizeBytes": 699,
-          "md5": "asset-wingspan-regras-ptbr.pdf",
-          "pageCount": 1,
-          "lastViewedPage": 1,
-          "status": "READY",
-          "createdAt": 1794933326008,
-          "updatedAt": 1794933326008
+          "sourceUrl": null,
+          "relativePath": "assets/rulebooks/wingspan_regras_oficial_318330.pdf",
+          "fileSizeBytes": 28749533,
+          "md5": "asset-wingspan_regras_oficial_318330.pdf",
+          "pageCount": 16,
+          "status": "READY"
         }
       ],
       "personalRating": 10,

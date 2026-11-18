@@ -26,7 +26,12 @@ export function useRulebooks(bggId: number | null) {
     try {
       await preloadedRulebookService.syncBundledRulebookForGame(bggId).catch(() => {});
       const list = await rulebookService.listByGame(bggId);
-      setRulebooks(list);
+      const hasRealPdf = list.some((rb) => rb.fileSizeBytes > 50000);
+      const filtered = hasRealPdf
+        ? list.filter((rb) => !(rb.fileSizeBytes < 50000 && rb.fileUri.endsWith('-regras-ptbr.pdf')))
+        : list;
+      filtered.sort((a, b) => b.fileSizeBytes - a.fileSizeBytes);
+      setRulebooks(filtered);
     } finally {
       setLoading(false);
     }

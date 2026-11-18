@@ -35,16 +35,6 @@ export function RulebookList({ bggId, gameTitle, onBeforeOpenReader }: RulebookL
 
   const [downloadFeedback, setDownloadFeedback] = useState<string | null>(null);
 
-  if (Platform.OS === 'web') {
-    return (
-      <Card variant="sunken" padding="sm">
-        <Text style={styles.webFallbackText}>
-          📖 Leitura de manuais disponível no app iOS/Android
-        </Text>
-      </Card>
-    );
-  }
-
   const hasPtBrManual = rulebooks.some(
     (rb) =>
       rb.sourceKind === 'BUNDLED_ASSET' ||

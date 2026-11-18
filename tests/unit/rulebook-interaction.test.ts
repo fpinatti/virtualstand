@@ -1,5 +1,9 @@
-import React from 'react';
 import { Rulebook } from '@/services/rulebook-types';
+import {
+  GITHUB_RAW_RULEBOOKS_BASE_URL,
+  resolveGithubRulebookUrl,
+  buildGithubPdfViewerHtml,
+} from '@/components/rulebooks/pdf-reader';
 
 describe('User Story 1: Clean & Safe One-Click Rulebook Opening (Feature 014)', () => {
   const sampleRulebook: Rulebook = {
@@ -9,7 +13,7 @@ describe('User Story 1: Clean & Safe One-Click Rulebook Opening (Feature 014)', 
     docType: 'BASE_RULES',
     sourceKind: 'BUNDLED_ASSET',
     sourceUrl: null,
-    fileUri: 'file:///path/to/heat-regras-ptbr.pdf',
+    fileUri: 'file:///path/to/heat_manual_de_regras_277392.pdf',
     fileSizeBytes: 15420000,
     pageCount: 24,
     lastViewedPage: 1,
@@ -36,5 +40,35 @@ describe('User Story 1: Clean & Safe One-Click Rulebook Opening (Feature 014)', 
     expect(sampleRulebook.id).toBe(101);
     expect(sampleRulebook.label).toContain('Heat');
     expect(sampleRulebook.status).toBe('READY');
+  });
+
+  it('resolves rulebooks directly to GitHub raw PDF URLs without local IPs', () => {
+    const url = resolveGithubRulebookUrl(sampleRulebook);
+    expect(url).toBe(
+      `${GITHUB_RAW_RULEBOOKS_BASE_URL}/heat_manual_de_regras_277392.pdf`
+    );
+    expect(url).toContain('https://raw.githubusercontent.com/fpinatti/virtualstand/main/assets/rulebooks/');
+    expect(url).not.toContain('192.168.');
+  });
+
+  it('upgrades synthetic stub filenames to the authentic catalog PDF from GitHub when available', () => {
+    const stubRulebook: Rulebook = {
+      ...sampleRulebook,
+      bggId: 266192, // Wingspan
+      fileUri: 'file:///path/to/wingspan-regras-ptbr.pdf',
+      fileSizeBytes: 699,
+    };
+    const url = resolveGithubRulebookUrl(stubRulebook);
+    expect(url).toBe(
+      `${GITHUB_RAW_RULEBOOKS_BASE_URL}/wingspan_regras_oficial_318330.pdf`
+    );
+  });
+
+  it('builds self-contained PDF.js viewer HTML referencing the GitHub PDF URL', () => {
+    const url = resolveGithubRulebookUrl(sampleRulebook);
+    const html = buildGithubPdfViewerHtml(url, 3, sampleRulebook.label);
+    expect(html).toContain('pdf.min.js');
+    expect(html).toContain(url);
+    expect(html).toContain('var initialPage = 3;');
   });
 });
