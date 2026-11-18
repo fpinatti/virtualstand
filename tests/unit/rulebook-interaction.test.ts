@@ -4,6 +4,8 @@ import {
   resolveGithubRulebookUrl,
   buildGithubPdfViewerHtml,
 } from '@/components/rulebooks/pdf-reader';
+import { PreloadedRulebookService } from '@/services/preloaded-rulebook.service';
+import { RulebookRepository } from '@/db/repositories/rulebook.repository';
 
 describe('User Story 1: Clean & Safe One-Click Rulebook Opening (Feature 014)', () => {
   const sampleRulebook: Rulebook = {
@@ -61,6 +63,26 @@ describe('User Story 1: Clean & Safe One-Click Rulebook Opening (Feature 014)', 
     const url = resolveGithubRulebookUrl(stubRulebook);
     expect(url).toBe(
       `${GITHUB_RAW_RULEBOOKS_BASE_URL}/wingspan_regras_oficial_318330.pdf`
+    );
+  });
+
+  it('automatically registers Wyrmspan (410201) and other physical catalog games via PreloadedRulebookService', async () => {
+    const insertedRows: any[] = [];
+    const mockRepo = {
+      listByBggId: jest.fn().mockResolvedValue([]),
+      findByBggIdAndMd5: jest.fn().mockResolvedValue(null),
+      insert: jest.fn(async (data) => {
+        insertedRows.push(data);
+        return { id: 1, ...data };
+      }),
+    } as unknown as RulebookRepository;
+
+    const service = new PreloadedRulebookService(mockRepo);
+    const synced = await service.syncBundledRulebookForGame(410201); // Wyrmspan
+    expect(synced).toBe(true);
+    expect(insertedRows.length).toBe(1);
+    expect(insertedRows[0].relativePath).toBe(
+      'assets/rulebooks/wyrmspan_wyrmspan_regras_pt_br_260945.pdf'
     );
   });
 

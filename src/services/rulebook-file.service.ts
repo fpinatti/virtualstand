@@ -115,7 +115,8 @@ export class RulebookFileService {
    * Resolves a stored relative path to an absolute file:// URI, enforcing directory boundaries.
    */
   toAbsoluteUri(relativePath: string): string {
-    const normalized = relativePath.replace(/\\/g, '/').replace(/^\/+/, '');
+    const clean = relativePath.split('#')[0];
+    const normalized = clean.replace(/\\/g, '/').replace(/^\/+/, '');
     const isAllowedDir =
       normalized.startsWith('rulebooks/') ||
       normalized.startsWith('assets/rulebooks/');

@@ -187,24 +187,49 @@ export class CatalogService {
       if (g.rulebooks && g.rulebooks.length > 0) {
         const existingRulebooks = await this.rulebookRepo.listByBggId(g.bggId);
         for (const r of g.rulebooks) {
+          const cleanRelPath = r.relativePath.split('#')[0];
           const alreadyHas = existingRulebooks.some(
-            (er) => er.relativePath === r.relativePath || er.md5 === r.md5
+            (er) =>
+              er.relativePath === r.relativePath ||
+              er.relativePath.split('#')[0] === cleanRelPath ||
+              er.md5 === r.md5
           );
           if (!alreadyHas) {
-            await this.rulebookRepo.insert({
-              bggId: g.bggId,
-              label: r.label,
-              docType: (r.docType as any) ?? 'BASE_RULES',
-              sourceKind: (r.sourceKind as any) ?? 'BUNDLED_ASSET',
-              sourceUrl: r.sourceUrl ?? null,
-              relativePath: r.relativePath,
-              fileSizeBytes: r.fileSizeBytes,
-              md5: r.md5,
-              pageCount: r.pageCount ?? null,
-              status: (r.status as any) ?? 'READY',
-              createdAt: now,
-              updatedAt: now,
-            });
+            try {
+              await this.rulebookRepo.insert({
+                bggId: g.bggId,
+                label: r.label,
+                docType: (r.docType as any) ?? 'BASE_RULES',
+                sourceKind: (r.sourceKind as any) ?? 'BUNDLED_ASSET',
+                sourceUrl: r.sourceUrl ?? null,
+                relativePath: r.relativePath,
+                fileSizeBytes: r.fileSizeBytes,
+                md5: r.md5,
+                pageCount: r.pageCount ?? null,
+                status: (r.status as any) ?? 'READY',
+                createdAt: now,
+                updatedAt: now,
+              });
+            } catch {
+              try {
+                await this.rulebookRepo.insert({
+                  bggId: g.bggId,
+                  label: r.label,
+                  docType: (r.docType as any) ?? 'BASE_RULES',
+                  sourceKind: (r.sourceKind as any) ?? 'BUNDLED_ASSET',
+                  sourceUrl: r.sourceUrl ?? null,
+                  relativePath: `${cleanRelPath}#${g.bggId}`,
+                  fileSizeBytes: r.fileSizeBytes,
+                  md5: r.md5,
+                  pageCount: r.pageCount ?? null,
+                  status: (r.status as any) ?? 'READY',
+                  createdAt: now,
+                  updatedAt: now,
+                });
+              } catch {
+                // Ignore duplicate constraint if already present
+              }
+            }
           }
         }
       }

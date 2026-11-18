@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
   TouchableOpacity,
-  Platform,
   StyleSheet,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { RulebookDocType } from '@/services/rulebook-types';
 import { useRulebooks } from '@/hooks/use-rulebooks';
-import { Badge, Button, Card, tokens } from '@/ui';
+import { Badge, Card, tokens } from '@/ui';
 
 const DOC_TYPE_LABELS: Record<RulebookDocType, string> = {
   BASE_RULES: 'Regras base',
@@ -25,32 +24,9 @@ interface RulebookListProps {
   onBeforeOpenReader?: () => void;
 }
 
-export function RulebookList({ bggId, gameTitle, onBeforeOpenReader }: RulebookListProps) {
+export function RulebookList({ bggId, onBeforeOpenReader }: RulebookListProps) {
   const router = useRouter();
-  const {
-    rulebooks,
-    isDownloading,
-    downloadPtBrRulebook,
-  } = useRulebooks(bggId);
-
-  const [downloadFeedback, setDownloadFeedback] = useState<string | null>(null);
-
-  const hasPtBrManual = rulebooks.some(
-    (rb) =>
-      rb.sourceKind === 'BUNDLED_ASSET' ||
-      rb.label.toLowerCase().includes('português') ||
-      rb.label.includes('PT-BR')
-  );
-
-  const handleDownloadPtBr = async () => {
-    setDownloadFeedback(null);
-    const success = await downloadPtBrRulebook(gameTitle);
-    if (success) {
-      setDownloadFeedback('Manual em Português obtido com sucesso!');
-    } else {
-      setDownloadFeedback('Manual em PT-BR não localizado para download.');
-    }
-  };
+  const { rulebooks } = useRulebooks(bggId);
 
   const openReader = (rulebookId: number) => {
     if (onBeforeOpenReader) {
@@ -71,36 +47,13 @@ export function RulebookList({ bggId, gameTitle, onBeforeOpenReader }: RulebookL
     <View style={styles.container}>
       <View style={styles.headerRow}>
         <Text style={styles.headerTitle}>Manuais ({rulebooks.length})</Text>
-        <View style={styles.headerActions}>
-          {!hasPtBrManual && (
-            <Button
-              label={isDownloading ? 'Baixando...' : '📥 Baixar PT-BR'}
-              variant="secondary"
-              size="sm"
-              onPress={handleDownloadPtBr}
-              disabled={isDownloading}
-            />
-          )}
-        </View>
       </View>
-
-      {downloadFeedback ? (
-        <Text style={styles.feedbackText}>{downloadFeedback}</Text>
-      ) : null}
 
       {rulebooks.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>
-            Nenhum manual oficial em PDF anexado para este jogo.
+            Nenhum manual oficial em PDF disponível para este jogo.
           </Text>
-          <View style={styles.downloadPromptWrap}>
-            <Button
-              label={isDownloading ? 'Baixando Manual...' : '📥 Baixar Manual Oficial (PT-BR)'}
-              variant="primary"
-              onPress={handleDownloadPtBr}
-              disabled={isDownloading}
-            />
-          </View>
         </View>
       ) : (
         rulebooks.map((rb) => (
@@ -143,23 +96,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: tokens.spacing.xs,
   },
-  headerActions: {
-    flexDirection: 'row',
-    gap: tokens.spacing.xs,
-    alignItems: 'center',
-  },
-  feedbackText: {
-    color: tokens.colors.accent.primary,
-    fontSize: tokens.typography.scale.caption.fontSize,
-    marginBottom: tokens.spacing.xs,
-    fontStyle: 'italic',
-  },
   emptyContainer: {
     paddingVertical: tokens.spacing.xs,
-  },
-  downloadPromptWrap: {
-    marginTop: tokens.spacing.sm,
-    gap: tokens.spacing.xs,
   },
   headerTitle: {
     color: tokens.colors.text.secondary,
@@ -197,10 +135,5 @@ const styles = StyleSheet.create({
     fontSize: tokens.typography.scale.caption.fontSize,
     marginTop: 2,
     fontVariant: ['tabular-nums'],
-  },
-  webFallbackText: {
-    color: tokens.colors.text.secondary,
-    fontSize: tokens.typography.scale.caption.fontSize,
-    textAlign: 'center',
   },
 });

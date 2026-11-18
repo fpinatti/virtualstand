@@ -3,6 +3,7 @@ import {
   findBundledRulebookByBggId,
 } from '@/data/bundled-rulebooks-catalog';
 import { RulebookRepository } from '@/db/repositories/rulebook.repository';
+import bundledCatalog from '../../assets/data/virtualstand-catalog.json';
 
 export class PreloadedRulebookService {
   private readonly repo: RulebookRepository;
@@ -16,31 +17,64 @@ export class PreloadedRulebookService {
    * and not yet registered in SQLite.
    */
   async syncBundledRulebookForGame(bggId: number): Promise<boolean> {
-    const item = findBundledRulebookByBggId(bggId);
-    if (!item) return false;
-
     if (typeof this.repo.listByBggId === 'function') {
       const existingForGame = await this.repo.listByBggId(bggId);
       if (existingForGame && existingForGame.length > 0) return false;
     }
 
-    const existing = await this.repo.findByBggIdAndMd5(bggId, item.md5);
+    const catalogGame =
+      typeof this.repo.listByBggId === 'function'
+        ? (bundledCatalog as any)?.games?.find((g: any) => g.bggId === bggId)
+        : null;
+    const catalogRb = catalogGame?.rulebooks?.[0];
+
+    const item = findBundledRulebookByBggId(bggId);
+    if (!catalogRb && !item) return false;
+
+    const targetMd5 = catalogRb ? catalogRb.md5 : item!.md5;
+    const targetRelPath = catalogRb ? catalogRb.relativePath : item!.relativeAssetPath;
+    const targetLabel = catalogRb ? catalogRb.label : item!.label;
+    const targetSize = catalogRb ? catalogRb.fileSizeBytes : item!.fileSizeBytes;
+    const targetPages = catalogRb ? (catalogRb.pageCount ?? 1) : (item!.pageCount ?? 1);
+
+    const existing = await this.repo.findByBggIdAndMd5(bggId, targetMd5);
     if (existing) return false;
 
     const now = Date.now();
-    await this.repo.insert({
-      bggId: item.bggId,
-      label: item.label,
-      docType: 'BASE_RULES',
-      sourceKind: 'BUNDLED_ASSET',
-      relativePath: item.relativeAssetPath,
-      fileSizeBytes: item.fileSizeBytes,
-      md5: item.md5,
-      pageCount: item.pageCount ?? 1,
-      status: 'READY',
-      createdAt: now,
-      updatedAt: now,
-    });
+    try {
+      await this.repo.insert({
+        bggId,
+        label: targetLabel,
+        docType: 'BASE_RULES',
+        sourceKind: 'BUNDLED_ASSET',
+        relativePath: targetRelPath,
+        fileSizeBytes: targetSize,
+        md5: targetMd5,
+        pageCount: targetPages,
+        status: 'READY',
+        createdAt: now,
+        updatedAt: now,
+      });
+    } catch {
+      try {
+        const cleanRelPath = String(targetRelPath).split('#')[0];
+        await this.repo.insert({
+          bggId,
+          label: targetLabel,
+          docType: 'BASE_RULES',
+          sourceKind: 'BUNDLED_ASSET',
+          relativePath: `${cleanRelPath}#${bggId}`,
+          fileSizeBytes: targetSize,
+          md5: targetMd5,
+          pageCount: targetPages,
+          status: 'READY',
+          createdAt: now,
+          updatedAt: now,
+        });
+      } catch {
+        return false;
+      }
+    }
 
     return true;
   }

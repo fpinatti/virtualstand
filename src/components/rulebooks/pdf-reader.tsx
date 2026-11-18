@@ -31,7 +31,7 @@ export const GITHUB_RAW_RULEBOOKS_BASE_URL =
  * has the authentic multi-MB PDF for that bggId, upgrades automatically to the real file.
  */
 export function resolveGithubRulebookUrl(rulebook: Rulebook): string {
-  const cleanUri = (rulebook.fileUri || '').replace(/\\/g, '/');
+  const cleanUri = (rulebook.fileUri || '').split('#')[0].replace(/\\/g, '/');
   let fileName = cleanUri.split('/').pop() || '';
 
   // Upgrade synthetic stub to authentic catalog PDF if available for this game
@@ -42,7 +42,11 @@ export function resolveGithubRulebookUrl(rulebook: Rulebook): string {
     );
     const catalogRb = catalogGame?.rulebooks?.[0];
     if (catalogRb?.relativePath) {
-      const catFileName = String(catalogRb.relativePath).replace(/\\/g, '/').split('/').pop();
+      const catFileName = String(catalogRb.relativePath)
+        .split('#')[0]
+        .replace(/\\/g, '/')
+        .split('/')
+        .pop();
       if (catFileName) {
         fileName = catFileName;
       }

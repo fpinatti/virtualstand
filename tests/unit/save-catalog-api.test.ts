@@ -1,21 +1,9 @@
 import fs from 'fs';
-import path from 'path';
 import { POST } from '@/../app/api/save-catalog+api';
 
 describe('POST /api/save-catalog (Feature 012 Dev Endpoint)', () => {
-  const targetPath = path.join(process.cwd(), 'assets', 'data', 'virtualstand-catalog.json');
-  let originalContent = '';
-
-  beforeAll(() => {
-    if (fs.existsSync(targetPath)) {
-      originalContent = fs.readFileSync(targetPath, 'utf-8');
-    }
-  });
-
-  afterAll(() => {
-    if (originalContent) {
-      fs.writeFileSync(targetPath, originalContent, 'utf-8');
-    }
+  afterEach(() => {
+    jest.restoreAllMocks();
   });
 
   it('rejects invalid or null payload', async () => {
@@ -29,6 +17,11 @@ describe('POST /api/save-catalog (Feature 012 Dev Endpoint)', () => {
   });
 
   it('persists catalog snapshot directly to assets/data/virtualstand-catalog.json', async () => {
+    let writtenData = '';
+    jest.spyOn(fs, 'writeFileSync').mockImplementation((_path, data) => {
+      writtenData = String(data);
+    });
+
     const dummyCatalog = {
       version: 1,
       exportedAt: new Date().toISOString(),
@@ -47,9 +40,9 @@ describe('POST /api/save-catalog (Feature 012 Dev Endpoint)', () => {
 
     const data = await res.json();
     expect(data.success).toBe(true);
-    expect(fs.existsSync(targetPath)).toBe(true);
+    expect(writtenData).not.toBe('');
 
-    const saved = JSON.parse(fs.readFileSync(targetPath, 'utf-8'));
+    const saved = JSON.parse(writtenData);
     expect(saved.totalGames).toBe(1);
     expect(saved.games[0].title).toBe('Test Game');
   });

@@ -6,6 +6,7 @@ module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^react-native$': 'react-native-web',
+    '^expo-router$': '<rootDir>/tests/mocks/expo-router.js',
     '^expo-file-system(/legacy)?$': '<rootDir>/tests/mocks/expo-file-system.js',
     '^expo-sqlite$': '<rootDir>/tests/mocks/expo-sqlite.js',
     '^expo-document-picker$': '<rootDir>/tests/mocks/expo-document-picker.js',
